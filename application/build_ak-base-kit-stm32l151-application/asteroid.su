@@ -1,0 +1,5 @@
+sources/app/game/space_shooter/asteroid.cpp:5:6:void asteroid_init()	24	static
+sources/app/game/space_shooter/asteroid.cpp:22:6:bool asteroid_out_of_screen()	0	static
+sources/app/game/space_shooter/asteroid.cpp:34:6:void asteroid_flight()	24	static
+sources/app/game/space_shooter/asteroid.cpp:55:6:void asteroid_hit()	32	static
+sources/app/game/space_shooter/asteroid.cpp:91:6:void asteroid_handler(ak_msg_t*)	0	static

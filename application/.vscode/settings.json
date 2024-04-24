@@ -1,0 +1,26 @@
+{
+    "files.associations": {
+        "*.tcc": "cpp",
+        "deque": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "system_error": "cpp",
+        "bit": "cpp",
+        "compare": "cpp",
+        "condition_variable": "cpp",
+        "cstddef": "cpp",
+        "executor": "cpp",
+        "io_context": "cpp",
+        "future": "cpp",
+        "limits": "cpp",
+        "memory": "cpp",
+        "mutex": "cpp",
+        "new": "cpp",
+        "functional": "cpp",
+        "random": "cpp",
+        "iterator": "cpp"
+    }
+}
