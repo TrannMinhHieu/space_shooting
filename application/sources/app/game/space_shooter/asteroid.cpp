@@ -84,7 +84,7 @@ void asteroid_hit()
             myExplosion.x = myShip.x;
             myExplosion.y = myShip.y;
 
-            if (myExplosion.visible == BLACK && myShip.visible == BLACK)
+            if (myShip.visible == BLACK)
             {
                 task_post_pure_msg(GAMEPLAY_TASK_ID, GAME_EXIT);
             }
@@ -94,6 +94,17 @@ void asteroid_hit()
                 task_post_pure_msg(EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
             }
         }
+    }
+}
+
+void asteroid_reset() 
+{
+    APP_DBG_SIG("Asteroid reset\n");
+    for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
+    {
+        myAsteroid[i].visible = BLACK;
+        myAsteroid[i].x = (rand() % 39) + 130;
+        myAsteroid[i].action_image = rand() % 3 + 1;
     }
 }
 void asteroid_handler(ak_msg_t *msg)
@@ -109,6 +120,9 @@ void asteroid_handler(ak_msg_t *msg)
     case SHIP_HIT_SIG:
     case MISSILE_HIT_SIG:
         asteroid_hit();
+        break;
+    case ASTEROID_RESET_SIG:
+        asteroid_reset();
         break;
     default:
         break;

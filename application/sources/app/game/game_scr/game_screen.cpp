@@ -4,7 +4,6 @@ uint8_t game_state;
 
 void info_screen_draw()
 {
-
 }
 
 /**
@@ -181,8 +180,19 @@ void game_play_handler(ak_msg_t *msg)
         task_post_pure_msg(EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
         break;
     case GAME_EXIT:
+        task_post_pure_msg(SHIP_TASK_ID, SHIP_RESET_SIG);
+        task_post_pure_msg(MISSILE_TASK_ID, MISSILE_RESET_SIG);
+        task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_RESET_SIG);
+        task_post_pure_msg(EXPLOSION_TASK_ID, EXPLOSION_RESET_SIG);
+
+        timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_GAME_MENU, GAMEPLAY_TIME_EXIT_INTERVAL, TIMER_ONE_SHOT);
         game_state = GAME_OVER;
         break;
+
+    case AC_DISPLAY_SHOW_GAME_MENU:
+        SCREEN_TRAN(game_menu_handler, &game_menu);
+        break;
+
     default:
         break;
     }

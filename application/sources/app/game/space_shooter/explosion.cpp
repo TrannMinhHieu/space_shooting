@@ -30,20 +30,27 @@ void explosion_explode()
     }
 }
 
+void explosion_reset()
+{
+    APP_DBG_SIG("Explosion reset\n");
+    myExplosion.visible = BLACK;
+    myExplosion.x = 0;
+    myExplosion.y = 0;
+}
+
 void explosion_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {
     case EXPLOSION_INIT_SIG:
-    {
         explosion_init();
-    }
-    break;
+        break;
     case EXPLPOSION_EXPLODE_SIG:
-    {
         explosion_explode();
-    }
-    break;
+        break;
+    case EXPLOSION_RESET_SIG:
+        explosion_reset();
+        break;
     default:
         break;
     }

@@ -96,7 +96,7 @@ void view_scr_idle() {
 void scr_idle_handle(ak_msg_t* msg) {
 	switch (msg->sig) {
 	case SCREEN_ENTRY: {
-		APP_DBG_SIG("SCREEN_ENTRY\n");
+		APP_DBG_SIG("SCREEN_IDLE_ENTRY\n");
 		if (v_idle_ball.empty()) {
 			ball new_ball;
 			new_ball.id = ball::total++;
@@ -122,7 +122,13 @@ void scr_idle_handle(ak_msg_t* msg) {
 		timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE);
 		SCREEN_TRAN(game_menu_handler, &game_menu);
 	}
-		break;
+
+	// case AC_DISPLAY_BUTON_MODE_RELEASED: {
+	// 	APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_RELEASED\n");
+	// 	timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE);
+	// 	SCREEN_TRAN(scr_es35sw_th_sensor_handle, &scr_es35sw_th_sensor);
+	// }
+	// 	break;
 
 	case AC_DISPLAY_BUTON_UP_RELEASED: {
 		APP_DBG_SIG("AC_DISPLAY_BUTON_UP_RELEASED\n");
@@ -151,13 +157,29 @@ void scr_idle_handle(ak_msg_t* msg) {
 			ball::total--;
 			v_idle_ball.pop_back();
 		}
-
-		if (v_idle_ball.empty()) {
+		else {
 			timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE);
-			SCREEN_TRAN(scr_es35sw_th_sensor_handle, &scr_es35sw_th_sensor);
+			BUZZER_PlayTones(tones_3beep);
 		}
+		// if (v_idle_ball.empty()) {
+		// 	timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE);
+		// 	SCREEN_TRAN(game_menu_handler, &game_menu);
+		// }
 	}
 		break;
+	// case AC_DISPLAY_BUTON_DOWN_RELEASED: {
+	// 	APP_DBG_SIG("AC_DISPLAY_BUTON_DOWN_RELEASED\n");
+	// 	if (v_idle_ball.size()) {
+	// 		ball::total--;
+	// 		v_idle_ball.pop_back();
+	// 	}
+
+	// 	if (v_idle_ball.empty()) {
+	// 		timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE);
+	// 		SCREEN_TRAN(scr_es35sw_th_sensor_handle, &scr_es35sw_th_sensor);
+	// 	}
+	// }
+	// 	break;
 
 	default:
 		break;

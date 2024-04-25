@@ -78,10 +78,6 @@ void menu_render()
     view_render.fillRect(scroll_bar.axis_x, scroll_bar.axis_y, scroll_bar.size_w, scroll_bar.size_h, WHITE);
     view_render.drawBitmap(scroll_bar.axis_x, 0, dot_icon, 1, MENU_SCREEN_VISIBLE_HEIGHT, WHITE);
 
-    // for (uint8_t i = 0; i < NUM_OF_ITEMS_ON_SCREEN; i++) {
-    //     view_render.drawRoundRect(frame[i].axis_x, frame[i].axis_y, frame[i].size_w, frame[i].size_h, frame[i].size_r, WHITE);
-    // }
-
     view_render.setTextSize(1);
     for (uint8_t i = 0; i < NUM_OF_ITEMS_ON_SCREEN; i++)
     {

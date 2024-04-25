@@ -50,6 +50,14 @@ void missile_flight()
     }
 }
 
+void missile_reset()
+{
+    APP_DBG_SIG("Missile reset\n");
+    myMissile.visible = BLACK;
+    myMissile.x = 0;
+    myMissile.y = 0;
+}
+
 void missile_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
@@ -58,11 +66,13 @@ void missile_handler(ak_msg_t *msg)
         missile_inint();
         break;
     case MISSILE_FIRE_SIG:
-    {
         missile_fired();
-    }
+        break;
     case MISSILE_FLIGHT:
         missile_flight();
+        break;
+    case MISSILE_RESET_SIG:
+        missile_reset();
         break;
     default:
         break;

@@ -48,7 +48,13 @@ void ship_move_down()
 
 void ship_reset()
 {
-    task_post_pure_msg(SHIP_TASK_ID, SHIP_INIT_SIG);
+    APP_DBG_SIG("Ship reset\n");
+    myShip.x = AXIS_SHIP_X;
+    myShip.y = AXIS_SHIP_Y;
+    myShip.visible = BLACK;
+    myShip.action_image = 1;
+    myShip.score = 0;
+    ;
 }
 
 void ship_handler(ak_msg_t *msg)

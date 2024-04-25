@@ -149,6 +149,7 @@ enum {
 	AC_DISPLAY_BUTON_DOWN_RELEASED,
 	AC_DISPLAY_SHOW_LOGO,	
 	AC_DISPLAY_SHOW_GAME_PLAY,
+	AC_DISPLAY_SHOW_GAME_MENU,
 	AC_DISPLAY_SHOW_IDLE,
 	AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE,
 	AC_DISPLAY_SHOW_FW_UPDATE,
@@ -240,7 +241,8 @@ enum {
 	MISSILE_INIT_SIG = AK_USER_DEFINE_SIG,
 	MISSILE_FIRE_SIG,
 	MISSILE_HIT_SIG,
-	MISSILE_FLIGHT
+	MISSILE_FLIGHT,
+	MISSILE_RESET_SIG
 };
 
 /*****************************************************************************/
@@ -251,6 +253,7 @@ enum {
 	ASTEROID_INIT_SIG = AK_USER_DEFINE_SIG,
 	ASTEROID_FLIGHT_SIG,
 	ASTEROID_HIT_SIG,
+	ASTEROID_RESET_SIG,
 };
 
 /*****************************************************************************/
@@ -259,7 +262,8 @@ enum {
 /*****************************************************************************/
 enum {
 	EXPLOSION_INIT_SIG = AK_USER_DEFINE_SIG,
-	EXPLPOSION_EXPLODE_SIG
+	EXPLPOSION_EXPLODE_SIG,
+	EXPLOSION_RESET_SIG,
 };
 
 /*****************************************************************************/
