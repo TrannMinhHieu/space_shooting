@@ -2,94 +2,181 @@
 
 Asteroid myAsteroid[NUM_ASTEROIDS];
 
+/**
+ * @brief Initialize the asteroids with random x-coordinates, predefined y-coordinates, and default values.
+ *
+ * This function initializes the `myAsteroid` array with random x-coordinates, predefined y-coordinates,
+ * and default values for visibility and action image.
+ *
+ * @param None
+ * @return None
+ */
 void asteroid_init()
 {
+    // Print debug message
     APP_DBG_SIG("Asteroid init\n");
-    const int asteroidYCoordinates[NUM_ASTEROIDS] = {AXIS_Y_ASTEROID_0,
-                                                     AXIS_Y_ASTEROID_1,
-                                                     AXIS_Y_ASTEROID_2,
-                                                     AXIS_Y_ASTEROID_3,
-                                                     AXIS_Y_ASTEROID_4,
-                                                     AXIS_Y_ASTEROID_5};
 
+    // Initialize asteroids
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
-        myAsteroid[i].y = asteroidYCoordinates[i];
+        // Assign random x-coordinate
         myAsteroid[i].x = (rand() % 39) + 130;
+
+        // Assign corresponding y-coordinate from asteroidYCoordinates
+        myAsteroid[i].y = asteroidYCoordinates[i];
+
+        // Set default values for visibility and action image
         myAsteroid[i].visible = WHITE;
         myAsteroid[i].action_image = 1;
     }
 }
 
-bool asteroid_out_of_screen()
+/**
+ * Checks if any of the asteroids in the `myAsteroid` array have moved off the screen by checking their x-coordinates.
+ * 
+ * @param asteroid_index The index of the asteroid in the `myAsteroid` array.
+ * @return A boolean value indicating whether any of the asteroids have moved off the screen.
+ */
+bool asteroid_out_of_screen(uint8_t asteroid_index)
 {
-    for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
+    // Check if the x-coordinate plus the width of the current asteroid is less than 0.
+    if (myAsteroid[asteroid_index].x + SIZE_BITMAP_ASTEROIDS_X < 0)
     {
-        if (myAsteroid[i].x < 0)
-        {
-            return true;
-        }
+        // If an asteroid's x-coordinate is less than 0, return true to indicate that it has moved off the screen.
+        return true;
     }
+    // If none of the asteroids have moved off the screen, return false.
     return false;
 }
 
+/**
+ * @brief Update the position and action image of each asteroid in the `myAsteroid` array.
+ *
+ * This function updates the position with default flight speed, and action image of each asteroid in the `myAsteroid` array.
+ * It also checks if an asteroid has moved off the screen.
+ *
+ * @param None
+ * @return None
+ */
 void asteroid_flight()
 {
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
+        // Check if the asteroid is visible
         if (myAsteroid[i].visible == WHITE)
         {
+            // Update the x-coordinate by subtracting the ASTEROIDS_SPEED value
             myAsteroid[i].x -= ASTEROIDS_SPEED;
+
+            // Increment the action image of the asteroid
             myAsteroid[i].action_image++;
+
+            // Reset the action image to 1 if it reaches 4
             if (myAsteroid[i].action_image == 4)
             {
                 myAsteroid[i].action_image = 1;
             }
-            if ((myAsteroid[i].x + SIZE_BITMAP_ASTEROIDS_X) < 0)
+
+            // Check if the asteroid has moved off the screen
+            if (asteroid_out_of_screen(i))
             {
                 APP_DBG_SIG("Asteroid out of range\n");
+
+                // Reposition the asteroid randomly within a specific range
                 myAsteroid[i].x = (rand() % 39) + 130;
             }
         }
     }
 }
 
+/**
+ * Checks if a missile has collided with an asteroid.
+ *
+ * @param asteroid_index The index of the asteroid in the `myAsteroid` array.
+ * @return True if a collision has occurred, False otherwise.
+ */
+bool asteroid_missile_collision(uint8_t asteroid_index)
+{
+    const int MISSILE_Y_OFFSET = 2;
+    // Check if the missile is visible and its x-coordinate plus its width is greater than the x-coordinate of the asteroid.
+    // Check if the missile's y-coordinate minus 2 is equal to the y-coordinate of the asteroid.
+    if (myMissile.visible == WHITE && myMissile.x + SIZE_MISSILE_BITMAP_X > myAsteroid[asteroid_index].x && myMissile.y - MISSILE_Y_OFFSET == myAsteroid[asteroid_index].y)
+    {
+        return true; // Collision occurred
+    }
+    return false; // No collision occurred
+}
+
+/**
+ * Checks if the ship has collided with an asteroid.
+ *
+ * @param asteroid_index The index of the asteroid in the myAsteroid array.
+ * @return true if a collision between the ship and the asteroid has occurred, false otherwise.
+ */
+bool asteroid_ship_collision(uint8_t asteroid_index)
+{
+    const int SHIP_Y_OFFSET = 3;
+    // Check if the ship is visible and its x-coordinate plus its width is greater than the x-coordinate of the asteroid
+    // Also, check if the ship's y-coordinate is equal to the y-coordinate of the asteroid minus 3
+    if (myShip.visible == WHITE && myShip.x + SIZE_BITMAP_SHIP_X > myAsteroid[asteroid_index].x && myShip.y == myAsteroid[asteroid_index].y - SHIP_Y_OFFSET)
+    {
+        return true; // Collision occurred
+    }
+    return false; // No collision occurred
+}
+
+/**
+ * @brief Handle the collision of an asteroid with a missile or a ship.
+ *
+ * @param None
+ * @return None
+ */
 void asteroid_hit()
 {
+    // Iterate through each asteroid in the myAsteroid array
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
         // Check if asteroid is visible and hit by missile
-        if (myMissile.visible == WHITE && myMissile.x + SIZE_MISSILE_BITMAP_X > myAsteroid[i].x && myMissile.y - 2 == myAsteroid[i].y)
+        if (asteroid_missile_collision(i))
         {
             APP_DBG_SIG("Missile hit asteroid\n");
             APP_DBG_SIG("Asteroid no %d hit by missile\n", i);
-            // myAsteroid[i].visible = BLACK;
+            // Update explosion position with asteroid's coordinates
             myExplosion.visible = WHITE;
             myExplosion.x = myAsteroid[i].x;
             myExplosion.y = myAsteroid[i].y;
-            myAsteroid[i].x = (rand() % 39) + 130;
 
+            // Missile visibility is set to black
             myMissile.visible = BLACK;
             myMissile.x = 0;
+            // Send message to increment score
             task_post_pure_msg(SHIP_TASK_ID, MISSILE_DESTROY_SIG);
+
+            // Move the asteroid to a new random position
+            myAsteroid[i].x = (rand() % 39) + 130;
         }
 
         // Check if asteroid is visible and hit by ship
-        if (myShip.visible == WHITE && myShip.x + SIZE_BITMAP_SHIP_X > myAsteroid[i].x && myShip.y == myAsteroid[i].y - 3)
+        if (asteroid_ship_collision(i))
         {
             APP_DBG_SIG("Ship hit asteroid\n");
             APP_DBG_SIG("Asteroid no %d hit by ship\n", i);
+            // Update explosion position with ship's coordinates
             myExplosion.visible = WHITE;
-            myShip.visible = BLACK;
             myExplosion.x = myShip.x;
             myExplosion.y = myShip.y;
 
+            // Hide the ship
+            myShip.visible = BLACK;
+
+            // If ship is hidden, exit the game
             if (myShip.visible == BLACK)
             {
                 task_post_pure_msg(GAMEPLAY_TASK_ID, GAME_EXIT);
             }
             else
             {
+                // Send messages to handle ship being hit and explode the asteroid
                 task_post_pure_msg(SHIP_TASK_ID, SHIP_HIT_SIG);
                 task_post_pure_msg(EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
             }
@@ -97,16 +184,37 @@ void asteroid_hit()
     }
 }
 
-void asteroid_reset() 
+/**
+ * @brief Reset the asteroids.
+ *
+ * @param None
+ * @return None
+ */
+void asteroid_reset()
 {
+    // Print a debug message indicating that the asteroids are being reset.
     APP_DBG_SIG("Asteroid reset\n");
+
+    // Iterate through each asteroid in the myAsteroid array.
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
+        // Set the visibility of the asteroid to black.
         myAsteroid[i].visible = BLACK;
+
+        // Assign a new random x-coordinate within the range of 130 to 168.
         myAsteroid[i].x = (rand() % 39) + 130;
+
+        // Assign a new random action image to the asteroid.
         myAsteroid[i].action_image = rand() % 3 + 1;
     }
 }
+
+/**
+ * @brief Message handler for the asteroid task.
+ *
+ * @param msg The message to handle.
+ * @return None
+ */
 void asteroid_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
@@ -125,6 +233,7 @@ void asteroid_handler(ak_msg_t *msg)
         asteroid_reset();
         break;
     default:
+        // Do nothing for unknown signals
         break;
     }
 }

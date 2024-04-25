@@ -35,7 +35,7 @@ void ship_draw()
 }
 
 /**
- * Draw the missile on the screen if it is visible.
+ * @brief Draw the missile on the screen if it is visible.
  *
  */
 void missile_draw()
@@ -53,7 +53,7 @@ void missile_draw()
 }
 
 /**
- * @brief Draw asteroid on the screen
+ * @brief Draw asteroids on the screen
  *
  */
 void asteroid_draw()
@@ -83,6 +83,10 @@ void asteroid_draw()
     }
 }
 
+/**
+ * @brief Draw explosion on the screen
+ * 
+ */
 void explosion_draw()
 {
     if (myExplosion.visible != WHITE)
@@ -153,7 +157,9 @@ void space_shooting_gameplay()
         view_render.print("YOU LOSE");
     }
 }
-// Gameplay handle
+/*****************************************************************************/
+/* GAME HANDLER */
+/*****************************************************************************/
 void game_time_tick_setup()
 {
     timer_set(AC_TASK_DISPLAY_ID, GAMEPLAY_TIME_TICK, GAMEPLAY_TIME_TICK_INTERVAL, TIMER_PERIODIC);

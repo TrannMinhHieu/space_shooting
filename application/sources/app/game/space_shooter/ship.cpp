@@ -3,18 +3,31 @@
 
 Ship myShip;
 
+/**
+ * @brief Initialize the ship with default values.
+ *
+ * @param None
+ * @return None
+ */
 void ship_init()
 {
     APP_DBG_SIG("Ship init\n");
-    myShip.x = AXIS_SHIP_X;
-    myShip.y = AXIS_SHIP_Y;
+    myShip.x = SHIP_X_COORDINATE;
+    myShip.y = SHIP_Y_COORDINATE;
     myShip.visible = WHITE;
     myShip.action_image = 1;
     myShip.score = 0;
 }
 
+/**
+ * @brief Display the ship animation.
+ *
+ * @param None
+ * @return None
+ */
 void ship_flight()
 {
+    // Cycle through the ship animation
     myShip.action_image++;
     if (myShip.action_image == 4)
     {
@@ -22,41 +35,72 @@ void ship_flight()
     }
 }
 
+/**
+ * @brief Fire a missile.
+ *
+ * @param None
+ * @return None
+ */
 void ship_fire()
 {
+    // Send message to fire a missile
     APP_DBG_SIG("Ship fire missile\n");
     task_post_pure_msg(MISSILE_TASK_ID, MISSILE_FIRE_SIG);
 }
 
+/**
+ * @brief Move the ship up by SHIP_Y_STEP.
+ *
+ * @param None
+ * @return None
+ */
 void ship_move_up()
 {
     APP_DBG_SIG("Ship move up\n");
     if (myShip.y > 0)
     {
-        myShip.y -= STEP_SHIP_AXIS_Y;
+        myShip.y -= SHIP_Y_STEP;
     }
 }
 
+/**
+ * @brief Move the ship down by SHIP_Y_STEP.
+ *
+ * @param None
+ * @return None
+ */
 void ship_move_down()
 {
     APP_DBG_SIG("Ship move down\n");
-    if (myShip.y < LCD_HEIGHT - STEP_SHIP_AXIS_Y)
+    if (myShip.y < LCD_HEIGHT - SHIP_Y_STEP)
     {
-        myShip.y += STEP_SHIP_AXIS_Y;
+        myShip.y += SHIP_Y_STEP;
     }
 }
 
+/**
+ * @brief Reset the ship.
+ *
+ * @param None
+ * @return None
+ */
 void ship_reset()
 {
     APP_DBG_SIG("Ship reset\n");
-    myShip.x = AXIS_SHIP_X;
-    myShip.y = AXIS_SHIP_Y;
+    myShip.x = SHIP_X_COORDINATE;
+    myShip.y = SHIP_Y_COORDINATE;
     myShip.visible = BLACK;
     myShip.action_image = 1;
     myShip.score = 0;
     ;
 }
 
+/**
+ * @brief Handle the ship task.
+ *
+ * @param None
+ * @return None
+ */
 void ship_handler(ak_msg_t *msg)
 {
     switch (msg->sig)

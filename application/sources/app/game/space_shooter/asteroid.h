@@ -17,21 +17,32 @@
 
 #include "buzzer.h"
 
-#define NUM_ASTEROIDS              (6)
-#define SIZE_BITMAP_ASTEROIDS_X    (20)
-#define SIZE_BITMAP_ASTEROIDS_Y    (10)
-#define ASTEROIDS_SPEED            (5)
+#define NUM_ASTEROIDS               (6)
+#define SIZE_BITMAP_ASTEROIDS_X     (20)
+#define SIZE_BITMAP_ASTEROIDS_Y     (10)
+#define ASTEROIDS_SPEED             (5)
 
-#define AXIS_Y_ASTEROID_0          (3)
-#define AXIS_Y_ASTEROID_1          (13)
-#define AXIS_Y_ASTEROID_2          (23)
-#define AXIS_Y_ASTEROID_3          (33)
-#define AXIS_Y_ASTEROID_4          (43)
-#define AXIS_Y_ASTEROID_5          (53)
+// Define global asteroid y-coordinates
+#define ASTEROID_0_Y_COORDINATE           (3)
+#define ASTEROID_1_Y_COORDINATE           (13)
+#define ASTEROID_2_Y_COORDINATE           (23)
+#define ASTEROID_3_Y_COORDINATE           (33)
+#define ASTEROID_4_Y_COORDINATE           (43)
+#define ASTEROID_5_Y_COORDINATE           (53)
 
+// Set screen left boundary
 const int SCREEN_LEFT_BOUNDARY = 0;
 
-typedef struct {
+// Predefined y-coordinates for each asteroid
+const int asteroidYCoordinates[NUM_ASTEROIDS] = {ASTEROID_0_Y_COORDINATE,
+                                                 ASTEROID_1_Y_COORDINATE,
+                                                 ASTEROID_2_Y_COORDINATE,
+                                                 ASTEROID_3_Y_COORDINATE,
+                                                 ASTEROID_4_Y_COORDINATE,
+                                                 ASTEROID_5_Y_COORDINATE};
+
+typedef struct
+{
     bool visible;
     int32_t x, y;
     uint8_t action_image;

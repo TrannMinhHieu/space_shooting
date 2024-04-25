@@ -15,12 +15,12 @@
 
 #include "game_screen.h"
 
-//global ship-related constants
-#define STEP_SHIP_AXIS_Y        (10)
+// Global ship-related constants
+#define SHIP_Y_STEP             (10)
 #define SIZE_BITMAP_SHIP_X      (15)
 #define SIZE_BITMAP_SHIP_Y      (15)
-#define AXIS_SHIP_X             (0)
-#define AXIS_SHIP_Y             (0)
+#define SHIP_X_COORDINATE       (0)
+#define SHIP_Y_COORDINATE       (0)
 
 typedef struct 
 {

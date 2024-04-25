@@ -17,7 +17,7 @@
 
 #include "game_screen.h"
 
-// global missile-related constants
+// Global missile-related constants
 #define MAX_MISSILE_DISTANCE    (120)
 #define MISSILE_SPEED           (5)
 #define SIZE_MISSILE_BITMAP_X   (10)
