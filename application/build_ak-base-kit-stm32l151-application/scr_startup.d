@@ -161,4 +161,6 @@ build_ak-base-kit-stm32l151-application/scr_startup.o: \
  sources/app/game/space_shooter/ship.h \
  sources/app/game/space_shooter/asteroid.h \
  sources/app/game/space_shooter/missile.h \
- sources/app/game/space_shooter/explosion.h
+ sources/app/game/space_shooter/explosion.h \
+ sources/app/game/game_scr/game_menu.h \
+ sources/app/game/game_scr/game_screen.h

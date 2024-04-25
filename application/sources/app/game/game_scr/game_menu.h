@@ -1,5 +1,5 @@
-#ifndef __SCR_STARTUP_H__
-#define __SCR_STARTUP_H__
+#ifndef __GAME_MENU_H__
+#define __GAME_MENU_H__
 
 #include "fsm.h"
 #include "port.h"
@@ -16,13 +16,10 @@
 #include "view_render.h"
 
 #include "game_screen.h"
-#include "game_menu.h"
+#include "game_bitmap.h"
 
-#include "buzzer.h"
+extern view_dynamic_t dyn_view_game_menu;
+extern view_screen_t game_menu;
+extern void game_menu_handler(ak_msg_t* msg);
 
-extern view_dynamic_t dyn_view_startup;
-
-extern view_screen_t scr_startup;
-extern void scr_startup_handle(ak_msg_t* msg);
-
-#endif //__SCR_STARTUP_H__
+#endif /* __GAME_MENU_H__ */

@@ -29,4 +29,11 @@ extern const unsigned char PROGMEM chosse_icon [];
 extern const unsigned char PROGMEM speaker_1 [];
 extern const unsigned char PROGMEM speaker_2 [];
 
+// scr_menu_game
+extern const unsigned char PROGMEM archery_icon [];
+extern const unsigned char PROGMEM dot_icon [];
+extern const unsigned char PROGMEM chart_icon [];
+extern const unsigned char PROGMEM setting_icon [];
+extern const unsigned char PROGMEM exit_icon [];
+
 #endif // __GAME_BITMAP_H__

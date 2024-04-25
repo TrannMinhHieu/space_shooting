@@ -1,0 +1,5 @@
+sources/app/game/game_scr/game_menu.cpp:93:6:void menu_cursor()	0	static
+sources/app/game/game_scr/game_menu.cpp:104:6:void menu_cursor_focus()	0	static
+sources/app/game/game_scr/game_menu.cpp:205:1:cpp)	0	static
+sources/app/game/game_scr/game_menu.cpp:74:6:void menu_render()	40	static
+sources/app/game/game_scr/game_menu.cpp:122:6:void game_menu_handler(ak_msg_t*)	16	static

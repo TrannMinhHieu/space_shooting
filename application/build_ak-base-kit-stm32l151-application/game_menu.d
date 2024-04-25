@@ -1,6 +1,6 @@
-build_ak-base-kit-stm32l151-application/scr_idle.o: \
- sources/app/screens/scr_idle.cpp sources/app/screens/scr_idle.h \
- sources/ak/inc/fsm.h \
+build_ak-base-kit-stm32l151-application/game_menu.o: \
+ sources/app/game/game_scr/game_menu.cpp \
+ sources/app/game/game_scr/game_menu.h sources/ak/inc/fsm.h \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdint.h \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/_default_types.h \
@@ -108,20 +108,7 @@ build_ak-base-kit-stm32l151-application/scr_idle.o: \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/ctype.h \
  sources/platform/stm32l/arduino/cores/stm32/pgmspace.h \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/inttypes.h \
- sources/app/screens/scr_idle.h sources/app/screens/scr_info.h \
- sources/common/view_render.h sources/app/screens/scr_startup.h \
- sources/app/game/game_scr/game_screen.h sources/driver/eeprom/eeprom.h \
- sources/app/app_eeprom.h sources/app/game/game_scr/game_bitmap.h \
- sources/app/game/space_shooter/ship.h \
- sources/app/game/space_shooter/asteroid.h \
- sources/app/game/space_shooter/missile.h \
- sources/app/game/space_shooter/explosion.h \
- sources/app/game/game_scr/game_menu.h \
- sources/app/game/game_scr/game_screen.h sources/app/screens/scr_noen.h \
- sources/app/screens/scr_es35sw_th_sensor.h sources/app/app_modbus_pull.h \
- sources/networks/mbmaster-v2.9.6/mbmaster/include/common/mbtypes.h \
- sources/networks/mbmaster-v2.9.6/mbmaster/include/common/mbportlayer.h \
- sources/app/screens/scr_lhio404_io_device.h \
+ sources/app/screens/scr_idle.h sources/common/view_render.h \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/vector \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/stl_algobase.h \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/functexcept.h \
@@ -162,4 +149,33 @@ build_ak-base-kit-stm32l151-application/scr_idle.o: \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/iterator_concepts.h \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/concepts \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/range_cmp.h \
- /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/vector.tcc
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/vector.tcc \
+ sources/app/screens/scr_info.h sources/app/screens/scr_startup.h \
+ sources/app/game/game_scr/game_screen.h sources/driver/eeprom/eeprom.h \
+ sources/app/app_eeprom.h sources/app/game/game_scr/game_bitmap.h \
+ sources/app/game/space_shooter/ship.h \
+ sources/app/game/space_shooter/asteroid.h \
+ sources/app/game/space_shooter/missile.h \
+ sources/app/game/space_shooter/explosion.h \
+ sources/app/game/game_scr/game_menu.h sources/app/screens/scr_noen.h \
+ sources/app/screens/scr_es35sw_th_sensor.h sources/app/app_modbus_pull.h \
+ sources/networks/mbmaster-v2.9.6/mbmaster/include/common/mbtypes.h \
+ sources/networks/mbmaster-v2.9.6/mbmaster/include/common/mbportlayer.h \
+ sources/app/screens/scr_lhio404_io_device.h \
+ sources/app/game/game_scr/game_screen.h \
+ sources/app/game/game_scr/game_bitmap.h \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/unordered_map \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/ext/aligned_buffer.h \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/stl_function.h \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/backward/binders.h \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/hashtable.h \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/hashtable_policy.h \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/tuple \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/utility \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/stl_relops.h \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/array \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/uses_allocator.h \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/invoke.h \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/limits \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/unordered_map.h \
+ /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/erase_if.h

@@ -42,8 +42,7 @@ void scr_startup_handle(ak_msg_t* msg) {
 		APP_DBG_SIG("AC_DISPLAY_INITIAL\n");
 		view_render.initialize();
 		view_render_display_on();
-		timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_LOGO, AC_DISPLAY_STARTUP_INTERVAL, TIMER_ONE_SHOT);
-		timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_GAME_PLAY, 2000, TIMER_ONE_SHOT);
+		timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_GAME_PLAY, AC_DISPLAY_STARTUP_INTERVAL, TIMER_ONE_SHOT);
 	}
 		break;
 
@@ -62,7 +61,8 @@ void scr_startup_handle(ak_msg_t* msg) {
 
 	case AC_DISPLAY_SHOW_GAME_PLAY: {
 		APP_DBG_SIG("AC_DISPLAY_SHOW_GAME_PLAY\n");
-		SCREEN_TRAN(game_play_handler, &game_screen);
+		//SCREEN_TRAN(game_play_handler, &game_screen);
+		SCREEN_TRAN(game_menu_handler, &game_menu);
 	}
 		break;
 

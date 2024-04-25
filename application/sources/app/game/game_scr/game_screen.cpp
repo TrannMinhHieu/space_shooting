@@ -165,7 +165,7 @@ void game_play_handler(ak_msg_t *msg)
     switch (msg->sig)
     {
     case SCREEN_ENTRY:
-        APP_DBG_SIG("SCREEN_ENTRY\n");
+        APP_DBG_SIG("SCREEN_GAME_PLAY_ENTRY\n");
         task_post_pure_msg(SHIP_TASK_ID, SHIP_INIT_SIG);
         task_post_pure_msg(MISSILE_TASK_ID, MISSILE_INIT_SIG);
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_INIT_SIG);

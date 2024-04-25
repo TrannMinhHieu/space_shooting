@@ -151,7 +151,10 @@ build_ak-base-kit-stm32l151-application/game_screen.o: \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/range_cmp.h \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/vector.tcc \
  sources/app/screens/scr_info.h sources/app/screens/scr_startup.h \
- sources/app/game/game_scr/game_screen.h sources/app/screens/scr_noen.h \
+ sources/app/game/game_scr/game_screen.h \
+ sources/app/game/game_scr/game_menu.h \
+ sources/app/game/game_scr/game_screen.h \
+ sources/app/game/game_scr/game_bitmap.h sources/app/screens/scr_noen.h \
  sources/app/screens/scr_es35sw_th_sensor.h sources/app/app_modbus_pull.h \
  sources/networks/mbmaster-v2.9.6/mbmaster/include/common/mbtypes.h \
  sources/networks/mbmaster-v2.9.6/mbmaster/include/common/mbportlayer.h \

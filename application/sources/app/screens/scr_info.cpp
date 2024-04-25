@@ -42,8 +42,9 @@ void view_scr_info() {
 void scr_info_handle(ak_msg_t* msg) {
 	switch (msg->sig) {
 	case SCREEN_ENTRY: {
-		APP_DBG_SIG("SCREEN_ENTRY\n");
+		APP_DBG_SIG("SCREEN_GAMEW_MENU_ENTRY\n");
 		timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE, AC_DISPLAY_LOGO_INTERVAL, TIMER_ONE_SHOT);
+		
 	}
 		break;
 

@@ -35,8 +35,6 @@ typedef struct {
     bool visible;
     int32_t x, y;
     uint8_t action_image;
-public:
-    void move();
 } Asteroid;
 
 extern Asteroid myAsteroid[NUM_ASTEROIDS];
