@@ -1,6 +1,7 @@
 #include "asteroid.h"
 
 Asteroid myAsteroid[NUM_ASTEROIDS];
+uint8_t tempo = 0;
 
 /**
  * @brief Initialize the asteroids with random x-coordinates, predefined y-coordinates, and default values.
@@ -33,7 +34,7 @@ void asteroid_init()
 
 /**
  * Checks if any of the asteroids in the `myAsteroid` array have moved off the screen by checking their x-coordinates.
- * 
+ *
  * @param asteroid_index The index of the asteroid in the `myAsteroid` array.
  * @return A boolean value indicating whether any of the asteroids have moved off the screen.
  */
@@ -58,6 +59,7 @@ bool asteroid_out_of_screen(uint8_t asteroid_index)
  * @param None
  * @return None
  */
+// TODO: increase tempo for faster asteroid movement
 void asteroid_flight()
 {
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
@@ -65,8 +67,8 @@ void asteroid_flight()
         // Check if the asteroid is visible
         if (myAsteroid[i].visible == WHITE)
         {
-            // Update the x-coordinate by subtracting the ASTEROIDS_SPEED value
-            myAsteroid[i].x -= ASTEROIDS_SPEED;
+            // Update the x-coordinate by subtracting the myShip.fly_speed
+            myAsteroid[i].x -= myShip.fly_speed;
 
             // Increment the action image of the asteroid
             myAsteroid[i].action_image++;

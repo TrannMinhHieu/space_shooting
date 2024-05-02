@@ -20,7 +20,7 @@
 #define NUM_ASTEROIDS               (6)
 #define SIZE_BITMAP_ASTEROIDS_X     (20)
 #define SIZE_BITMAP_ASTEROIDS_Y     (10)
-#define ASTEROIDS_SPEED             (5)
+// #define ASTEROIDS_SPEED             (5)
 
 // Define global asteroid y-coordinates
 #define ASTEROID_0_Y_COORDINATE           (3)

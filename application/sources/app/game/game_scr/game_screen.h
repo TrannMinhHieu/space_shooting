@@ -21,6 +21,7 @@
 
 #include "buzzer.h"
 
+#include "game_highscore.h"
 #include "game_bitmap.h"
 
 #include "ship.h"

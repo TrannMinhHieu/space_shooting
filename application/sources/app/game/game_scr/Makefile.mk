@@ -7,3 +7,4 @@ VPATH += sources/app/game/game_scr
 SOURCES_CPP += sources/app/game/game_scr/game_screen.cpp
 SOURCES_CPP += sources/app/game/game_scr/game_menu.cpp
 SOURCES_CPP += sources/app/game/game_scr/game_bitmap.cpp
+SOURCES_CPP += sources/app/game/game_scr/game_highscore.cpp

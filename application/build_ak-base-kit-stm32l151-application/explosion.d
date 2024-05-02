@@ -154,13 +154,15 @@ build_ak-base-kit-stm32l151-application/explosion.o: \
  /home/hieutran/game/tools/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/c++/10.3.1/bits/vector.tcc \
  sources/app/screens/scr_info.h sources/app/screens/scr_startup.h \
  sources/app/game/game_scr/game_screen.h sources/driver/eeprom/eeprom.h \
- sources/app/app_eeprom.h sources/app/game/game_scr/game_bitmap.h \
+ sources/app/app_eeprom.h sources/app/game/game_scr/game_highscore.h \
+ sources/app/game/game_scr/game_menu.h \
+ sources/app/game/game_scr/game_screen.h \
+ sources/app/game/game_scr/game_bitmap.h \
  sources/app/game/space_shooter/ship.h \
  sources/app/game/space_shooter/asteroid.h \
  sources/app/game/space_shooter/missile.h \
  sources/app/game/space_shooter/explosion.h \
- sources/app/game/game_scr/game_menu.h \
- sources/app/game/game_scr/game_screen.h sources/app/screens/scr_noen.h \
+ sources/app/game/game_scr/game_menu.h sources/app/screens/scr_noen.h \
  sources/app/screens/scr_es35sw_th_sensor.h sources/app/app_modbus_pull.h \
  sources/networks/mbmaster-v2.9.6/mbmaster/include/common/mbtypes.h \
  sources/networks/mbmaster-v2.9.6/mbmaster/include/common/mbportlayer.h \

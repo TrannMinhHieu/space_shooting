@@ -16,7 +16,7 @@ struct menu_items
 static char menu_items_name[NUM_OF_ITEMS][15] =
     {
         "START",      // item_1
-        "INFOMATION", // item_2
+        "HIGH SCORE", // item_2
         "EXIT",       // item_3
 };
 
@@ -105,7 +105,7 @@ void menu_cursor_focus()
         SCREEN_TRAN(game_play_handler, &game_screen);
         break;
     case 1:
-        SCREEN_TRAN(scr_idle_handle, &scr_idle);
+        SCREEN_TRAN(game_highscore_handler, &game_highscore);
         break;
     case 2:
         SCREEN_TRAN(scr_idle_handle, &scr_idle);
@@ -135,13 +135,13 @@ void game_menu_handler(ak_msg_t *msg)
     }
     break;
 
-    case AC_DISPLAY_BUTON_MODE_RELEASED:
+    case AC_DISPLAY_BUTTON_MODE_RELEASED:
     {
         menu_cursor_focus();
     }
     break;
 
-    case AC_DISPLAY_BUTON_UP_RELEASED:
+    case AC_DISPLAY_BUTTON_UP_RELEASED:
     {
         if (screen_menu.location > 0)
         {
@@ -168,7 +168,7 @@ void game_menu_handler(ak_msg_t *msg)
     }
     break;
 
-    case AC_DISPLAY_BUTON_DOWN_RELEASED:
+    case AC_DISPLAY_BUTTON_DOWN_RELEASED:
     {
         if (screen_menu.location < NUM_OF_ITEMS - 1)
         {

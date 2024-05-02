@@ -17,6 +17,7 @@ void ship_init()
     myShip.visible = WHITE;
     myShip.action_image = 1;
     myShip.score = 0;
+    myShip.fly_speed = 2;
 }
 
 /**
@@ -32,6 +33,11 @@ void ship_flight()
     if (myShip.action_image == 4)
     {
         myShip.action_image = 1;
+    }
+
+    if(myShip.score % 200 == 0 && myShip.fly_speed < 8) {
+        myShip.fly_speed++;
+        myShip.score +=10;
     }
 }
 

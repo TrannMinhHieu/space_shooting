@@ -85,7 +85,7 @@ void asteroid_draw()
 
 /**
  * @brief Draw explosion on the screen
- * 
+ *
  */
 void explosion_draw()
 {
@@ -155,6 +155,13 @@ void space_shooting_gameplay()
         view_render.setTextColor(WHITE);
         view_render.setCursor(17, 24);
         view_render.print("YOU LOSE");
+
+        view_render.setTextSize(1);
+        view_render.setCursor(17, 44);
+        view_render.print("YOUR SCORE: ");
+
+        view_render.setCursor(97, 44);
+        view_render.print(game_score.current_score);
     }
 }
 /*****************************************************************************/
@@ -186,6 +193,8 @@ void game_play_handler(ak_msg_t *msg)
         task_post_pure_msg(EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
         break;
     case GAME_EXIT:
+        APP_DBG_SIG("SCREEN_GAME_EXIT\n");
+        game_score.current_score = myShip.score;
         task_post_pure_msg(SHIP_TASK_ID, SHIP_RESET_SIG);
         task_post_pure_msg(MISSILE_TASK_ID, MISSILE_RESET_SIG);
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_RESET_SIG);

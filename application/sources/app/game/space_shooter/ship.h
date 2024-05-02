@@ -26,6 +26,7 @@ typedef struct
 {
     bool visible;
     uint32_t x, y;
+    uint8_t fly_speed;
     uint8_t action_image;
     uint32_t score;
 } Ship;

@@ -8,3 +8,4 @@ SOURCES_CPP += sources/app/game/space_shooter/ship.cpp
 SOURCES_CPP += sources/app/game/space_shooter/missile.cpp
 SOURCES_CPP += sources/app/game/space_shooter/asteroid.cpp
 SOURCES_CPP += sources/app/game/space_shooter/explosion.cpp
+SOURCES_CPP += sources/app/game/space_shooter/tunnel.cpp

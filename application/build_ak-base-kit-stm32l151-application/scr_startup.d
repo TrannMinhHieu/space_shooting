@@ -157,10 +157,12 @@ build_ak-base-kit-stm32l151-application/scr_startup.o: \
  sources/networks/mbmaster-v2.9.6/mbmaster/include/common/mbportlayer.h \
  sources/app/screens/scr_lhio404_io_device.h \
  sources/app/game/game_scr/game_screen.h sources/driver/eeprom/eeprom.h \
- sources/app/app_eeprom.h sources/app/game/game_scr/game_bitmap.h \
+ sources/app/app_eeprom.h sources/app/game/game_scr/game_highscore.h \
+ sources/app/game/game_scr/game_menu.h \
+ sources/app/game/game_scr/game_screen.h \
+ sources/app/game/game_scr/game_bitmap.h \
  sources/app/game/space_shooter/ship.h \
  sources/app/game/space_shooter/asteroid.h \
  sources/app/game/space_shooter/missile.h \
  sources/app/game/space_shooter/explosion.h \
- sources/app/game/game_scr/game_menu.h \
- sources/app/game/game_scr/game_screen.h
+ sources/app/game/game_scr/game_menu.h

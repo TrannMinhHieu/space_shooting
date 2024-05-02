@@ -15,7 +15,11 @@
 #include "task_display.h"
 #include "view_render.h"
 
+#include "eeprom.h"
+#include "app_eeprom.h"
+
 #include "game_screen.h"
+#include "game_highscore.h"
 #include "game_bitmap.h"
 
 extern view_dynamic_t dyn_view_game_menu;
