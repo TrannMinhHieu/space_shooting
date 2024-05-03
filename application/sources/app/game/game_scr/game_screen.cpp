@@ -13,22 +13,46 @@ void info_screen_draw()
 void ship_draw()
 {
     // If ship is not visible, do nothing and return
-    if (myShip.visible != WHITE)
+    if (myShip.ship.visible != WHITE)
     {
         return;
     }
-    switch (myShip.action_image)
+    switch (myShip.ship.action_image)
     {
     case 1:
-        view_render.drawBitmap(myShip.x, myShip.y, bitmap_space_ship_1,
+        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, bitmap_space_ship_1,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
         break;
     case 2:
-        view_render.drawBitmap(myShip.x, myShip.y, bitmap_space_ship_2,
+        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, bitmap_space_ship_2,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
         break;
     case 3:
-        view_render.drawBitmap(myShip.x, myShip.y, bitmap_space_ship_3,
+        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, bitmap_space_ship_3,
+                               SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
+        break;
+    }
+}
+
+void enemy_ship_draw()
+{
+    if (myEnemyShip.ship.visible != WHITE)
+    {
+        return;
+    }
+
+    switch (myEnemyShip.ship.action_image)
+    {
+    case 1:
+        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, bitmap_space_ship_1,
+                               SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
+        break;
+    case 2:
+        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, bitmap_space_ship_2,
+                               SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
+        break;
+    case 3:
+        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, bitmap_space_ship_3,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
         break;
     }
@@ -143,6 +167,7 @@ void space_shooting_gameplay()
     if (game_state == GAME_PLAY)
     {
         ship_draw();
+        enemy_ship_draw();
         asteroid_draw();
         missile_draw();
         explosion_draw();
@@ -178,7 +203,9 @@ void game_play_handler(ak_msg_t *msg)
     {
     case SCREEN_ENTRY:
         APP_DBG_SIG("SCREEN_GAME_PLAY_ENTRY\n");
-        task_post_pure_msg(SHIP_TASK_ID, SHIP_INIT_SIG);
+        task_post_pure_msg(SHIP_PLAYER_TASK_ID, SHIP_INIT_SIG);
+        task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_INIT_SIG);
+        task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_TAKEOFF_SIG);
         task_post_pure_msg(MISSILE_TASK_ID, MISSILE_INIT_SIG);
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_INIT_SIG);
         task_post_pure_msg(EXPLOSION_TASK_ID, EXPLOSION_INIT_SIG);
@@ -186,16 +213,17 @@ void game_play_handler(ak_msg_t *msg)
         game_state = GAME_PLAY;
         break;
     case GAMEPLAY_TIME_TICK:
-        task_post_pure_msg(SHIP_TASK_ID, SHIP_FLIGHT_SIG);
+        task_post_pure_msg(SHIP_PLAYER_TASK_ID, SHIP_FLIGHT_SIG);
         task_post_pure_msg(MISSILE_TASK_ID, MISSILE_FLIGHT);
-        task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_FLIGHT_SIG);
-        task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_HIT_SIG);
+        task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_FLIGHT_SIG);
+        //task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_FLIGHT_SIG);
+        //task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_HIT_SIG);
         task_post_pure_msg(EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
         break;
     case GAME_EXIT:
         APP_DBG_SIG("SCREEN_GAME_EXIT\n");
         game_score.current_score = myShip.score;
-        task_post_pure_msg(SHIP_TASK_ID, SHIP_RESET_SIG);
+        task_post_pure_msg(SHIP_PLAYER_TASK_ID, SHIP_RESET_SIG);
         task_post_pure_msg(MISSILE_TASK_ID, MISSILE_RESET_SIG);
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_RESET_SIG);
         task_post_pure_msg(EXPLOSION_TASK_ID, EXPLOSION_RESET_SIG);

@@ -38,7 +38,7 @@ void asteroid_init()
  * @param asteroid_index The index of the asteroid in the `myAsteroid` array.
  * @return A boolean value indicating whether any of the asteroids have moved off the screen.
  */
-bool asteroid_out_of_screen(uint8_t asteroid_index)
+bool is_asteroid_out_of_screen(uint8_t asteroid_index)
 {
     // Check if the x-coordinate plus the width of the current asteroid is less than 0.
     if (myAsteroid[asteroid_index].x + SIZE_BITMAP_ASTEROIDS_X < 0)
@@ -80,7 +80,7 @@ void asteroid_flight()
             }
 
             // Check if the asteroid has moved off the screen
-            if (asteroid_out_of_screen(i))
+            if (is_asteroid_out_of_screen(i))
             {
                 APP_DBG_SIG("Asteroid out of range\n");
 
@@ -99,10 +99,11 @@ void asteroid_flight()
  */
 bool asteroid_missile_collision(uint8_t asteroid_index)
 {
-    const int MISSILE_Y_OFFSET = 2;
     // Check if the missile is visible and its x-coordinate plus its width is greater than the x-coordinate of the asteroid.
     // Check if the missile's y-coordinate minus 2 is equal to the y-coordinate of the asteroid.
-    if (myMissile.visible == WHITE && myMissile.x + SIZE_MISSILE_BITMAP_X > myAsteroid[asteroid_index].x && myMissile.y - MISSILE_Y_OFFSET == myAsteroid[asteroid_index].y)
+    if (myMissile.visible == WHITE
+        && (int32_t)(myMissile.x + SIZE_MISSILE_BITMAP_X) > myAsteroid[asteroid_index].x
+        && (int32_t)(myMissile.y - MISSILE_Y_OFFSET_FOR_ASTEROID) == myAsteroid[asteroid_index].y)
     {
         return true; // Collision occurred
     }
@@ -117,10 +118,11 @@ bool asteroid_missile_collision(uint8_t asteroid_index)
  */
 bool asteroid_ship_collision(uint8_t asteroid_index)
 {
-    const int SHIP_Y_OFFSET = 3;
     // Check if the ship is visible and its x-coordinate plus its width is greater than the x-coordinate of the asteroid
     // Also, check if the ship's y-coordinate is equal to the y-coordinate of the asteroid minus 3
-    if (myShip.visible == WHITE && myShip.x + SIZE_BITMAP_SHIP_X > myAsteroid[asteroid_index].x && myShip.y == myAsteroid[asteroid_index].y - SHIP_Y_OFFSET)
+    if (myShip.ship.visible == WHITE
+        && (int32_t)(myShip.ship.x + SIZE_BITMAP_SHIP_X) > myAsteroid[asteroid_index].x
+        && (int32_t)(myShip.ship.y) == myAsteroid[asteroid_index].y - SHIP_Y_OFFSET_FOR_ASTEROID)
     {
         return true; // Collision occurred
     }
@@ -152,7 +154,7 @@ void asteroid_hit()
             myMissile.visible = BLACK;
             myMissile.x = 0;
             // Send message to increment score
-            task_post_pure_msg(SHIP_TASK_ID, MISSILE_DESTROY_SIG);
+            task_post_pure_msg(SHIP_PLAYER_TASK_ID, MISSILE_DESTROY_SIG);
 
             // Move the asteroid to a new random position
             myAsteroid[i].x = (rand() % 39) + 130;
@@ -165,21 +167,21 @@ void asteroid_hit()
             APP_DBG_SIG("Asteroid no %d hit by ship\n", i);
             // Update explosion position with ship's coordinates
             myExplosion.visible = WHITE;
-            myExplosion.x = myShip.x;
-            myExplosion.y = myShip.y;
+            myExplosion.x = myShip.ship.x;
+            myExplosion.y = myShip.ship.y;
 
             // Hide the ship
-            myShip.visible = BLACK;
+            myShip.ship.visible = BLACK;
 
             // If ship is hidden, exit the game
-            if (myShip.visible == BLACK)
+            if (myShip.ship.visible == BLACK)
             {
                 task_post_pure_msg(GAMEPLAY_TASK_ID, GAME_EXIT);
             }
             else
             {
                 // Send messages to handle ship being hit and explode the asteroid
-                task_post_pure_msg(SHIP_TASK_ID, SHIP_HIT_SIG);
+                task_post_pure_msg(SHIP_PLAYER_TASK_ID, SHIP_HIT_SIG);
                 task_post_pure_msg(EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
             }
         }

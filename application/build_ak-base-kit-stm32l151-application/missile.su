@@ -1,6 +1,0 @@
-sources/app/game/space_shooter/missile.cpp:13:6:void missile_inint()	8	static
-sources/app/game/space_shooter/missile.cpp:28:6:bool is_armed()	8	static
-sources/app/game/space_shooter/missile.cpp:47:6:void missile_fired()	8	static
-sources/app/game/space_shooter/missile.cpp:69:6:void missile_flight()	16	static
-sources/app/game/space_shooter/missile.cpp:94:6:void missile_reset()	8	static
-sources/app/game/space_shooter/missile.cpp:108:6:void missile_handler(ak_msg_t*)	0	static

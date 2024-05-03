@@ -30,10 +30,10 @@ bool is_armed()
     // If the missile is visible it is not armed
     if (myMissile.visible == BLACK)
     {
+        APP_DBG_SIG("Missile is armed\n");
         return true; // It is armed
     }
-    APP_DBG_SIG("Missile is armed\n");
-    return false; // Otherwise, it is armed
+    return false; // Otherwise, it is not armed
 }
 
 /**
@@ -46,7 +46,6 @@ bool is_armed()
  */
 void missile_fired()
 {
-    const uint8_t SHIP_Y_OFFSET = 5;
     // Check if the missile is armed
     if (!is_armed())
     {
@@ -54,7 +53,7 @@ void missile_fired()
     }
     APP_DBG_SIG("Missile fired\n");
     // Set the y-coordinate of the missile
-    myMissile.y = myShip.y + SHIP_Y_OFFSET;
+    myMissile.y = myShip.ship.y + SHIP_Y_OFFSET_FOR_MISSILES;
     myMissile.visible = WHITE;
 }
 
@@ -71,12 +70,12 @@ void missile_flight()
     if (myMissile.visible == WHITE)
     {
         APP_DBG_SIG("Missile in flight\n");
-        if (myMissile.x < MAX_MISSILE_DISTANCE)
+        if (myMissile.x < MAX_PLAYER_MISSILE_DISTANCE)
         {
-            myMissile.x += MISSILE_SPEED; // Move the missile by "MISSILE_SPEED" pixels
+            myMissile.x += PLAYER_MISSILE_SPEED; // Move the missile by "PLAYER_MISSILE_SPEED" pixels
         }
         // If the missile fly to "MAX_MISSILE_DISTANCE", reset it
-        else if (myMissile.x >= MAX_MISSILE_DISTANCE)
+        else if (myMissile.x >= MAX_PLAYER_MISSILE_DISTANCE)
         {
             myMissile.visible = BLACK;
             is_armed(); // Display missile armed message

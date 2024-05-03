@@ -30,6 +30,10 @@
 #define ASTEROID_4_Y_COORDINATE           (43)
 #define ASTEROID_5_Y_COORDINATE           (53)
 
+// Define offsets
+const int MISSILE_Y_OFFSET_FOR_ASTEROID = 2;
+const int SHIP_Y_OFFSET_FOR_ASTEROID = 3;
+
 // Set screen left boundary
 const int SCREEN_LEFT_BOUNDARY = 0;
 

@@ -18,10 +18,14 @@
 #include "game_screen.h"
 
 // Global missile-related constants
-#define MAX_MISSILE_DISTANCE    (120)
-#define MISSILE_SPEED           (5)
-#define SIZE_MISSILE_BITMAP_X   (10)
-#define SIZE_MISSILE_BITMAP_Y   (5)
+#define MAX_PLAYER_MISSILE_DISTANCE     (120)
+#define PLAYER_MISSILE_SPEED            (5)
+#define SIZE_MISSILE_BITMAP_X           (10)
+#define SIZE_MISSILE_BITMAP_Y           (5)
+
+#define MAX_NUM_OF_ENEMY_MISSILE        (5)
+
+const uint8_t SHIP_Y_OFFSET_FOR_MISSILES = 5;
 
 typedef struct 
 {
@@ -30,6 +34,9 @@ typedef struct
     uint8_t action_image;
 } Missile;
 
+struct EnemyMissile : Missile {};
+
+extern EnemyMissile myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
 extern Missile myMissile;
 
 #endif /* __MISSILE_H__ */

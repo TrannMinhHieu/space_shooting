@@ -27,7 +27,8 @@ const task_t app_task_table[] = {
 	/*************************************************************************/
 	/* GAME TASK */
 	/*************************************************************************/
-	{SHIP_TASK_ID				,	TASK_PRI_LEVEL_4	,	ship_handler		},
+	{SHIP_PLAYER_TASK_ID		,	TASK_PRI_LEVEL_4	,	ship_player_handler	},
+	{SHIP_ENEMY_TASK_ID			,	TASK_PRI_LEVEL_4	,	enemy_ship_handler	},
 	{MISSILE_TASK_ID			,	TASK_PRI_LEVEL_4	,	missile_handler		},
 	{ASTEROID_TASK_ID			,	TASK_PRI_LEVEL_4	,	asteroid_handler	},
 	{EXPLOSION_TASK_ID			,	TASK_PRI_LEVEL_4	,	explosion_handler	},

@@ -28,7 +28,8 @@ enum {
 	AC_TASK_DISPLAY_ID,
 
 	/* GAME TASKS*/
-	SHIP_TASK_ID,
+	SHIP_PLAYER_TASK_ID,
+	SHIP_ENEMY_TASK_ID,
 	MISSILE_TASK_ID,
 	ASTEROID_TASK_ID,
 	EXPLOSION_TASK_ID,
@@ -87,7 +88,8 @@ extern void task_display(ak_msg_t*);
 extern void task_zigbee(ak_msg_t*);
 
 /* GAME TASKS */
-extern void ship_handler(ak_msg_t*);
+extern void ship_player_handler(ak_msg_t*);
+extern void enemy_ship_handler(ak_msg_t*);
 extern void asteroid_handler(ak_msg_t*);
 extern void missile_handler(ak_msg_t*);
 extern void explosion_handler(ak_msg_t*);

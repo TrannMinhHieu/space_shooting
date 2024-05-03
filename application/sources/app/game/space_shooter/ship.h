@@ -26,11 +26,26 @@ typedef struct
 {
     bool visible;
     uint32_t x, y;
-    uint8_t fly_speed;
     uint8_t action_image;
-    uint32_t score;
+    // uint8_t fly_speed;
+    // uint32_t score;
 } Ship;
 
-extern Ship myShip;
+typedef struct
+{
+    Ship ship;
+    uint8_t fly_speed;
+    uint32_t score;
+} PlayerShip;
+
+typedef struct
+{
+    Ship ship;
+    uint8_t health;
+    uint8_t num_missiles;
+} EnemyShip;
+
+extern PlayerShip myShip;
+extern EnemyShip myEnemyShip;
 
 #endif /* __SHIP_H__ */

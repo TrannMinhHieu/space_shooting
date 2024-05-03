@@ -1,7 +1,0 @@
-sources/app/game/space_shooter/ship.cpp:12:6:void ship_init()	8	static
-sources/app/game/space_shooter/ship.cpp:29:6:void ship_flight()	0	static
-sources/app/game/space_shooter/ship.cpp:50:6:void ship_fire()	8	static
-sources/app/game/space_shooter/ship.cpp:63:6:void ship_move_up()	8	static
-sources/app/game/space_shooter/ship.cpp:78:6:void ship_move_down()	8	static
-sources/app/game/space_shooter/ship.cpp:93:6:void ship_reset()	8	static
-sources/app/game/space_shooter/ship.cpp:110:6:void ship_handler(ak_msg_t*)	0	static

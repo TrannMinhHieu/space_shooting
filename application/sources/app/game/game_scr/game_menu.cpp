@@ -96,7 +96,6 @@ void menu_cursor()
     scroll_bar.axis_y = MENU_SCREEN_VISIBLE_HEIGHT * screen_menu.location / NUM_OF_ITEMS;
 }
 
-// TODO: implement high score
 void menu_cursor_focus()
 {
     switch (screen_menu.location)

@@ -1,4 +1,0 @@
-sources/app/game/space_shooter/explosion.cpp:15:6:void explosion_init()	8	static
-sources/app/game/space_shooter/explosion.cpp:33:6:void explosion_explode()	8	static
-sources/app/game/space_shooter/explosion.cpp:56:6:void explosion_reset()	8	static
-sources/app/game/space_shooter/explosion.cpp:70:6:void explosion_handler(ak_msg_t*)	0	static
