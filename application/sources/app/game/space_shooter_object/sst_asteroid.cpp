@@ -328,7 +328,7 @@ bool asteroid_ship_collision(uint8_t asteroid_index)
     }
 
     // Check if the ship and asteroid have the same y-coordinate
-    if (myShip.ship.y != (uint32_t)myAsteroid[asteroid_index].y)
+    if (myShip.ship.y + SHIP_Y_OFFSET_FOR_ASTEROID != (uint32_t)myAsteroid[asteroid_index].y)
     {
         return false;
     }
