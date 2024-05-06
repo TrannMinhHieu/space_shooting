@@ -1,4 +1,4 @@
-#include "game_highscore.h"
+#include "sst_game_highscore.h"
 
 game_score_t game_score;
 

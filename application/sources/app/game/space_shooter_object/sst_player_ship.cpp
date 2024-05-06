@@ -1,4 +1,4 @@
-#include "ship.h"
+#include "sst_ship.h"
 
 PlayerShip myShip;
 
@@ -8,7 +8,7 @@ PlayerShip myShip;
  * @param None
  * @return None
  */
-void ship_init()
+void player_ship_init()
 {
     APP_DBG_SIG("Ship init\n");
     myShip.ship.x = SHIP_X_COORDINATE;
@@ -25,7 +25,7 @@ void ship_init()
  * @param None
  * @return None
  */
-void ship_flight()
+void player_ship_flight()
 {
     // Cycle through the ship animation
     myShip.ship.action_image++;
@@ -47,11 +47,11 @@ void ship_flight()
  * @param None
  * @return None
  */
-void ship_fire()
+void player_ship_fire()
 {
     // Send message to fire a missile
     APP_DBG_SIG("Ship fire missile\n");
-    task_post_pure_msg(MISSILE_TASK_ID, MISSILE_FIRE_SIG);
+    task_post_pure_msg(PLAYER_MISSILE_TASK_ID, MISSILE_FIRE_SIG);
 }
 
 /**
@@ -60,7 +60,7 @@ void ship_fire()
  * @param None
  * @return None
  */
-void ship_move_up()
+void player_ship_move_up()
 {
     APP_DBG_SIG("Ship move up\n");
     if (myShip.ship.y > 0)
@@ -75,7 +75,7 @@ void ship_move_up()
  * @param None
  * @return None
  */
-void ship_move_down()
+void player_ship_move_down()
 {
     APP_DBG_SIG("Ship move down\n");
     if (myShip.ship.y < LCD_HEIGHT - SHIP_Y_STEP)
@@ -90,7 +90,7 @@ void ship_move_down()
  * @param None
  * @return None
  */
-void ship_reset()
+void player_ship_reset()
 {
     APP_DBG_SIG("Ship reset\n");
     myShip.ship.x = SHIP_X_COORDINATE;
@@ -107,31 +107,32 @@ void ship_reset()
  * @param None
  * @return None
  */
-void ship_player_handler(ak_msg_t *msg)
+void player_ship_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {
     case SHIP_INIT_SIG:
-        ship_init();
+        player_ship_init();
         break;
     case SHIP_FLIGHT_SIG:
-        ship_flight();
+        player_ship_flight();
         break;
     case SHIP_FIRE_SIG:
-        ship_fire();
+        player_ship_fire();
         break;
     case SHIP_MOVE_UP_SIG:
-        ship_move_up();
+        player_ship_move_up();
         break;
     case SHIP_MOVE_DOWN_SIG:
-        ship_move_down();
+        player_ship_move_down();
         break;
     case MISSILE_DESTROY_SIG:
+    // TODO: Handle point values data sent by asteroid and ene
         myShip.score += 10;
         APP_DBG_SIG("Ship score %d\n", myShip.score);
         break;
     case SHIP_RESET_SIG:
-        ship_reset();
+        player_ship_reset();
         break;
     default:
         break;

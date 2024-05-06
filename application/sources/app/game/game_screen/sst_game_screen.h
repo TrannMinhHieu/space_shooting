@@ -21,13 +21,13 @@
 
 #include "buzzer.h"
 
-#include "game_highscore.h"
-#include "game_bitmap.h"
+#include "sst_game_highscore.h"
+#include "sst_game_bitmap.h"
 
-#include "ship.h"
-#include "asteroid.h"
-#include "missile.h"
-#include "explosion.h"
+#include "sst_ship.h"
+#include "sst_asteroid.h"
+#include "sst_missile.h"
+#include "sst_explosion.h"
 
 #define GAME_OFF    (0)
 #define GAME_PLAY   (1)

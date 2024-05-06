@@ -28,12 +28,12 @@ enum {
 	AC_TASK_DISPLAY_ID,
 
 	/* GAME TASKS*/
-	SHIP_PLAYER_TASK_ID,
-	SHIP_ENEMY_TASK_ID,
-	MISSILE_TASK_ID,
-	ENEMY_MISSILE_TASK_ID,
 	ASTEROID_TASK_ID,
 	EXPLOSION_TASK_ID,
+	PLAYER_SHIP_TASK_ID,
+	PLAYER_MISSILE_TASK_ID,
+	ENEMY_SHIP_TASK_ID,
+	ENEMY_MISSILE_TASK_ID,
 	GAMEPLAY_TASK_ID,
 
 #if defined(TASK_ZIGBEE_EN)
@@ -89,12 +89,19 @@ extern void task_display(ak_msg_t*);
 extern void task_zigbee(ak_msg_t*);
 
 /* GAME TASKS */
-extern void ship_player_handler(ak_msg_t*);
-extern void enemy_ship_handler(ak_msg_t*);
+// Common object handler
 extern void asteroid_handler(ak_msg_t*);
-extern void missile_handler(ak_msg_t*);
-extern void enemy_missile_handler(ak_msg_t*);
 extern void explosion_handler(ak_msg_t*);
+
+// Player object handler
+extern void player_ship_handler(ak_msg_t*);
+extern void player_missile_handler(ak_msg_t*);
+
+// Enemy object handler
+extern void enemy_missile_handler(ak_msg_t*);
+extern void enemy_ship_handler(ak_msg_t*);
+
+// Game play handler
 extern void game_play_handler(ak_msg_t*);
 
 /* RF24 NETWORK TASK */

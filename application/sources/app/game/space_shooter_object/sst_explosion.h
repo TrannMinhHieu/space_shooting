@@ -13,7 +13,7 @@
 #include "task_list.h"
 #include "task_display.h"
 
-#include "game_screen.h"
+#include "sst_game_screen.h"
 
 #define SIZE_BITMAP_EXPLOSION_1_X     (15)
 #define SIZE_BITMAP_EXPLOSION_1_Y     (15)

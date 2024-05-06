@@ -1,4 +1,4 @@
-#include "ship.h"
+#include "sst_ship.h"
 
 EnemyShip myEnemyShip;
 
@@ -35,17 +35,17 @@ int8_t randomize_enemy_ship_control()
     // 7% chance to fire
     if (random < 5)
     {
-        task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_MOVE_SIG);
+        task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_MOVE_SIG);
         return MOVE_UP;
     }
     else if (random < 10)
     {
-        task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_MOVE_SIG);
+        task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_MOVE_SIG);
         return MOVE_DOWN;
     }
     else if (random < 17)
     {
-        task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_FIRE_SIG);
+        task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_FIRE_SIG);
         return FIRE;
     }
 
@@ -102,8 +102,9 @@ void enemy_ship_health_control()
 {
     if(myEnemyShip.health <= 0) {
         myEnemyShip.ship.visible = BLACK;
+        // TODO: Send message with points value data for player ship
         myShip.score += 100;
-        task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_RESET_SIG);
+        task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_RESET_SIG);
         task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_RESET_SIG);
         APP_DBG_SIG("Enemy ship dead\n");
         game_stage = GAME_STAGE_ASTEROID_FEILD;

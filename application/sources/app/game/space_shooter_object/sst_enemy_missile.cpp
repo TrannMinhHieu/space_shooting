@@ -1,5 +1,4 @@
-#include "missile.h"
-#include "ship.h"
+#include "sst_missile.h"
 
 Missile myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
 

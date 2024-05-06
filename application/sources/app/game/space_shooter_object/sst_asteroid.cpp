@@ -1,7 +1,11 @@
-#include "asteroid.h"
+#include "sst_asteroid.h"
 
 Asteroid myAsteroid[NUM_ASTEROIDS];
 uint16_t asteroid_count = 0;
+
+bool is_asteroid_out_of_screen();
+bool asteroid_missile_collision(uint8_t asteroid_index);
+bool asteroid_ship_collision(uint8_t asteroid_index);
 
 /**
  * @brief Initialize the asteroids with random x-coordinates, predefined y-coordinates, and default values.
@@ -28,38 +32,19 @@ void asteroid_init()
 
         // Set default values for visibility and action image
         myAsteroid[i].visible = WHITE;
-        myAsteroid[i].action_image = 1;
+        myAsteroid[i].action_image = rand() % 3 + 1;
     }
-}
-
-/**
- * Checks if any of the asteroids in the `myAsteroid` array have moved off the screen by checking their x-coordinates.
- *
- * @param asteroid_index The index of the asteroid in the `myAsteroid` array.
- * @return A boolean value indicating whether any of the asteroids have moved off the screen.
- */
-bool is_asteroid_out_of_screen(uint8_t asteroid_index)
-{
-    // Check if the x-coordinate plus the width of the current asteroid is less than 0.
-    if (myAsteroid[asteroid_index].x + SIZE_BITMAP_ASTEROIDS_X < 0)
-    {
-        // If an asteroid's x-coordinate is less than 0, return true to indicate that it has moved off the screen.
-        return true;
-    }
-    // If none of the asteroids have moved off the screen, return false.
-    return false;
 }
 
 /**
  * @brief Update the position and action image of each asteroid in the `myAsteroid` array.
  *
- * This function updates the position with default flight speed, and action image of each asteroid in the `myAsteroid` array.
- * It also checks if an asteroid has moved off the screen.
+ * This function updates the position with player ship flight speed and action image of each asteroid in the `myAsteroid` array.
+ * It also checks if an asteroid has moved off the screen and repositions it randomly within a specific range. 
  *
  * @param None
  * @return None
  */
-// TODO: increase tempo for faster asteroid movement
 void asteroid_flight()
 {
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
@@ -92,50 +77,12 @@ void asteroid_flight()
 }
 
 /**
- * Checks if a missile has collided with an asteroid.
- *
- * @param asteroid_index The index of the asteroid in the `myAsteroid` array.
- * @return True if a collision has occurred, False otherwise.
- */
-bool asteroid_missile_collision(uint8_t asteroid_index)
-{
-    // Check if the missile is visible and its x-coordinate plus its width is greater than the x-coordinate of the asteroid.
-    // Check if the missile's y-coordinate minus 2 is equal to the y-coordinate of the asteroid.
-    if (myMissile.visible == WHITE
-        && (int32_t)(myMissile.x + SIZE_MISSILE_BITMAP_X) > myAsteroid[asteroid_index].x
-        && (int32_t)(myMissile.y - MISSILE_Y_OFFSET_FOR_ASTEROID) == myAsteroid[asteroid_index].y)
-    {
-        return true; // Collision occurred
-    }
-    return false; // No collision occurred
-}
-
-/**
- * Checks if the ship has collided with an asteroid.
- *
- * @param asteroid_index The index of the asteroid in the myAsteroid array.
- * @return true if a collision between the ship and the asteroid has occurred, false otherwise.
- */
-bool asteroid_ship_collision(uint8_t asteroid_index)
-{
-    // Check if the ship is visible and its x-coordinate plus its width is greater than the x-coordinate of the asteroid
-    // Also, check if the ship's y-coordinate is equal to the y-coordinate of the asteroid minus 3
-    if (myShip.ship.visible == WHITE
-        && (int32_t)(myShip.ship.x + SIZE_BITMAP_SHIP_X) > myAsteroid[asteroid_index].x
-        && (int32_t)(myShip.ship.y) == myAsteroid[asteroid_index].y - SHIP_Y_OFFSET_FOR_ASTEROID)
-    {
-        return true; // Collision occurred
-    }
-    return false; // No collision occurred
-}
-
-/**
  * @brief Handle the collision of an asteroid with a missile or a ship.
  *
  * @param None
  * @return None
  */
-void asteroid_hit()
+void asteroid_hit_handler()
 {
     // Iterate through each asteroid in the myAsteroid array
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
@@ -151,10 +98,12 @@ void asteroid_hit()
             myExplosion.y = myAsteroid[i].y;
 
             // Missile visibility is set to black
+            // Reset position of missile
             myMissile.visible = BLACK;
             myMissile.x = 0;
             // Send message to increment score
-            task_post_pure_msg(SHIP_PLAYER_TASK_ID, MISSILE_DESTROY_SIG);
+            // TODO:Send message with points value data for player ship
+            task_post_pure_msg(PLAYER_SHIP_TASK_ID, MISSILE_DESTROY_SIG);
 
             // Move the asteroid to a new random position
             myAsteroid[i].x = (rand() % 39) + 130;
@@ -181,7 +130,7 @@ void asteroid_hit()
             else
             {
                 // Send messages to handle ship being hit and explode the asteroid
-                task_post_pure_msg(SHIP_PLAYER_TASK_ID, SHIP_HIT_SIG);
+                task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_HIT_SIG);
                 task_post_pure_msg(EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
             }
         }
@@ -204,7 +153,7 @@ void asteroid_field_control()
             asteroid_count = 0;
             APP_DBG_SIG("Asteroid count = %d\n", asteroid_count);
             game_stage = GAME_STAGE_SHIP_FIGHT;
-            task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_TAKEOFF_SIG);
+            task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_ENEMY_TAKEOFF_SIG);
             break;
         }
     }
@@ -255,7 +204,7 @@ void asteroid_handler(ak_msg_t *msg)
         break;
     case SHIP_HIT_SIG:
     case MISSILE_HIT_SIG:
-        asteroid_hit();
+        asteroid_hit_handler();
         break;
     case ASTEROID_RESET_SIG:
         asteroid_reset();
@@ -264,4 +213,60 @@ void asteroid_handler(ak_msg_t *msg)
         // Do nothing for unknown signals
         break;
     }
+}
+
+// Non-void functions
+/**
+ * Checks if any of the asteroids in the `myAsteroid` array have moved off the screen by checking their x-coordinates.
+ *
+ * @param asteroid_index The index of the asteroid in the `myAsteroid` array.
+ * @return A boolean value indicating whether any of the asteroids have moved off the screen.
+ */
+bool is_asteroid_out_of_screen(uint8_t asteroid_index)
+{
+    // Check if the x-coordinate plus the width of the current asteroid is less than SCREEN_LEFT_BOUNDARY (0).
+    if (myAsteroid[asteroid_index].x + SIZE_BITMAP_ASTEROIDS_X < SCREEN_LEFT_BOUNDARY)
+    {
+        // If an asteroid's x-coordinate is less than 0, return true to indicate that it has moved off the screen.
+        return true;
+    }
+    // If none of the asteroids have moved off the screen, return false.
+    return false;
+}
+/**
+ * Checks if a missile has collided with an asteroid.
+ *
+ * @param asteroid_index The index of the asteroid in the `myAsteroid` array.
+ * @return True if a collision has occurred, False otherwise.
+ */
+bool asteroid_missile_collision(uint8_t asteroid_index)
+{
+    // Check if the missile is visible and its x-coordinate plus its width is greater than the x-coordinate of the asteroid.
+    // Check if the missile's y-coordinate minus 2 is equal to the y-coordinate of the asteroid.
+    if (myMissile.visible == WHITE
+        && (int32_t)(myMissile.x + SIZE_MISSILE_BITMAP_X) > myAsteroid[asteroid_index].x
+        && (int32_t)(myMissile.y - MISSILE_Y_OFFSET_FOR_ASTEROID) == myAsteroid[asteroid_index].y)
+    {
+        return true; // Collision occurred
+    }
+    return false; // No collision occurred
+}
+
+/**
+ * Checks if the ship has collided with an asteroid.
+ *
+ * @param asteroid_index The index of the asteroid in the myAsteroid array.
+ * @return true if a collision between the ship and the asteroid has occurred, false otherwise.
+ */
+bool asteroid_ship_collision(uint8_t asteroid_index)
+{
+    // Check if the ship is visible and its x-coordinate plus its width is greater than the x-coordinate of the asteroid
+    // Also, check if the ship's y-coordinate is equal to the y-coordinate of the asteroid minus 3
+    if (myShip.ship.visible == WHITE
+        && (int32_t)(myShip.ship.x + SIZE_BITMAP_SHIP_X) > myAsteroid[asteroid_index].x
+        && (int32_t)(myShip.ship.y) == myAsteroid[asteroid_index].y - SHIP_Y_OFFSET_FOR_ASTEROID)
+    {
+        return true; // Collision occurred
+    }
+    return false; // No collision occurred
 }

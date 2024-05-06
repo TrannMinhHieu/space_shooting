@@ -1,4 +1,4 @@
-#include "explosion.h"
+#include "sst_explosion.h"
 
 Explosion myExplosion;
 

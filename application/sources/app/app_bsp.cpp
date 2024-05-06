@@ -10,7 +10,7 @@
 #include "task_list.h"
 #include "task_list_if.h"
 
-#include "game_screen.h"
+#include "sst_game_screen.h"
 
 button_t btn_mode;
 button_t btn_up;
@@ -33,7 +33,7 @@ void btn_mode_callback(void* b) {
 	case BUTTON_SW_STATE_RELEASED: {
 		APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_RELEASED\n");
 		if(game_state == GAME_PLAY) {
-			task_post_pure_msg(SHIP_PLAYER_TASK_ID, SHIP_FIRE_SIG);
+			task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_FIRE_SIG);
 		} else {
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_MODE_RELEASED);
 		}
@@ -62,7 +62,7 @@ void btn_up_callback(void* b) {
 	case BUTTON_SW_STATE_RELEASED: {
 		APP_DBG("[btn_up_callback] BUTTON_SW_STATE_RELEASED\n");
 		if(game_state == GAME_PLAY) {
-			task_post_pure_msg(SHIP_PLAYER_TASK_ID, SHIP_MOVE_UP_SIG);
+			task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_MOVE_UP_SIG);
 		} else {
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_UP_RELEASED);
 		}
@@ -90,7 +90,7 @@ void btn_down_callback(void* b) {
 	case BUTTON_SW_STATE_RELEASED: {
 		APP_DBG("[btn_down_callback] BUTTON_SW_STATE_RELEASED\n");
 		if (game_state == GAME_PLAY) {
-			task_post_pure_msg(SHIP_PLAYER_TASK_ID, SHIP_MOVE_DOWN_SIG);
+			task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_MOVE_DOWN_SIG);
 		} else {
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_DOWN_RELEASED);
 		}

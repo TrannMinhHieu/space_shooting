@@ -1,4 +1,4 @@
-#include "game_bitmap.h"
+#include "sst_game_bitmap.h"
 
 
 /**

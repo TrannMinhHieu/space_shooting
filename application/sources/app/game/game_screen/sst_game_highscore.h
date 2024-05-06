@@ -18,7 +18,7 @@
 #include "task_display.h"
 #include "view_render.h"
 
-#include "game_menu.h"
+#include "sst_game_menu.h"
 
 extern view_dynamic_t dyn_view_highscore;
 extern view_screen_t game_highscore;

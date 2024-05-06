@@ -1,5 +1,5 @@
-#ifndef __SHIP_H__
-#define __SHIP_H__
+#ifndef __SST_SHIP_H__
+#define __SST_SHIP_H__
 
 #include <stdio.h>
 
@@ -13,7 +13,7 @@
 #include "task_list.h"
 #include "task_display.h"
 
-#include "game_screen.h"
+#include "sst_game_screen.h"
 
 // Global ship-related constants
 #define SHIP_Y_STEP             (10)
@@ -29,8 +29,6 @@ typedef struct
     bool visible;
     uint32_t x, y;
     uint8_t action_image;
-    // uint8_t fly_speed;
-    // uint32_t score;
 } Ship;
 
 typedef struct
@@ -50,4 +48,4 @@ typedef struct
 extern PlayerShip myShip;
 extern EnemyShip myEnemyShip;
 
-#endif /* __SHIP_H__ */
+#endif /* __SST_SHIP_H__ */

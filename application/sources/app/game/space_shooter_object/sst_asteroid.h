@@ -13,23 +13,23 @@
 #include "task_list.h"
 #include "task_display.h"
 
-#include "game_screen.h"
+#include "sst_game_screen.h"
 
 #include "buzzer.h"
 
-#define NUM_ASTEROIDS               (6)
-#define SIZE_BITMAP_ASTEROIDS_X     (20)
-#define SIZE_BITMAP_ASTEROIDS_Y     (10)
-// #define ASTEROIDS_SPEED             (5)
+#define NUM_ASTEROIDS                       (6)
+#define SIZE_BITMAP_ASTEROIDS_X             (20)
+#define SIZE_BITMAP_ASTEROIDS_Y             (10)
 
 // Define global asteroid y-coordinates
-#define ASTEROID_0_Y_COORDINATE           (3)
-#define ASTEROID_1_Y_COORDINATE           (13)
-#define ASTEROID_2_Y_COORDINATE           (23)
-#define ASTEROID_3_Y_COORDINATE           (33)
-#define ASTEROID_4_Y_COORDINATE           (43)
-#define ASTEROID_5_Y_COORDINATE           (53)
+#define ASTEROID_0_Y_COORDINATE             (3)
+#define ASTEROID_1_Y_COORDINATE             (13)
+#define ASTEROID_2_Y_COORDINATE             (23)
+#define ASTEROID_3_Y_COORDINATE             (33)
+#define ASTEROID_4_Y_COORDINATE             (43)
+#define ASTEROID_5_Y_COORDINATE             (53)
 
+// Local values
 // Define offsets
 const int MISSILE_Y_OFFSET_FOR_ASTEROID = 2;
 const int SHIP_Y_OFFSET_FOR_ASTEROID = 3;

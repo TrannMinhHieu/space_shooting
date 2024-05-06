@@ -18,9 +18,9 @@
 #include "eeprom.h"
 #include "app_eeprom.h"
 
-#include "game_screen.h"
-#include "game_highscore.h"
-#include "game_bitmap.h"
+#include "sst_game_screen.h"
+#include "sst_game_highscore.h"
+#include "sst_game_bitmap.h"
 
 extern view_dynamic_t dyn_view_game_menu;
 extern view_screen_t game_menu;

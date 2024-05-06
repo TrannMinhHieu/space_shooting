@@ -1,4 +1,4 @@
-#include "missile.h"
+#include "sst_missile.h"
 
 Missile myMissile;
 
@@ -8,7 +8,7 @@ Missile myMissile;
  * @param None
  * @return None
  */
-void missile_inint()
+void missile_player_inint()
 {
     APP_DBG_SIG("Missile init\n");
     myMissile.x = 0;
@@ -42,7 +42,7 @@ bool is_armed()
  * @param None
  * @return None
  */
-void missile_fired()
+void missile_player_fired()
 {
     // Check if the missile is armed
     if (!is_armed())
@@ -63,7 +63,7 @@ void missile_fired()
  * @param None
  * @return None
  */
-void missile_flight()
+void missile_player_flight()
 {
     if (myMissile.visible == WHITE)
     {
@@ -81,7 +81,7 @@ void missile_flight()
     }
 }
 
-bool missile_enemy_ship_collision() {
+bool missile_player_enemy_ship_collision() {
     if(myEnemyShip.ship.visible == WHITE && myMissile.visible == WHITE
         && myMissile.x + SIZE_MISSILE_BITMAP_X > myEnemyShip.ship.x
         && myMissile.y - SHIP_Y_OFFSET_FOR_MISSILES == myEnemyShip.ship.y) 
@@ -92,8 +92,8 @@ bool missile_enemy_ship_collision() {
     return false;
 }
 //TODO: fix bug missile_enemy_ship_collision not detected
-void missile_hit() {
-    if(missile_enemy_ship_collision()) {
+void missile_player_hit() {
+    if(missile_player_enemy_ship_collision()) {
         APP_DBG_SIG("Missile hit enemy ship\n");
         myExplosion.visible = WHITE;
         myExplosion.x = myMissile.x;
@@ -111,7 +111,7 @@ void missile_hit() {
  * @param None
  * @return None
  */
-void missile_reset()
+void missile_player_reset()
 {
     APP_DBG_SIG("Missile reset\n");
     myMissile.visible = BLACK;
@@ -125,24 +125,24 @@ void missile_reset()
  * @param msg The message to be handled.
  * @return None
  */
-void missile_handler(ak_msg_t* msg)
+void player_missile_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
     case MISSILE_INIT_SIG:
-        missile_inint();
+        missile_player_inint();
         break;
     case MISSILE_FIRE_SIG:
-        missile_fired();
+        missile_player_fired();
         break;
     case MISSILE_FLIGHT:
-        missile_flight();
+        missile_player_flight();
         break;
     case MISSILE_HIT_SIG:
-        missile_hit();
+        missile_player_hit();
         break;
     case MISSILE_RESET_SIG:
-        missile_reset();
+        missile_player_reset();
         break;
     default:
         break;

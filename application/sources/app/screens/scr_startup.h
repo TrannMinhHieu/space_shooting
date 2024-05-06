@@ -15,8 +15,8 @@
 #include "task_display.h"
 #include "view_render.h"
 
-#include "game_screen.h"
-#include "game_menu.h"
+#include "sst_game_screen.h"
+#include "sst_game_menu.h"
 
 #include "buzzer.h"
 

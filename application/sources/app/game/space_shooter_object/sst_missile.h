@@ -15,7 +15,7 @@
 
 #include "buzzer.h"
 
-#include "game_screen.h"
+#include "sst_game_screen.h"
 
 // Global missile-related constants
 #define MAX_PLAYER_MISSILE_DISTANCE     (120)
