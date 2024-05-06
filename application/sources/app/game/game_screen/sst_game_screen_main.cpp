@@ -7,8 +7,14 @@ void info_screen_draw()
 {
 }
 
+/**
+ * Controls the game stage and posts messages based on the current game stage.
+ *
+ * @throws None
+ */
 void game_stage_control()
 {
+    // Post messages based on the current game stage
     if (game_stage == GAME_STAGE_SHIP_FIGHT)
     {
         task_post_pure_msg(PLAYER_MISSILE_TASK_ID, MISSILE_HIT_SIG);
@@ -16,7 +22,7 @@ void game_stage_control()
         task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_HIT_SIG);
         task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_FLIGHT_SIG);
     }
-    if (game_stage == GAME_STAGE_ASTEROID_FEILD)
+    else if (game_stage == GAME_STAGE_ASTEROID_FEILD)
     {
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_FLIGHT_SIG);
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_HIT_SIG);
@@ -138,6 +144,13 @@ void player_missile_draw()
                            WHITE);
 }
 
+/**
+ * Draws the enemy ship on the screen if it is visible.
+ *
+ * @return void
+ *
+ * @throws None
+ */
 void enemy_ship_draw()
 {
     if (myEnemyShip.ship.visible != WHITE)
@@ -161,6 +174,13 @@ void enemy_ship_draw()
         break;
     }
 }
+/**
+ * Draws the enemy missile on the screen if it is visible.
+ *
+ * @return void
+ *
+ * @throws None
+ */
 void enemy_missile_draw()
 {
     for (uint8_t i = 0; i < MAX_NUM_OF_ENEMY_MISSILE; i++)
@@ -177,8 +197,6 @@ void enemy_missile_draw()
                                WHITE);
     }
 }
-
-
 
 static void space_shooting_gameplay();
 
@@ -253,7 +271,6 @@ void game_play_handler(ak_msg_t *msg)
         game_stage = GAME_STAGE_ASTEROID_FEILD;
         break;
     case GAMEPLAY_TIME_TICK:
-        // TODO: Add state control for enemy ship state and asteroid state
         task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_FLIGHT_SIG);
         task_post_pure_msg(PLAYER_MISSILE_TASK_ID, MISSILE_FLIGHT);
         task_post_pure_msg(EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);

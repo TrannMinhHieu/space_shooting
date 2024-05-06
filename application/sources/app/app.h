@@ -276,6 +276,7 @@ enum {
 /*****************************************************************************/
 enum {
 	ASTEROID_INIT_SIG = AK_USER_DEFINE_SIG,
+	ASTEROID_SPAWN_SIG,
 	ASTEROID_FLIGHT_SIG,
 	ASTEROID_HIT_SIG,
 	ASTEROID_RESET_SIG,

@@ -70,6 +70,7 @@ view_screen_t game_menu = {
     .focus_item = 0,
 };
 
+
 void menu_render()
 {
 #define GAME_MENU_TEXT_SPACING_X_AXIS (10)

@@ -34,9 +34,6 @@
 const int MISSILE_Y_OFFSET_FOR_ASTEROID = 2;
 const int SHIP_Y_OFFSET_FOR_ASTEROID = 3;
 
-// Set screen left boundary
-const int SCREEN_LEFT_BOUNDARY = 0;
-
 // Predefined y-coordinates for each asteroid
 const int asteroidYCoordinates[NUM_ASTEROIDS] = {ASTEROID_0_Y_COORDINATE,
                                                  ASTEROID_1_Y_COORDINATE,

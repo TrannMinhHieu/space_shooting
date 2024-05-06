@@ -20,27 +20,26 @@ view_screen_t game_highscore = {
 
 void highscore_render()
 {
+    // Clear the screen
     view_render.clear();
 
+    // Set text size and color
     view_render.setTextSize(1);
     view_render.setTextColor(WHITE);
+
+    // Print the "Highscore" title
     view_render.setCursor(5, 5);
     view_render.print("Highscore");
 
+    // Print the top three scores
     view_render.setCursor(5, 25);
-    view_render.print("1. ");
-    view_render.setCursor(35, 25);
-    view_render.print(game_score.first_place);
+    view_render.print("1. " + String(game_score.first_place));
 
     view_render.setCursor(5, 35);
-    view_render.print("2. ");
-    view_render.setCursor(35, 35);
-    view_render.print(game_score.second_place);
+    view_render.print("2. " + String(game_score.second_place));
 
     view_render.setCursor(5, 45);
-    view_render.print("3. ");
-    view_render.setCursor(35, 45);
-    view_render.print(game_score.third_place);
+    view_render.print("3. " + String(game_score.third_place));
 }
 
 void score_sort()

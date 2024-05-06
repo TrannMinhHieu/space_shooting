@@ -26,6 +26,7 @@
 
 #define MAX_NUM_OF_ENEMY_MISSILE        (5)
 
+// Local missile-related constants
 const uint8_t SHIP_Y_OFFSET_FOR_MISSILES = 5;
 
 typedef struct 

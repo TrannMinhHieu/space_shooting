@@ -2,18 +2,27 @@
 
 EnemyShip myEnemyShip;
 
+/**
+ * @brief Initializes the enemy ship.
+ *
+ * @details This function sets the initial values for the enemy ship's position, visibility, action image,
+ * health, and number of missiles.
+ *
+ * @param: None
+ * @return: None
+ */
 void enemy_ship_init()
 {
     APP_DBG_SIG("Enemy ship init\n");
+    myEnemyShip.ship.visible = BLACK;    
     myEnemyShip.ship.x = 0;
     myEnemyShip.ship.y = 0;
-    myEnemyShip.ship.visible = BLACK;
     myEnemyShip.ship.action_image = rand() % 3 + 1;
     myEnemyShip.health = SHIP_LIFE;
     myEnemyShip.num_missiles = MAX_NUM_OF_ENEMY_MISSILE;
 }
 
-uint8_t ship_control;
+uint8_t ship_action;
 enum Actions
 {
     MOVE_UP,
@@ -21,6 +30,13 @@ enum Actions
     FIRE,
     DO_NOTTHING
 };
+/**
+ * @brief Randomizes the action for the enemy ship.
+ *
+ * @details This function generates a random number between 0 and 99 and assigns a action to the enemy ship based on the generated number.
+ * @param: None
+ * @return: The action for the enemy ship. Possible values are MOVE_UP, MOVE_DOWN, FIRE, or DO_NOTHING.
+ */
 int8_t randomize_enemy_ship_control()
 {
     // TODO: use better randomize function
@@ -52,111 +68,190 @@ int8_t randomize_enemy_ship_control()
     return DO_NOTTHING;
 }
 
+/**
+ * @brief Initializes the enemy ship for takeoff.
+ *
+ * @details This function sets the initial values for the enemy ship's position, visibility, action image, and action.
+ * @param: None
+ * @return: None
+ */
 void enemy_ship_takeoff()
 {
     APP_DBG_SIG("Enemy ship takeoff\n");
+
+    // Set enemy ship position
     myEnemyShip.ship.x = 150;
     myEnemyShip.ship.y = 20;
+
+    // Set enemy ship visibility and action image
     myEnemyShip.ship.visible = WHITE;
     myEnemyShip.ship.action_image = 1;
 }
 
+// TODO: add this function. @brief Retreats the enemy ship when "x" time have passed
+
 void enemy_ship_retreat()
 {
     APP_DBG_SIG("Enemy ship retreat\n");
+
+    // Check if enemy ship is within the screen boundaries
     if (myEnemyShip.ship.x + SIZE_BITMAP_SHIP_X < LCD_WIDTH)
     {
+        // Move enemy ship towards the right side of the screen
         myEnemyShip.ship.x++;
-    } else {
+    }
+    else
+    {
+        // Make enemy ship invisible
         myEnemyShip.ship.visible = BLACK;
     }
 }
 
+/**
+ * @brief Adjusts the flight of the enemy ship.
+ *
+ * @details This function is responsible for adjusting the flight of the enemy ship based on its visibility and action image.
+ * If the ship's x position is greater than 100, it moves the ship to the left by 2 units. If the action image is 1, it calls the
+ * randomize_enemy_ship_control function to determine the ship's next action.
+ *
+ * @param None
+ * @return None
+ */
 void enemy_ship_flight()
 {
+    // Check if the enemy ship is visible
     if (myEnemyShip.ship.visible != WHITE)
     {
-        return;
+        return; // If not visible, return and do nothing
     }
 
+    // Increment the action image of the ship
+    myEnemyShip.ship.action_image++;
+
+    // Reset the action image if it reaches 4
+    if (myEnemyShip.ship.action_image == 4)
+    {
+        myEnemyShip.ship.action_image = 1;
+    }
+
+    // Adjust the ship's position based on conditions
     if (myEnemyShip.ship.x > 100)
     {
         myEnemyShip.ship.x -= 2;
-        myEnemyShip.ship.action_image++;
-        if (myEnemyShip.ship.action_image == 4)
-        {
-            myEnemyShip.ship.action_image = 1;
-        }
     }
-    else
+    else if (myEnemyShip.ship.action_image == 1)
     {
-        myEnemyShip.ship.action_image++;
-        if (myEnemyShip.ship.action_image == 4)
-        {
-            myEnemyShip.ship.action_image = 1;
-            ship_control = randomize_enemy_ship_control();
-        }
+        // Call the randomize_enemy_ship_control function to determine the ship's next action
+        ship_action = randomize_enemy_ship_control();
     }
 }
 void enemy_ship_health_control()
 {
-    if(myEnemyShip.health <= 0) {
+    // Check if the health of the enemy ship is less than or equal to 0
+    if (myEnemyShip.health <= 0)
+    {
+        // Make the enemy ship invisible
         myEnemyShip.ship.visible = BLACK;
+
         // TODO: Send message with points value data for player ship
+        // Increase the player's score by 100
         myShip.score += 100;
+
+        // Reset the enemy ship and enemy missile tasks
         task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_RESET_SIG);
         task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_RESET_SIG);
+
+        // Print debug message
         APP_DBG_SIG("Enemy ship dead\n");
+
+        // Change the game stage to GAME_STAGE_ASTEROID_FEILD
+        task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_SPAWN_SIG);
         game_stage = GAME_STAGE_ASTEROID_FEILD;
+
+        // Return from the function
         return;
     }
 }
+
+/**
+ * @brief Moves the enemy ship up or down based on its visibility and ship action.
+ *
+ * @details This function checks if the enemy ship is visible and its x position is less than 100.
+ * If the ship is visible and the ship action is MOVE_UP, the ship is moved up by SHIP_Y_STEP units.
+ * If the ship is visible and the ship action is MOVE_DOWN, the ship is moved down by SHIP_Y_STEP units.
+ *
+ * @param None
+ * @return None
+ */
 void enemy_ship_move()
 {
+    // Check if the enemy ship is visible and its x position is less than 100
     if (myEnemyShip.ship.visible != WHITE || myEnemyShip.ship.x > 100)
     {
         return;
     }
 
-    if (myEnemyShip.ship.y > 0 && ship_control == MOVE_UP)
+    // Move the ship up if it is visible and the ship_action is MOVE_UP
+    if (myEnemyShip.ship.y > 0 && ship_action == MOVE_UP)
     {
+        // Print debug message
         APP_DBG_SIG("Enemy ship move up\n");
+
+        // Update the ship's y position
         myEnemyShip.ship.y -= SHIP_Y_STEP;
     }
 
-    if (myEnemyShip.ship.y < LCD_HEIGHT - SHIP_Y_STEP && ship_control == MOVE_DOWN)
+    // Move the ship down if it is visible and the ship_action is MOVE_DOWN
+    if (myEnemyShip.ship.y < LCD_HEIGHT - SHIP_Y_STEP && ship_action == MOVE_DOWN)
     {
+        // Print debug message
         APP_DBG_SIG("Enemy ship move down\n");
+
+        // Update the ship's y position
         myEnemyShip.ship.y += SHIP_Y_STEP;
     }
 }
 
+/**
+ * @brief Fires a missile from the enemy ship.
+ *
+ * @details This function checks if the ship action is set to FIRE and if the enemy ship has any missiles remaining.
+ * If both conditions are met, a message is sent to fire a missile and the number of missiles is decremented by one.
+ *
+ * @param None
+ * @return None
+ */
 void enemy_ship_fire()
 {
-    // Send message to fire a missile
-    if (ship_control != FIRE || myEnemyShip.num_missiles <= 0)
+    // Check if the ship action is set to FIRE and if the enemy ship has any missiles remaining
+    if (myEnemyShip.num_missiles > 0 && ship_action == FIRE)
     {
-        return;
-    }
-
-    {
-        APP_DBG_SIG("Enemy ship fire missile\n");
+        // Decrement the number of missiles by one
         myEnemyShip.num_missiles--;
+
+        // Send a message to fire a missile
+        APP_DBG_SIG("Enemy ship fire missile\n");
         task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_FIRE_SIG);
     }
-    // TODO: send message to fire a missile
-    // TODO: fly out if num_missiles =< 0
 }
 
+/**
+ * @brief Resets the enemy ship to its initial state.
+ *
+ * @details This function resets the enemy ship's position, visibility, action image, number of missiles, and health to their initial values.
+ *
+ * @param None
+ * @return None
+ */
 void enemy_ship_reset()
 {
     APP_DBG_SIG("Enemy ship reset\n");
+    myEnemyShip.ship.visible = BLACK;    
     myEnemyShip.ship.x = 0;
     myEnemyShip.ship.y = 0;
-    myEnemyShip.ship.visible = BLACK;
     myEnemyShip.ship.action_image = rand() % 3 + 1;
+    myEnemyShip.health = SHIP_LIFE;    
     myEnemyShip.num_missiles = MAX_NUM_OF_ENEMY_MISSILE;
-    myEnemyShip.health = SHIP_LIFE;
 }
 
 void enemy_ship_handler(ak_msg_t *msg)
