@@ -8,8 +8,8 @@ void enemy_ship_init()
     myEnemyShip.ship.x = 0;
     myEnemyShip.ship.y = 0;
     myEnemyShip.ship.visible = BLACK;
-    myEnemyShip.ship.action_image = 1;
-    myEnemyShip.health = 3;
+    myEnemyShip.ship.action_image = rand() % 3 + 1;
+    myEnemyShip.health = SHIP_LIFE;
     myEnemyShip.num_missiles = MAX_NUM_OF_ENEMY_MISSILE;
 }
 
@@ -30,9 +30,9 @@ int8_t randomize_enemy_ship_control()
     // int random = dis(gen);
     uint8_t random = rand() % 100;
 
-    // 30% chance to move up
-    // 30% chance to move down
-    // 20% chance to fire
+    // 5% chance to move up
+    // 5% chance to move down
+    // 7% chance to fire
     if (random < 5)
     {
         task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_MOVE_SIG);
@@ -67,6 +67,8 @@ void enemy_ship_retreat()
     if (myEnemyShip.ship.x + SIZE_BITMAP_SHIP_X < LCD_WIDTH)
     {
         myEnemyShip.ship.x++;
+    } else {
+        myEnemyShip.ship.visible = BLACK;
     }
 }
 
@@ -94,6 +96,18 @@ void enemy_ship_flight()
             myEnemyShip.ship.action_image = 1;
             ship_control = randomize_enemy_ship_control();
         }
+    }
+}
+void enemy_ship_health_control()
+{
+    if(myEnemyShip.health <= 0) {
+        myEnemyShip.ship.visible = BLACK;
+        myShip.score += 100;
+        task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_RESET_SIG);
+        task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_RESET_SIG);
+        APP_DBG_SIG("Enemy ship dead\n");
+        game_stage = GAME_STAGE_ASTEROID_FEILD;
+        return;
     }
 }
 void enemy_ship_move()
@@ -127,7 +141,7 @@ void enemy_ship_fire()
     {
         APP_DBG_SIG("Enemy ship fire missile\n");
         myEnemyShip.num_missiles--;
-        // task_post_pure_msg(MISSILE_TASK_ID, MISSILE_FIRE_SIG);
+        task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_FIRE_SIG);
     }
     // TODO: send message to fire a missile
     // TODO: fly out if num_missiles =< 0
@@ -139,8 +153,9 @@ void enemy_ship_reset()
     myEnemyShip.ship.x = 0;
     myEnemyShip.ship.y = 0;
     myEnemyShip.ship.visible = BLACK;
-    myEnemyShip.ship.action_image = 1;
+    myEnemyShip.ship.action_image = rand() % 3 + 1;
     myEnemyShip.num_missiles = MAX_NUM_OF_ENEMY_MISSILE;
+    myEnemyShip.health = SHIP_LIFE;
 }
 
 void enemy_ship_handler(ak_msg_t *msg)
@@ -155,15 +170,13 @@ void enemy_ship_handler(ak_msg_t *msg)
         break;
     case SHIP_ENEMY_FLIGHT_SIG:
         enemy_ship_flight();
+        enemy_ship_health_control();
         break;
     case SHIP_ENEMY_MOVE_SIG:
         enemy_ship_move();
         break;
     case SHIP_ENEMY_FIRE_SIG:
         enemy_ship_fire();
-        break;
-    case MISSILE_DESTROY_SIG:
-        myEnemyShip.num_missiles--;
         break;
     case SHIP_ENEMY_RESET_SIG:
         enemy_ship_reset();

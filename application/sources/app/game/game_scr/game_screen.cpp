@@ -1,9 +1,26 @@
 #include "game_screen.h"
 
 uint8_t game_state;
+uint8_t game_stage;
 
 void info_screen_draw()
 {
+}
+
+void game_stage_control()
+{
+    if (game_stage == GAME_STAGE_SHIP_FIGHT)
+    {
+        task_post_pure_msg(MISSILE_TASK_ID, MISSILE_HIT_SIG);
+        task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_FLIGHT_SIG);
+        task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_HIT_SIG);
+        task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_FLIGHT_SIG);
+    }
+    if (game_stage == GAME_STAGE_ASTEROID_FEILD)
+    {
+        task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_FLIGHT_SIG);
+        task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_HIT_SIG);
+    }
 }
 
 /**
@@ -74,6 +91,22 @@ void missile_draw()
                            SIZE_MISSILE_BITMAP_X,
                            SIZE_MISSILE_BITMAP_Y,
                            WHITE);
+}
+void enemy_missile_draw()
+{
+    for (uint8_t i = 0; i < MAX_NUM_OF_ENEMY_MISSILE; i++)
+    {
+        if (myEnemyMissile[i].visible != WHITE)
+        {
+            continue;
+        }
+        view_render.drawBitmap(myEnemyMissile[i].x,
+                               myEnemyMissile[i].y,
+                               bitmap_missile_enemy,
+                               SIZE_MISSILE_BITMAP_X,
+                               SIZE_MISSILE_BITMAP_Y,
+                               WHITE);
+    }
 }
 
 /**
@@ -170,6 +203,7 @@ void space_shooting_gameplay()
         enemy_ship_draw();
         asteroid_draw();
         missile_draw();
+        enemy_missile_draw();
         explosion_draw();
         view_render.update();
     }
@@ -211,13 +245,19 @@ void game_play_handler(ak_msg_t *msg)
         task_post_pure_msg(EXPLOSION_TASK_ID, EXPLOSION_INIT_SIG);
         game_time_tick_setup();
         game_state = GAME_PLAY;
+        game_stage = GAME_STAGE_ASTEROID_FEILD;
         break;
     case GAMEPLAY_TIME_TICK:
+        // TODO: Add state control for enemy ship state and asteroid state
         task_post_pure_msg(SHIP_PLAYER_TASK_ID, SHIP_FLIGHT_SIG);
         task_post_pure_msg(MISSILE_TASK_ID, MISSILE_FLIGHT);
-        task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_FLIGHT_SIG);
-        //task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_FLIGHT_SIG);
-        //task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_HIT_SIG);
+        game_stage_control();
+        // task_post_pure_msg(MISSILE_TASK_ID, MISSILE_HIT_SIG);
+        // task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_FLIGHT_SIG);
+        // task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_HIT_SIG);
+        // task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_FLIGHT_SIG);
+        // task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_FLIGHT_SIG);
+        // task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_HIT_SIG);
         task_post_pure_msg(EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
         break;
     case GAME_EXIT:

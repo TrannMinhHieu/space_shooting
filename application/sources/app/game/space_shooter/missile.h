@@ -22,6 +22,7 @@
 #define PLAYER_MISSILE_SPEED            (5)
 #define SIZE_MISSILE_BITMAP_X           (10)
 #define SIZE_MISSILE_BITMAP_Y           (5)
+#define SAFE_DISTANCE_TO_FIRE_MISSILE   (80)
 
 #define MAX_NUM_OF_ENEMY_MISSILE        (5)
 
@@ -34,9 +35,7 @@ typedef struct
     uint8_t action_image;
 } Missile;
 
-struct EnemyMissile : Missile {};
-
-extern EnemyMissile myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
+extern Missile myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
 extern Missile myMissile;
 
 #endif /* __MISSILE_H__ */

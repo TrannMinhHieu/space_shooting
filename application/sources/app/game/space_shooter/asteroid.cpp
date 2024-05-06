@@ -1,7 +1,7 @@
 #include "asteroid.h"
 
 Asteroid myAsteroid[NUM_ASTEROIDS];
-uint8_t tempo = 0;
+uint16_t asteroid_count = 0;
 
 /**
  * @brief Initialize the asteroids with random x-coordinates, predefined y-coordinates, and default values.
@@ -188,6 +188,28 @@ void asteroid_hit()
     }
 }
 
+void asteroid_field_control()
+{
+    for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
+    {
+        if(asteroid_missile_collision(i))
+        {
+            asteroid_count++;
+            APP_DBG_SIG("Number of asteroids destroyed: %d\n", asteroid_count);
+        }
+        if(asteroid_count >= 15) 
+        {
+            APP_DBG_SIG("Reset asteroids\n");
+            task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_RESET_SIG);
+            asteroid_count = 0;
+            APP_DBG_SIG("Asteroid count = %d\n", asteroid_count);
+            game_stage = GAME_STAGE_SHIP_FIGHT;
+            task_post_pure_msg(SHIP_ENEMY_TASK_ID, SHIP_ENEMY_TAKEOFF_SIG);
+            break;
+        }
+    }
+}
+
 /**
  * @brief Reset the asteroids.
  *
@@ -203,7 +225,8 @@ void asteroid_reset()
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
         // Set the visibility of the asteroid to black.
-        myAsteroid[i].visible = BLACK;
+        // myAsteroid[i].visible = BLACK;
+        myAsteroid[i].visible = WHITE;
 
         // Assign a new random x-coordinate within the range of 130 to 168.
         myAsteroid[i].x = (rand() % 39) + 130;
@@ -228,6 +251,7 @@ void asteroid_handler(ak_msg_t *msg)
         break;
     case ASTEROID_FLIGHT_SIG:
         asteroid_flight();
+        asteroid_field_control();
         break;
     case SHIP_HIT_SIG:
     case MISSILE_HIT_SIG:

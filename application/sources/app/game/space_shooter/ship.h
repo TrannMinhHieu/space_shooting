@@ -22,6 +22,8 @@
 #define SHIP_X_COORDINATE       (0)
 #define SHIP_Y_COORDINATE       (0)
 
+#define SHIP_LIFE               (3)
+
 typedef struct 
 {
     bool visible;

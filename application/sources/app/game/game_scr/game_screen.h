@@ -33,8 +33,12 @@
 #define GAME_PLAY   (1)
 #define GAME_OVER   (2)
 
+#define GAME_STAGE_SHIP_FIGHT		(0)
+#define GAME_STAGE_ASTEROID_FEILD	(1)
+
 // global game state
 extern uint8_t game_state;
+extern uint8_t game_stage;
 
 extern view_dynamic_t dyn_view_game;
 extern view_screen_t game_screen;

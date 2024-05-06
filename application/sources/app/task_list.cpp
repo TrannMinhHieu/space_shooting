@@ -27,12 +27,13 @@ const task_t app_task_table[] = {
 	/*************************************************************************/
 	/* GAME TASK */
 	/*************************************************************************/
-	{SHIP_PLAYER_TASK_ID		,	TASK_PRI_LEVEL_4	,	ship_player_handler	},
-	{SHIP_ENEMY_TASK_ID			,	TASK_PRI_LEVEL_4	,	enemy_ship_handler	},
-	{MISSILE_TASK_ID			,	TASK_PRI_LEVEL_4	,	missile_handler		},
-	{ASTEROID_TASK_ID			,	TASK_PRI_LEVEL_4	,	asteroid_handler	},
-	{EXPLOSION_TASK_ID			,	TASK_PRI_LEVEL_4	,	explosion_handler	},
-	{GAMEPLAY_TASK_ID			,	TASK_PRI_LEVEL_4	,	game_play_handler	},
+	{SHIP_PLAYER_TASK_ID		,	TASK_PRI_LEVEL_4	,	ship_player_handler	 	},
+	{SHIP_ENEMY_TASK_ID			,	TASK_PRI_LEVEL_4	,	enemy_ship_handler	 	},
+	{MISSILE_TASK_ID			,	TASK_PRI_LEVEL_4	,	missile_handler		 	},
+	{ENEMY_MISSILE_TASK_ID		,	TASK_PRI_LEVEL_4	,	enemy_missile_handler	},
+	{ASTEROID_TASK_ID			,	TASK_PRI_LEVEL_4	,	asteroid_handler	 	},
+	{EXPLOSION_TASK_ID			,	TASK_PRI_LEVEL_4	,	explosion_handler	 	},
+	{GAMEPLAY_TASK_ID			,	TASK_PRI_LEVEL_4	,	game_play_handler	 	},
 
 	/*************************************************************************/
 	/* RF24 NETWORK TASK */

@@ -1,9 +1,5 @@
 #include "explosion.h"
 
-#include "asteroid.h"
-#include "missile.h"
-#include "ship.h"
-
 Explosion myExplosion;
 
 /**

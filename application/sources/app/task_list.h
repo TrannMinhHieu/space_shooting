@@ -31,6 +31,7 @@ enum {
 	SHIP_PLAYER_TASK_ID,
 	SHIP_ENEMY_TASK_ID,
 	MISSILE_TASK_ID,
+	ENEMY_MISSILE_TASK_ID,
 	ASTEROID_TASK_ID,
 	EXPLOSION_TASK_ID,
 	GAMEPLAY_TASK_ID,
@@ -92,6 +93,7 @@ extern void ship_player_handler(ak_msg_t*);
 extern void enemy_ship_handler(ak_msg_t*);
 extern void asteroid_handler(ak_msg_t*);
 extern void missile_handler(ak_msg_t*);
+extern void enemy_missile_handler(ak_msg_t*);
 extern void explosion_handler(ak_msg_t*);
 extern void game_play_handler(ak_msg_t*);
 

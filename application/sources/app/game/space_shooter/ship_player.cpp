@@ -1,5 +1,4 @@
 #include "ship.h"
-#include "asteroid.h"
 
 PlayerShip myShip;
 

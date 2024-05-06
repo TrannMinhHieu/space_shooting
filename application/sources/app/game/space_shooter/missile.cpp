@@ -1,6 +1,4 @@
 #include "missile.h"
-#include "ship.h"
-#include "asteroid.h"
 
 Missile myMissile;
 
@@ -69,7 +67,6 @@ void missile_flight()
 {
     if (myMissile.visible == WHITE)
     {
-        APP_DBG_SIG("Missile in flight\n");
         if (myMissile.x < MAX_PLAYER_MISSILE_DISTANCE)
         {
             myMissile.x += PLAYER_MISSILE_SPEED; // Move the missile by "PLAYER_MISSILE_SPEED" pixels
@@ -81,6 +78,30 @@ void missile_flight()
             is_armed(); // Display missile armed message
             myMissile.x = 0;
         }
+    }
+}
+
+bool missile_enemy_ship_collision() {
+    if(myEnemyShip.ship.visible == WHITE && myMissile.visible == WHITE
+        && myMissile.x + SIZE_MISSILE_BITMAP_X > myEnemyShip.ship.x
+        && myMissile.y - SHIP_Y_OFFSET_FOR_MISSILES == myEnemyShip.ship.y) 
+    {
+        return true;
+    }
+
+    return false;
+}
+//TODO: fix bug missile_enemy_ship_collision not detected
+void missile_hit() {
+    if(missile_enemy_ship_collision()) {
+        APP_DBG_SIG("Missile hit enemy ship\n");
+        myExplosion.visible = WHITE;
+        myExplosion.x = myMissile.x;
+        myExplosion.y = myMissile.y;
+        myMissile.visible = BLACK;
+        myMissile.x = 0;
+        myEnemyShip.health--;
+        APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
     }
 }
 
@@ -104,7 +125,7 @@ void missile_reset()
  * @param msg The message to be handled.
  * @return None
  */
-void missile_handler(ak_msg_t *msg)
+void missile_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
@@ -116,6 +137,9 @@ void missile_handler(ak_msg_t *msg)
         break;
     case MISSILE_FLIGHT:
         missile_flight();
+        break;
+    case MISSILE_HIT_SIG:
+        missile_hit();
         break;
     case MISSILE_RESET_SIG:
         missile_reset();
