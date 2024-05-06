@@ -14,7 +14,7 @@ EnemyShip myEnemyShip;
 void enemy_ship_init()
 {
     APP_DBG_SIG("Enemy ship init\n");
-    myEnemyShip.ship.visible = BLACK;    
+    myEnemyShip.ship.visible = BLACK;
     myEnemyShip.ship.x = 0;
     myEnemyShip.ship.y = 0;
     myEnemyShip.ship.action_image = rand() % 3 + 1;
@@ -49,19 +49,21 @@ int8_t randomize_enemy_ship_control()
     // 5% chance to move up
     // 5% chance to move down
     // 7% chance to fire
-    if (random < 5)
+    // TODO: increase these chances as the game progresses
+    uint16_t rate = (myShip.fly_speed - 1) * 2;
+    if (random < 5 + rate)
     {
-        task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_MOVE_SIG);
+        task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
         return MOVE_UP;
     }
-    else if (random < 10)
+    else if (random < 10 + rate)
     {
-        task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_MOVE_SIG);
+        task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
         return MOVE_DOWN;
     }
-    else if (random < 17)
+    else if (random < 17 + rate)
     {
-        task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_FIRE_SIG);
+        task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
         return FIRE;
     }
 
@@ -89,7 +91,6 @@ void enemy_ship_takeoff()
 }
 
 // TODO: add this function. @brief Retreats the enemy ship when "x" time have passed
-
 void enemy_ship_retreat()
 {
     APP_DBG_SIG("Enemy ship retreat\n");
@@ -125,24 +126,31 @@ void enemy_ship_flight()
         return; // If not visible, return and do nothing
     }
 
-    // Increment the action image of the ship
-    myEnemyShip.ship.action_image++;
-
-    // Reset the action image if it reaches 4
-    if (myEnemyShip.ship.action_image == 4)
-    {
-        myEnemyShip.ship.action_image = 1;
-    }
-
     // Adjust the ship's position based on conditions
     if (myEnemyShip.ship.x > 100)
     {
         myEnemyShip.ship.x -= 2;
+        // Increment the action image of the ship
+        myEnemyShip.ship.action_image++;
+
+        // Reset the action image if it reaches 4
+        if (myEnemyShip.ship.action_image == 4)
+        {
+            myEnemyShip.ship.action_image = 1;
+        }
     }
-    else if (myEnemyShip.ship.action_image == 1)
+    else
     {
-        // Call the randomize_enemy_ship_control function to determine the ship's next action
-        ship_action = randomize_enemy_ship_control();
+        // Increment the action image of the ship
+        myEnemyShip.ship.action_image++;
+
+        // Reset the action image if it reaches 4
+        if (myEnemyShip.ship.action_image == 4)
+        {
+            myEnemyShip.ship.action_image = 1;
+            // Call the randomize_enemy_ship_control function to determine the ship's next action
+            ship_action = randomize_enemy_ship_control();
+        }
     }
 }
 void enemy_ship_health_control()
@@ -158,7 +166,7 @@ void enemy_ship_health_control()
         myShip.score += 100;
 
         // Reset the enemy ship and enemy missile tasks
-        task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_RESET_SIG);
+        task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_RESET_SIG);
         task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_RESET_SIG);
 
         // Print debug message
@@ -246,35 +254,35 @@ void enemy_ship_fire()
 void enemy_ship_reset()
 {
     APP_DBG_SIG("Enemy ship reset\n");
-    myEnemyShip.ship.visible = BLACK;    
+    myEnemyShip.ship.visible = BLACK;
     myEnemyShip.ship.x = 0;
     myEnemyShip.ship.y = 0;
     myEnemyShip.ship.action_image = rand() % 3 + 1;
-    myEnemyShip.health = SHIP_LIFE;    
+    myEnemyShip.health = SHIP_LIFE;
     myEnemyShip.num_missiles = MAX_NUM_OF_ENEMY_MISSILE;
 }
 
-void enemy_ship_handler(ak_msg_t *msg)
+void enemy_ship_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
-    case SHIP_ENEMY_INIT_SIG:
+    case ENEMY_SHIP_INIT_SIG:
         enemy_ship_init();
         break;
-    case SHIP_ENEMY_TAKEOFF_SIG:
+    case ENEMY_SHIP_TAKEOFF_SIG:
         enemy_ship_takeoff();
         break;
-    case SHIP_ENEMY_FLIGHT_SIG:
+    case ENEMY_SHIP_FLIGHT_SIG:
         enemy_ship_flight();
         enemy_ship_health_control();
         break;
-    case SHIP_ENEMY_MOVE_SIG:
+    case ENEMY_SHIP_MOVE_SIG:
         enemy_ship_move();
         break;
-    case SHIP_ENEMY_FIRE_SIG:
+    case ENEMY_SHIP_FIRE_SIG:
         enemy_ship_fire();
         break;
-    case SHIP_ENEMY_RESET_SIG:
+    case ENEMY_SHIP_RESET_SIG:
         enemy_ship_reset();
         break;
     default:

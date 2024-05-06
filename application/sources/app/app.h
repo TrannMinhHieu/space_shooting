@@ -238,12 +238,12 @@ enum {
 */
 /*****************************************************************************/
 enum {
-	SHIP_ENEMY_INIT_SIG = AK_USER_DEFINE_SIG,
-	SHIP_ENEMY_TAKEOFF_SIG,
-	SHIP_ENEMY_MOVE_SIG,
-	SHIP_ENEMY_FLIGHT_SIG,
-	SHIP_ENEMY_FIRE_SIG,
-	SHIP_ENEMY_RESET_SIG,
+	ENEMY_SHIP_INIT_SIG = AK_USER_DEFINE_SIG,
+	ENEMY_SHIP_TAKEOFF_SIG,
+	ENEMY_SHIP_MOVE_SIG,
+	ENEMY_SHIP_FLIGHT_SIG,
+	ENEMY_SHIP_FIRE_SIG,
+	ENEMY_SHIP_RESET_SIG,
 };
 
 /*****************************************************************************/
@@ -253,8 +253,8 @@ enum {
 enum {
 	MISSILE_INIT_SIG = AK_USER_DEFINE_SIG,
 	MISSILE_FIRE_SIG,
+	MISSILE_FLIGHT_SIG,
 	MISSILE_HIT_SIG,
-	MISSILE_FLIGHT,
 	MISSILE_RESET_SIG,
 };
 

@@ -196,7 +196,7 @@ void asteroid_field_control()
             game_stage = GAME_STAGE_SHIP_FIGHT;
 
             // Trigger the enemy ship to take off
-            task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_ENEMY_TAKEOFF_SIG);
+            task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_TAKEOFF_SIG);
 
             // Break out of the loop
             break;
@@ -238,7 +238,7 @@ void asteroid_reset()
  * @param msg The message to handle.
  * @return None
  */
-void asteroid_handler(ak_msg_t *msg)
+void asteroid_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
@@ -298,13 +298,13 @@ bool asteroid_missile_collision(uint8_t asteroid_index)
     }
 
     // Check if the missile and asteroid have the same y-coordinate
-    if (myMissile.y - MISSILE_Y_OFFSET_FOR_ASTEROID != myAsteroid[asteroid_index].y)
+    if (myMissile.y - MISSILE_Y_OFFSET_FOR_ASTEROID != (uint32_t)myAsteroid[asteroid_index].y)
     {
         return false;
     }
 
     // Check if the missile and asteroid have the same x-coordinate
-    if (myMissile.x + SIZE_MISSILE_BITMAP_X != myAsteroid[asteroid_index].x)
+    if (myMissile.x + SIZE_MISSILE_BITMAP_X <= (uint32_t)myAsteroid[asteroid_index].x)
     {
         return false;
     }
@@ -328,13 +328,13 @@ bool asteroid_ship_collision(uint8_t asteroid_index)
     }
 
     // Check if the ship and asteroid have the same y-coordinate
-    if (myShip.ship.y != myAsteroid[asteroid_index].y)
+    if (myShip.ship.y != (uint32_t)myAsteroid[asteroid_index].y)
     {
         return false;
     }
 
     // Check if the ship and asteroid have the same x-coordinate
-    if (myShip.ship.x + SIZE_BITMAP_SHIP_X != myAsteroid[asteroid_index].x)
+    if (myShip.ship.x + SIZE_BITMAP_SHIP_X <= (uint32_t)myAsteroid[asteroid_index].x)
     {
         return false;
     }

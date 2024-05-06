@@ -3,6 +3,7 @@
 Missile myMissile;
 
 bool is_armed();
+bool player_missile_enemy_ship_collision();
 
 /**
  * @brief Initialize the missile with default values.
@@ -118,7 +119,7 @@ void player_missile_handler(ak_msg_t *msg)
     case MISSILE_FIRE_SIG:
         player_missile_fired();
         break;
-    case MISSILE_FLIGHT:
+    case MISSILE_FLIGHT_SIG:
         player_missile_flight();
         break;
     case MISSILE_HIT_SIG:
@@ -169,7 +170,7 @@ bool player_missile_enemy_ship_collision()
     }
 
     // Check if the x-coordinate of the missile plus the size of the missile bitmap is equal to the x-coordinate of the enemy ship.
-    if (myMissile.x + SIZE_MISSILE_BITMAP_X != myEnemyShip.ship.x)
+    if (myMissile.x + SIZE_MISSILE_BITMAP_X <= myEnemyShip.ship.x)
     {
         return false;
     }

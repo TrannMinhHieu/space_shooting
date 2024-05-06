@@ -246,7 +246,7 @@ bool enemy_missile_player_missile_collision(uint8_t enemy_missile_index)
     };
 
     // Check if the x positions of the missiles overlap
-    if (myMissile.x + SIZE_MISSILE_BITMAP_X != myEnemyMissile[enemy_missile_index].x)
+    if (myMissile.x + SIZE_MISSILE_BITMAP_X <= myEnemyMissile[enemy_missile_index].x)
     {
         return false;
     };
@@ -268,7 +268,7 @@ bool enemy_missile_player_ship_collision(uint8_t enemy_missile_index)
     };
 
     // Check if the x positions of the ship and the enemy missile overlap
-    if (myShip.ship.x + SIZE_BITMAP_SHIP_X != myEnemyMissile[enemy_missile_index].x)
+    if (myShip.ship.x + SIZE_BITMAP_SHIP_X <= myEnemyMissile[enemy_missile_index].x)
     {
         return false;
     };

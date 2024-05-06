@@ -20,9 +20,9 @@ void game_stage_control()
         task_post_pure_msg(PLAYER_MISSILE_TASK_ID, MISSILE_HIT_SIG);
         task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_FLIGHT_SIG);
         task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_HIT_SIG);
-        task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_FLIGHT_SIG);
+        task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FLIGHT_SIG);
     }
-    else if (game_stage == GAME_STAGE_ASTEROID_FEILD)
+    if (game_stage == GAME_STAGE_ASTEROID_FEILD)
     {
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_FLIGHT_SIG);
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_HIT_SIG);
@@ -260,29 +260,29 @@ void game_play_handler(ak_msg_t *msg)
         APP_DBG_SIG("SCREEN_GAME_PLAY_ENTRY\n");
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_INIT_SIG);
         task_post_pure_msg(EXPLOSION_TASK_ID, EXPLOSION_INIT_SIG);
-
         task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_INIT_SIG);
-        task_post_pure_msg(ENEMY_SHIP_TASK_ID, SHIP_ENEMY_INIT_SIG);
-        task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_ENEMY_TAKEOFF_SIG);
         task_post_pure_msg(PLAYER_MISSILE_TASK_ID, MISSILE_INIT_SIG);
-
-        game_time_tick_setup();
-        game_state = GAME_PLAY;
+        task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_INIT_SIG);
+        task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_INIT_SIG);
         game_stage = GAME_STAGE_ASTEROID_FEILD;
+        game_state = GAME_PLAY;
+        game_time_tick_setup();
         break;
     case GAMEPLAY_TIME_TICK:
         task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_FLIGHT_SIG);
-        task_post_pure_msg(PLAYER_MISSILE_TASK_ID, MISSILE_FLIGHT);
+        task_post_pure_msg(PLAYER_MISSILE_TASK_ID, MISSILE_FLIGHT_SIG);
         task_post_pure_msg(EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
         game_stage_control();
         break;
     case GAME_EXIT:
         APP_DBG_SIG("SCREEN_GAME_EXIT\n");
         game_score.current_score = myShip.score;
-        task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_RESET_SIG);
-        task_post_pure_msg(PLAYER_MISSILE_TASK_ID, MISSILE_RESET_SIG);
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_RESET_SIG);
         task_post_pure_msg(EXPLOSION_TASK_ID, EXPLOSION_RESET_SIG);
+        task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_RESET_SIG);
+        task_post_pure_msg(PLAYER_MISSILE_TASK_ID, MISSILE_RESET_SIG);
+        task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_RESET_SIG);
+        task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_RESET_SIG);
 
         timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_GAME_MENU, GAMEPLAY_TIME_EXIT_INTERVAL, TIMER_ONE_SHOT);
         game_state = GAME_OVER;
