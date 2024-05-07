@@ -252,7 +252,7 @@ void game_time_tick_setup()
     timer_set(AC_TASK_DISPLAY_ID, GAMEPLAY_TIME_TICK, GAMEPLAY_TIME_TICK_INTERVAL, TIMER_PERIODIC);
 }
 
-void game_play_handler(ak_msg_t *msg)
+void game_play_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
@@ -284,12 +284,12 @@ void game_play_handler(ak_msg_t *msg)
         task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_RESET_SIG);
         task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_RESET_SIG);
 
-        timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_GAME_MENU, GAMEPLAY_TIME_EXIT_INTERVAL, TIMER_ONE_SHOT);
+        timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_GAME_HIGHSCORE, GAMEPLAY_TIME_EXIT_INTERVAL, TIMER_ONE_SHOT);
         game_state = GAME_OVER;
         break;
 
-    case AC_DISPLAY_SHOW_GAME_MENU:
-        SCREEN_TRAN(game_menu_handler, &game_menu);
+    case AC_DISPLAY_SHOW_GAME_HIGHSCORE:
+        SCREEN_TRAN(game_highscore_handler, &game_highscore);
         break;
 
     default:

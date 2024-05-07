@@ -36,9 +36,10 @@ void player_ship_flight()
 
     if (myShip.score % 200 == 0 && myShip.fly_speed < 8 && myShip.score > 0)
     {
+        // Increase the ship speed as the score increases
         myShip.fly_speed++;
         APP_DBG_SIG("Ship fly speed %d\n", myShip.fly_speed);
-        myShip.score += 10;
+        myShip.score += 10; // break point
     }
 }
 
@@ -128,7 +129,7 @@ void player_ship_handler(ak_msg_t* msg)
         player_ship_move_down();
         break;
     case MISSILE_DESTROY_SIG:
-        // TODO: Handle point values data sent by asteroid and ene
+        // TODO: Handle point values data sent by asteroid and enemy ship
         myShip.score += 10;
         APP_DBG_SIG("Ship score %d\n", myShip.score);
         break;

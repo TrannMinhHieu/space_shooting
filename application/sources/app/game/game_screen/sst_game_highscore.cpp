@@ -62,7 +62,7 @@ void score_sort()
     }
 }
 
-void game_highscore_handler(ak_msg_t *msg)
+void game_highscore_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
