@@ -122,7 +122,6 @@ void player_ship_handler(ak_msg_t* msg)
         player_ship_fire();
         break;
     case SHIP_MOVE_UP_SIG:
-        APP_DBG_SIG("BUG\n");
         player_ship_move_up();
         break;
     case SHIP_MOVE_DOWN_SIG:
