@@ -20,6 +20,8 @@ void enemy_ship_init()
     myEnemyShip.ship.action_image = rand() % 3 + 1;
     myEnemyShip.health = SHIP_LIFE;
     myEnemyShip.num_missiles = MAX_NUM_OF_ENEMY_MISSILE;
+    APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
+    APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 }
 
 uint8_t ship_action;
@@ -258,8 +260,10 @@ void enemy_ship_reset()
     myEnemyShip.ship.x = 0;
     myEnemyShip.ship.y = 0;
     myEnemyShip.ship.action_image = rand() % 3 + 1;
-    myEnemyShip.health = SHIP_LIFE;
-    myEnemyShip.num_missiles = MAX_NUM_OF_ENEMY_MISSILE;
+    myEnemyShip.health = SHIP_LIFE + (myShip.fly_speed);
+    myEnemyShip.num_missiles = MAX_NUM_OF_ENEMY_MISSILE + (myShip.fly_speed);
+    APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
+    APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 }
 
 void enemy_ship_handler(ak_msg_t* msg)

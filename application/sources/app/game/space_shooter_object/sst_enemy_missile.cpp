@@ -68,10 +68,8 @@ void enemy_missile_hit()
         // Check if there is a collision between the enemy missile and the player's ship
         if (enemy_missile_player_ship_collision(i))
         {
-            // TODO: fix bug collision not detected
             APP_DBG_SIG("Enemy missile hit ship\n");
             APP_DBG_SIG("Ship hited by enemy missile no %d\n", i);
-            APP_DBG_SIG("Enemy missile no %d position x = %d y = %d\n", i, myEnemyMissile[i].x, myEnemyMissile[i].y);
 
             // Set the visibility of the explosion to white and update its position to the player's ship's position
             myExplosion.visible = WHITE;
@@ -112,7 +110,7 @@ void enemy_missile_fired()
             myEnemyMissile[i].visible = WHITE;
 
             // Print debug message
-            APP_DBG_SIG("Enemy missile fired\n");
+            APP_DBG_SIG("Enemy missile[%d] fired at (%d, %d)\n", i, myEnemyMissile[i].x, myEnemyMissile[i].y);
 
             // Exit the loop
             break;
@@ -142,8 +140,6 @@ void enemy_missile_flight()
             {
                 // Reset the enemy missile's visibility
                 myEnemyMissile[i].visible = BLACK;
-                // myEnemyMissile[i].x = myEnemyShip.ship.x;
-                // myEnemyMissile[i].y = myEnemyShip.ship.y + SHIP_Y_OFFSET_FOR_MISSILES;
 
                 // Increment the number of enemy missiles
                 myEnemyShip.num_missiles++;
