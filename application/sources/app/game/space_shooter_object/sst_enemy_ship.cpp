@@ -30,7 +30,7 @@ enum Actions
     MOVE_UP,
     MOVE_DOWN,
     FIRE,
-    DO_NOTTHING
+    DO_NOTHING
 };
 /**
  * @brief Randomizes the action for the enemy ship.
@@ -69,7 +69,129 @@ int8_t randomize_enemy_ship_control()
         return FIRE;
     }
 
-    return DO_NOTTHING;
+    return DO_NOTHING;
+}
+
+uint8_t strategy_based_enemy_decide_action()
+{
+    static uint8_t decision_interval = 0;
+    int random_factor = rand() % 100; // Random number between 0 and 99
+
+    if (decision_interval == 0)
+    {
+        if (myShip.ship.y < myEnemyShip.ship.y)
+        {
+            if (random_factor < 60) // 60% chance to move up if player is above
+            {
+                task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+                return MOVE_UP;
+            }
+            else if (random_factor < 80) // 20% chance to fire if player is above
+            {
+                task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+                return FIRE;
+            }
+        }
+        else if (myShip.ship.y > myEnemyShip.ship.y)
+        {
+            if (random_factor < 60) // 60% chance to move down if player is below
+            {
+                task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+                return MOVE_DOWN;
+            }
+            else if (random_factor < 80) // 20% chance to fire if player is below
+            {
+                task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+                return FIRE;
+            }
+        }
+        else
+        {
+            // Player is at the same y-coordinate, decide whether to fire or not with some randomness
+            if (random_factor < 20) // 20% chance to fire when player is at the same y-coordinate
+            {
+                task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+                return FIRE;
+            }
+        }
+
+        decision_interval = (rand() % 5 + 10) - (myShip.fly_speed - 1); // Randomize decision interval between 10 and 14 frames, reduce interval based on player speed
+    }
+    else
+    {
+        decision_interval--;
+        return DO_NOTHING;
+    }
+}
+
+uint8_t better_random_enemy_decide_action()
+{
+    static uint8_t decision_interval = 0;
+    int8_t relative_player_enemy_position = myShip.ship.y - myEnemyShip.ship.y; // Pre-calculate relative player-enemy position
+
+    if (decision_interval == 0)
+    {
+        // TODO: take in Player(x, y) and Enemy(x, y) as parameter to generate random number
+        int random_factor = rand() % 100; // Random number between 0 and 99
+        int base_probability = 20 + myShip.fly_speed;
+
+        // Vary action probabilities based on game state or difficulty level
+        int move_up_probability = base_probability;         // Base probability for moving up
+        int move_down_probability = base_probability;       // Base probability for moving down
+        int fire_probability = base_probability - 10;       // Base probability for firing
+
+        // Adjust probabilities based on relative position
+        if (relative_player_enemy_position < -10)
+        {
+            // Player is significantly above, bias towards moving up or firing
+            move_up_probability += 30;
+            move_down_probability -= 10;
+            fire_probability += 10;
+        }
+        else if (relative_player_enemy_position > 10)
+        {
+            // Player is significantly below, bias towards moving down or firing
+            move_up_probability -= 10;
+            move_down_probability += 30;
+            fire_probability += 10;
+        }
+        else
+        {
+            // Player is at a similar level, bias towards firing
+            fire_probability += 20;
+        }
+
+        // Determine action based on probabilities
+        if (random_factor < move_up_probability)
+        {
+            task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+            ship_action = MOVE_UP;
+        }
+        else if (random_factor < move_up_probability + move_down_probability)
+        {
+            task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+            ship_action = MOVE_DOWN;
+        }
+        else if (random_factor < move_up_probability + move_down_probability + fire_probability)
+        {
+            task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+            ship_action = FIRE;
+        }
+        else
+        {
+            ship_action = DO_NOTHING;
+        }
+        // Reset decision interval and update previous player position
+        decision_interval = (rand() % 10 + 9) - (myShip.fly_speed - 1); // Random base interval between 9 and 18 frames, depending on player speed
+        APP_DBG_SIG("Decision interval: %d\n", decision_interval);
+    }
+    else
+    {
+        decision_interval--;
+        APP_DBG_SIG("Decision interval: %d\n", decision_interval);
+    }
+
+    return ship_action;
 }
 
 /**
@@ -131,28 +253,29 @@ void enemy_ship_flight()
     // Adjust the ship's position based on conditions
     if (myEnemyShip.ship.x > 100)
     {
+        // Fly enemy ship in range
         myEnemyShip.ship.x -= 2;
-        // Increment the action image of the ship
-        myEnemyShip.ship.action_image++;
-
-        // Reset the action image if it reaches 4
-        if (myEnemyShip.ship.action_image == 4)
-        {
-            myEnemyShip.ship.action_image = 1;
-        }
     }
     else
     {
-        // Increment the action image of the ship
-        myEnemyShip.ship.action_image++;
-
-        // Reset the action image if it reaches 4
-        if (myEnemyShip.ship.action_image == 4)
+        // Call the randomize_enemy_ship_control function to determine the ship's next action
+        if (myShip.score > 800)
         {
-            myEnemyShip.ship.action_image = 1;
-            // Call the randomize_enemy_ship_control function to determine the ship's next action
-            ship_action = randomize_enemy_ship_control();
+            ship_action = strategy_based_enemy_decide_action();
         }
+        else
+        {
+            ship_action = better_random_enemy_decide_action();
+        }
+    }
+
+    // Increment the action image of the ship
+    myEnemyShip.ship.action_image++;
+
+    // Reset the action image if it reaches 4
+    if (myEnemyShip.ship.action_image == 4)
+    {
+        myEnemyShip.ship.action_image = 1;
     }
 }
 void enemy_ship_health_control()
@@ -266,7 +389,7 @@ void enemy_ship_reset()
     APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 }
 
-void enemy_ship_handler(ak_msg_t* msg)
+void enemy_ship_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {
