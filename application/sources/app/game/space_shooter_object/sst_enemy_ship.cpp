@@ -120,8 +120,9 @@ uint8_t strategy_based_enemy_decide_action()
     else
     {
         decision_interval--;
-        return DO_NOTHING;
     }
+
+    return DO_NOTHING;
 }
 
 uint8_t better_random_enemy_decide_action()
@@ -132,13 +133,13 @@ uint8_t better_random_enemy_decide_action()
     if (decision_interval == 0)
     {
         // TODO: take in Player(x, y) and Enemy(x, y) as parameter to generate random number
-        int random_factor = rand() % 100; // Random number between 0 and 99
-        int base_probability = 20 + myShip.fly_speed;
+        uint8_t random_factor = rand() % 100; // Random number between 0 and 99
+        uint8_t base_probability = 20 + myShip.fly_speed;
 
         // Vary action probabilities based on game state or difficulty level
-        int move_up_probability = base_probability;         // Base probability for moving up
-        int move_down_probability = base_probability;       // Base probability for moving down
-        int fire_probability = base_probability - 10;       // Base probability for firing
+        uint8_t move_up_probability = base_probability;   // Base probability for moving up
+        uint8_t move_down_probability = base_probability; // Base probability for moving down
+        uint8_t fire_probability = base_probability - 10; // Base probability for firing
 
         // Adjust probabilities based on relative position
         if (relative_player_enemy_position < -10)

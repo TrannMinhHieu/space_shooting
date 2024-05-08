@@ -1,5 +1,5 @@
-CFLAGS		+= -I./sources/app/game/space_shooter_object
-CPPFLAGS	+= -I./sources/app/game/space_shooter_object
+CFLAGS		+= -I./sources/app/game/game_libraries/game_obj_lib
+CPPFLAGS	+= -I./sources/app/game/game_libraries/game_obj_lib
 
 VPATH += sources/app/game/space_shooter_object
 
