@@ -224,8 +224,8 @@ void asteroid_reset()
         // Set the visibility of the asteroid to black.
         myAsteroid[i].visible = BLACK;
 
-        // Assign a new random x-coordinate within the range of 130 to 198.
-        myAsteroid[i].x = (rand() % 39) + 160;
+        // Assign a new random x-coordinate within the range of 130 to 168.
+        myAsteroid[i].x = (rand() % 39) + 130;
 
         // Assign a new random action image to the asteroid.
         myAsteroid[i].action_image = rand() % 3 + 1;
