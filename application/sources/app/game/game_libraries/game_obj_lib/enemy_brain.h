@@ -2,6 +2,8 @@
 #define ENEMY_BRAIN_H
 
 #include <stdio.h>
+#include <chrono>
+#include <thread>
 
 #include "fsm.h"
 #include "port.h"
@@ -41,7 +43,7 @@ enum Actions
  * @param: None
  * @return: The action for the enemy ship. Possible values are MOVE_UP, MOVE_DOWN, FIRE, or DO_NOTHING.
  */
-int8_t randomize_enemy_ship_control()
+int8_t simple_randomize_enemy_control()
 {
     // TODO: use better randomize function
 
@@ -80,7 +82,7 @@ int8_t randomize_enemy_ship_control()
  *
  * @return The action for the enemy ship: MOVE_UP, MOVE_DOWN, FIRE, or DO_NOTHING.
  */
-uint8_t strategy_based_enemy_decide_action()
+uint8_t strategy_based_enemy_control()
 {
     static uint8_t decision_interval = 0;
     int random_factor = rand() % 100; // Random number between 0 and 99
@@ -141,7 +143,7 @@ uint8_t strategy_based_enemy_decide_action()
  *
  * @return Enemy action: MOVE_UP, MOVE_DOWN, FIRE, or DO_NOTHING.
  */
-uint8_t better_random_enemy_decide_action()
+uint8_t better_randomize_enemy_control()
 {
     static uint8_t decision_interval = 0;
     int8_t relative_player_enemy_position = myShip.ship.y - myEnemyShip.ship.y; // Pre-calculate relative player-enemy position
@@ -191,7 +193,9 @@ uint8_t better_random_enemy_decide_action()
         }
         else if (random_factor < move_up_probability + move_down_probability + fire_probability)
         {
-            task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+            timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
+            //task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+            // std::this_thread::sleep_for(std::chrono::milliseconds(800));
             ship_action = FIRE;
         }
         else
@@ -199,7 +203,7 @@ uint8_t better_random_enemy_decide_action()
             ship_action = DO_NOTHING;
         }
         // Reset decision interval and update previous player position
-        decision_interval = (rand() % 10 + 9) - (myShip.fly_speed - 1); // Random base interval between 9 and 18 frames, depending on player speed
+        decision_interval = (rand() % 5 + 15) - (myShip.fly_speed - 1); // Random base interval between 15 and 19 frames, depending on player speed
         APP_DBG_SIG("Decision interval: %d\n", decision_interval);
     }
     else

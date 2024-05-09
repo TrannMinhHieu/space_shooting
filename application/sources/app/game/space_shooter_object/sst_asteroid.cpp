@@ -181,8 +181,8 @@ void asteroid_field_control()
             APP_DBG_SIG("Number of asteroids destroyed: %d\n", asteroid_count);
         }
 
-        // Check if the asteroid_count is equal to or greater than 15
-        if (asteroid_count >= 15)
+        // Check if the asteroid_count is equal to or greater than 15 (base), increased by 4 for each speed level
+        if (asteroid_count >= 15 + ((myShip.fly_speed - 1) * 4))
         {
             // Reset all the asteroids
             APP_DBG_SIG("Reset asteroids\n");

@@ -92,11 +92,11 @@ void enemy_ship_flight()
         // Call the randomize_enemy_ship_control function to determine the ship's next action
         if (myShip.score > 800)
         {
-            ship_action = strategy_based_enemy_decide_action();
+            ship_action = strategy_based_enemy_control();
         }
         else
         {
-            ship_action = better_random_enemy_decide_action();
+            ship_action = better_randomize_enemy_control();
         }
     }
 
