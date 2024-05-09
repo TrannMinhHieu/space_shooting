@@ -9,7 +9,3 @@ endif
 ifeq ($(TASK_ZIGBEE_OPTION),-DTASK_ZIGBEE_EN)
 include sources/networks/ArduinoZigBee/Makefile.mk
 endif
-
-ifeq ($(TASK_MBMASTER_OPTION),-DTASK_MBMASTER_EN)
-include sources/networks/mbmaster-v2.9.6/Makefile.mk
-endif
