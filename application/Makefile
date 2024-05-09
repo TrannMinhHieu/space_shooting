@@ -53,7 +53,6 @@ USB_OPTION = -UUSING_USB_MOD
 
 # Interface compile option.
 IF_LINK_OPTION = -DIF_LINK_UART_EN
-IF_NETWORK_NRF24_OPTION = -UIF_NETWORK_NRF24_EN
 
 # Task compile option.
 

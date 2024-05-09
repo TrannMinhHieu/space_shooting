@@ -408,9 +408,6 @@ void exti_line1_irq() {
 	task_entry_interrupt();
 
 	if (EXTI_GetITStatus(EXTI_Line1) != RESET) {
-#if defined(IF_NETWORK_NRF24_EN)
-		sys_irq_nrf24l01();
-#endif
 		EXTI_ClearITPendingBit(EXTI_Line1);
 	}
 

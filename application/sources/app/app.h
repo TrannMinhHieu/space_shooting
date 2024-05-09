@@ -14,9 +14,6 @@ extern "C"
 #endif
 
 #include "ak.h"
-#if defined (IF_NETWORK_NRF24_EN)
-#include "nrf_nwk_sig.h"
-#endif
 
 #include "app_if.h"
 #include "app_eeprom.h"

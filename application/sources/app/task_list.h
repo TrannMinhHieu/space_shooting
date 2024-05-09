@@ -22,7 +22,6 @@ enum {
 	AC_TASK_SHELL_ID,
 	AC_TASK_LIFE_ID,
 	AC_TASK_IF_ID,
-	AC_TASK_RF24_IF_ID,
 	AC_TASK_UART_IF_ID,
 	AC_TASK_DBG_ID,
 	AC_TASK_DISPLAY_ID,
@@ -35,13 +34,6 @@ enum {
 	ENEMY_SHIP_TASK_ID,
 	ENEMY_MISSILE_TASK_ID,
 	GAMEPLAY_TASK_ID,
-
-	/* NRF24 NETWORKS */
-#if defined (IF_NETWORK_NRF24_EN)
-	AC_RF24_PHY_ID,
-	AC_RF24_MAC_ID,
-	AC_RF24_NWK_ID,
-#endif
 
 	/* LINK */
 #if defined (IF_LINK_UART_EN)
@@ -77,7 +69,6 @@ extern void task_fw(ak_msg_t*);
 extern void task_shell(ak_msg_t*);
 extern void task_life(ak_msg_t*);
 extern void task_if(ak_msg_t*);
-extern void task_rf24_if(ak_msg_t*);
 extern void task_uart_if(ak_msg_t*);
 extern void task_dbg(ak_msg_t*);
 extern void task_display(ak_msg_t*);
@@ -98,18 +89,10 @@ extern void enemy_ship_handler(ak_msg_t*);
 // Game play handler
 extern void game_play_handler(ak_msg_t*);
 
-/* RF24 NETWORK TASK */
-extern void task_rf24_phy(ak_msg_t*);
-extern void task_rf24_mac(ak_msg_t*);
-extern void task_rf24_nwk(ak_msg_t*);
-
 /* LINK TASK */
 extern void task_link_phy(ak_msg_t*);
 extern void task_link_mac(ak_msg_t*);
 extern void task_link(ak_msg_t*);
-
-/* RF24 DEMO TASK */
-extern void task_rf24_demo(ak_msg_t*);
 
 /*****************************************************************************/
 /*  DECLARE: Task polling
