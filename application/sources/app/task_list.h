@@ -61,7 +61,6 @@ enum {
 /*****************************************************************************/
 enum {
 	/* APP TASKS */
-	AC_TASK_POLLING_ZIGBEE_ID,
 	AC_TASK_POLLING_CONSOLE_ID,
 
 	/* EOT polling task ID */
@@ -82,7 +81,6 @@ extern void task_rf24_if(ak_msg_t*);
 extern void task_uart_if(ak_msg_t*);
 extern void task_dbg(ak_msg_t*);
 extern void task_display(ak_msg_t*);
-extern void task_zigbee(ak_msg_t*);
 
 /* GAME TASKS */
 // Common object handler
@@ -117,7 +115,6 @@ extern void task_rf24_demo(ak_msg_t*);
 /*  DECLARE: Task polling
  */
 /*****************************************************************************/
-extern void task_polling_zigbee();
 extern void task_polling_console();
 
 #endif //__TASK_LIST_H__
