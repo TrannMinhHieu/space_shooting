@@ -33,8 +33,14 @@
 #define GAME_PLAY   (1)
 #define GAME_OVER   (2)
 
-#define GAME_STAGE_SHIP_FIGHT		(0)
-#define GAME_STAGE_ASTEROID_FEILD	(1)
+// #define GAME_STAGE_SHIP_FIGHT		(0)
+// #define GAME_STAGE_ASTEROID_FEILD	(1)
+
+enum Stages{
+    GAME_STAGE_SHIP_FIGHT,
+    GAME_STAGE_ASTEROID_FEILD,
+    GAME_STAGE_TERRAIN,
+};
 
 // global game state
 extern uint8_t game_state;

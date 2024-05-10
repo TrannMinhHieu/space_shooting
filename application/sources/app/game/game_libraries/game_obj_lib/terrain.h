@@ -15,15 +15,15 @@
 #include "task_display.h"
 #include "view_render.h"
 
-#include "perlin_noise.h"
-
 class TerrainCoordinates
 {
 public:
     int x;
     int y;
 
-    TerrainCoordinates();
+    void coordinates();
     void terrainMover();
 };
-std ::vector<TerrainCoordinates> v_terrain;
+
+extern std::vector<TerrainCoordinates> v_terrain;
+extern void terrain_handler(ak_msg_t* msg);

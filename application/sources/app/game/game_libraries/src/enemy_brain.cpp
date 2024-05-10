@@ -54,8 +54,8 @@ uint8_t simple_randomize_enemy_control()
 /**
  * @brief Determines the enemy ship's action based on player's relative position.
  *
- * @details Decides enemy action using a strategy influenced by the player's y-coordinate. 
- * Actions include moving up or down with a 60% chance, firing with a 20% chance, or doing nothing. 
+ * @details Decides enemy action using a strategy influenced by the player's y-coordinate.
+ * Actions include moving up or down with a 60% chance, firing with a 20% chance, or doing nothing.
  * The decision interval is adjusted based on player speed and randomized between 10 and 14 frames.
  *
  * @return The action for the enemy ship: MOVE_UP, MOVE_DOWN, FIRE, or DO_NOTHING.
@@ -116,7 +116,7 @@ uint8_t strategy_based_enemy_control()
 /**
  * @brief Determines enemy ship's action based on player's relative position and game difficulty.
  *
- * @details Calculates action probabilities for moving up, down, or firing, adjusted by player-enemy position and game state. 
+ * @details Calculates action probabilities for moving up, down, or firing, adjusted by player-enemy position and game state.
  * Randomizes decision intervals influenced by player speed.
  *
  * @return Enemy action: MOVE_UP, MOVE_DOWN, FIRE, or DO_NOTHING.
@@ -172,8 +172,8 @@ uint8_t better_randomize_enemy_control()
         else if (random_factor < move_up_probability + move_down_probability + fire_probability)
         {
             timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
-            //task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
-            // std::this_thread::sleep_for(std::chrono::milliseconds(800));
+            // task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+            //  std::this_thread::sleep_for(std::chrono::milliseconds(800));
             ship_action = FIRE;
         }
         else
@@ -191,4 +191,48 @@ uint8_t better_randomize_enemy_control()
     }
 
     return ship_action;
+}
+
+void better_strategy_based_enemy_control()
+{
+    uint8_t actions_performed_counter = 0;
+    static uint8_t decision_interval = 0;
+
+    if (actions_performed_counter == 0)
+    {
+        // Enemy does not perform any actions
+    }
+
+    if (decision_interval == 0)
+    {
+    }
+    else
+    {
+        decision_interval--;
+    }
+}
+void attack_pattern_1()
+{
+    // TODO: Implement attack pattern 1
+}
+void attack_pattern_2(uint8_t actions_performed_counter)
+{
+    if(myEnemyShip.ship.x < 130)
+    {
+        myEnemyShip.ship.x += myShip.fly_speed;
+    }
+    else if (myEnemyShip.ship.x > 130)
+    {
+        myEnemyShip.ship.x = 0;
+        myEnemyShip.ship.y = 20;
+    }
+    // TODO: Implement attack pattern 2
+    if (myShip.ship.x < 90)
+    {
+        myShip.ship.x += (90 - myShip.ship.x * 2);
+    }
+}
+void attack_pattern_3()
+{
+    // TODO: Implement attack pattern 3
 }
