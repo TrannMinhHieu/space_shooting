@@ -20,7 +20,7 @@
 #define SIZE_BITMAP_SHIP_X      (15)
 #define SIZE_BITMAP_SHIP_Y      (15)
 #define SHIP_X_COORDINATE       (0)
-#define SHIP_Y_COORDINATE       (0)
+#define SHIP_Y_COORDINATE       (20)
 
 #define SHIP_LIFE               (3)
 

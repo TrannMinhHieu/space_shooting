@@ -1,37 +1,36 @@
 #include "terrain.h"
 #include <vector>
 
-struct point
-{
-    int x;
-    int y;
-};
+using namespace std;
 
-void generate_terrain()
-{
-    // TODO: randomize x coordinates
-    int y = rand() % 20 + 10;
-    int x = 120;
+std::vector<TerrainCoordinates> v_terrain;
 
-    point p = {x, y};
-    v_terrain.push_back(p);
+TerrainCoordinates::TerrainCoordinates() {
+    this->x = rand() % (LCD_WIDTH - 10);
+    this->y = rand() % (LCD_HEIGHT - 10);
 }
 
-std::vector<point> v_terrain;
-void update_terrain()
-{
-    // TODO: update terrain
-    // store in a vector with x and y coordinates
-    // x = x + 1;
-    // draw on screen
+void TerrainCoordinates::terrainMover() {
+    this->x = this->x - 1;
 
-    for (int i = 0; i < v_terrain.size(); i++)
-    {
-        v_terrain[i].x = v_terrain[i].x + 1;
+    if (this->x < 0) {
+        this->x = rand() % (LCD_WIDTH - 10);
+        this->y = rand() % (LCD_HEIGHT - 10);
+    }
+}
 
-        if (v_terrain[i].x < 10)
-        {
-            v_terrain.erase(v_terrain.begin() + i);
+void terrain_generate() {
+    for(int i = 0; i < 10; i++) {
+        v_terrain.push_back(TerrainCoordinates());
+    }
+}
+
+void terrain_update() {
+    for (uint8_t i = 0; i < v_terrain.size(); i++) {
+        v_terrain[i].terrainMover();
+        if(v_terrain[i].x < 0) {
+            v_terrain[i].x = rand() % (LCD_WIDTH - 10);
+            v_terrain[i].y = rand() % (LCD_HEIGHT - 10);
         }
     }
 }

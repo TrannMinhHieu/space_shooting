@@ -120,7 +120,7 @@ void scr_idle_handle(ak_msg_t* msg) {
 	case AC_DISPLAY_BUTTON_MODE_RELEASED: {
 		APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_RELEASED\n");
 		timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE);
-		SCREEN_TRAN(game_menu_handler, &game_menu);
+		SCREEN_TRAN(game_menu_handler, &sst_game_menu);
 	}
 		break;
 	// case AC_DISPLAY_BUTTON_MODE_RELEASED: {

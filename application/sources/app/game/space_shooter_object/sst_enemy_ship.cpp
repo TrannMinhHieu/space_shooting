@@ -16,8 +16,8 @@ void enemy_ship_init()
 {
     APP_DBG_SIG("Enemy ship init\n");
     myEnemyShip.ship.visible = BLACK;
-    myEnemyShip.ship.x = 0;
-    myEnemyShip.ship.y = 0;
+    myEnemyShip.ship.x = SHIP_X_COORDINATE;
+    myEnemyShip.ship.y = SHIP_Y_COORDINATE;
     myEnemyShip.ship.action_image = rand() % 3 + 1;
     myEnemyShip.health = SHIP_LIFE;
     myEnemyShip.num_missiles = MAX_NUM_OF_ENEMY_MISSILE;

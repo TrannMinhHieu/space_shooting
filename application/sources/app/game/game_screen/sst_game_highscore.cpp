@@ -4,14 +4,14 @@ game_score_t game_score;
 
 static void highscore_render();
 
-view_dynamic_t dyn_view_highscore = {
+view_dynamic_t dyn_view_sst_game_highscore = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
     },
     highscore_render};
 
-view_screen_t game_highscore = {
-    &dyn_view_highscore,
+view_screen_t sst_game_highscore = {
+    &dyn_view_sst_game_highscore,
     ITEM_NULL,
     ITEM_NULL,
 
@@ -88,7 +88,7 @@ void game_highscore_handler(ak_msg_t* msg)
     case AC_DISPLAY_BUTTON_MODE_RELEASED:
     {
         APP_DBG_SIG("OUT_HIGH_SCORE\n");
-        SCREEN_TRAN(game_menu_handler, &game_menu);
+        SCREEN_TRAN(game_menu_handler, &sst_game_menu);
     }
     break;
     default:

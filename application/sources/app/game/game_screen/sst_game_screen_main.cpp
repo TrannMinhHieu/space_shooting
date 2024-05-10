@@ -198,23 +198,23 @@ void enemy_missile_draw()
     }
 }
 
-static void space_shooting_gameplay();
+static void space_shooting_gameplay_render();
 
-view_dynamic_t dyn_view_game = {
+view_dynamic_t dyn_view_sst_game_screen = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
     },
-    space_shooting_gameplay};
+    space_shooting_gameplay_render};
 
-view_screen_t game_screen = {
-    &dyn_view_game,
+view_screen_t sst_game_screen = {
+    &dyn_view_sst_game_screen,
     ITEM_NULL,
     ITEM_NULL,
 
     .focus_item = 0,
 };
 
-void space_shooting_gameplay()
+void space_shooting_gameplay_render()
 {
     if (game_state == GAME_PLAY)
     {
@@ -289,7 +289,7 @@ void game_play_handler(ak_msg_t* msg)
         break;
 
     case AC_DISPLAY_SHOW_GAME_HIGHSCORE:
-        SCREEN_TRAN(game_highscore_handler, &game_highscore);
+        SCREEN_TRAN(game_highscore_handler, &sst_game_highscore);
         break;
 
     default:

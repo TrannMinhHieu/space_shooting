@@ -266,7 +266,7 @@ void app_init_state_machine() {
  * used for app tasks
  */
 void app_task_init() {
-	SCREEN_CTOR(&scr_mng_app, scr_startup_handle, &scr_startup);
+	SCREEN_CTOR(&scr_mng_app, game_startup_handler, &sst_game_startup);
 
 	task_post_pure_msg(AC_TASK_UART_IF_ID, AC_UART_IF_INIT);
 }

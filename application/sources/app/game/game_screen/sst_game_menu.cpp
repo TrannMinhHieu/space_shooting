@@ -62,7 +62,7 @@ view_dynamic_t dyn_view_game_menu = {
     },
     menu_render};
 
-view_screen_t game_menu = {
+view_screen_t sst_game_menu = {
     &dyn_view_game_menu,
     ITEM_NULL,
     ITEM_NULL,
@@ -101,13 +101,13 @@ void menu_cursor_focus()
     switch (screen_menu.location)
     {
     case 0:
-        SCREEN_TRAN(game_play_handler, &game_screen);
+        SCREEN_TRAN(game_play_handler, &sst_game_screen);
         break;
     case 1:
-        SCREEN_TRAN(game_highscore_handler, &game_highscore);
+        SCREEN_TRAN(game_highscore_handler, &sst_game_highscore);
         break;
     case 2:
-        SCREEN_TRAN(scr_idle_handle, &scr_idle);
+        SCREEN_TRAN(game_idle_handler, &sst_game_idle);
         break;
     default:
         break;
@@ -130,7 +130,7 @@ void game_menu_handler(ak_msg_t *msg)
 
     case AC_DISPLAY_SHOW_IDLE:
     {
-        SCREEN_TRAN(scr_idle_handle, &scr_idle);
+        SCREEN_TRAN(game_idle_handler, &sst_game_idle);
     }
     break;
 

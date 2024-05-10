@@ -20,8 +20,8 @@
 
 #include "sst_game_menu.h"
 
-extern view_dynamic_t dyn_view_highscore;
-extern view_screen_t game_highscore;
+extern view_dynamic_t dyn_view_sst_game_highscore;
+extern view_screen_t sst_game_highscore;
 
 typedef struct
 {

@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <vector>
+#ifndef __SST_GAME_IDLE_H__
+#define __SST_GAME_IDLE_H__
 
 #include "fsm.h"
 #include "port.h"
@@ -15,15 +15,10 @@
 #include "task_display.h"
 #include "view_render.h"
 
-#include "perlin_noise.h"
+#include "buzzer.h"
 
-class TerrainCoordinates
-{
-public:
-    int x;
-    int y;
+extern view_dynamic_t dyn_view_sst_game_idle;
+extern view_screen_t sst_game_idle;
+extern void sst_game_idle_handler(ak_msg_t* msg);
 
-    TerrainCoordinates();
-    void terrainMover();
-};
-std ::vector<TerrainCoordinates> v_terrain;
+#endif

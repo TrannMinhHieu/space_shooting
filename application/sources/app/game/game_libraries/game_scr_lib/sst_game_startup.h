@@ -1,5 +1,5 @@
-#ifndef __SCR_STARTUP_H__
-#define __SCR_STARTUP_H__
+#ifndef __SST_GAME_STARTUP_H__
+#define __SST_GAME_STARTUP_H__
 
 #include "fsm.h"
 #include "port.h"
@@ -20,8 +20,8 @@
 
 #include "buzzer.h"
 
-extern view_dynamic_t dyn_view_startup;
-extern view_screen_t scr_startup;
-extern void scr_startup_handle(ak_msg_t* msg);
+extern view_dynamic_t dyn_view_sst_game_startup;
+extern view_screen_t sst_game_startup;
+extern void game_startup_handler(ak_msg_t* msg);
 
-#endif //__SCR_STARTUP_H__
+#endif // SST_GAME_STARTUP_H
