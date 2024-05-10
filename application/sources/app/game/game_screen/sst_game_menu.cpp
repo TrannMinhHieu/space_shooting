@@ -49,7 +49,6 @@ typedef struct
 } menu_display_frame;
 
 screen_display screen_menu;
-menu_screen menu_option;
 menu_scroll_bar scroll_bar;
 menu_display_frame display_frame;
 menu_display_frame frame[3];
@@ -75,13 +74,16 @@ void menu_render()
 {
 #define GAME_MENU_TEXT_SPACING_X_AXIS (10)
 
-    view_render.fillRect(scroll_bar.axis_x, scroll_bar.axis_y, scroll_bar.size_w, scroll_bar.size_h, WHITE);
-    view_render.drawBitmap(scroll_bar.axis_x, 0, dot_icon, 1, MENU_SCREEN_VISIBLE_HEIGHT, WHITE);
+    // view_render.fillRect(scroll_bar.axis_x, scroll_bar.axis_y, scroll_bar.size_w, scroll_bar.size_h, WHITE);
+    // view_render.drawBitmap(scroll_bar.axis_x, 0, dot_icon, 1, MENU_SCREEN_VISIBLE_HEIGHT, WHITE);
 
     view_render.setTextSize(1);
     for (uint8_t i = 0; i < NUM_OF_ITEMS_ON_SCREEN; i++)
     {
-        view_render.setCursor(GAME_MENU_TEXT_SPACING_X_AXIS, i * ITEM_SPACING + 5);
+        view_render.setCursor(GAME_MENU_TEXT_SPACING_X_AXIS, i * ITEM_SPACING);
+        view_render.drawFastVLine(display_frame.axis_x + 2, display_frame.axis_y + 4, 10, WHITE);
+
+        view_render.setCursor(GAME_MENU_TEXT_SPACING_X_AXIS, i * ITEM_SPACING + 6);
         view_render.print(menu_items_name[screen_menu.screen + i]);
     }
 }
@@ -89,11 +91,11 @@ void menu_render()
 void menu_cursor()
 {
     display_frame.axis_y = frame[screen_menu.location - screen_menu.screen].axis_y;
-    frame[0].axis_y = 5;
-    frame[1].axis_y = 25;
-    frame[2].axis_y = 45;
+    frame[0].axis_y = 0;
+    frame[1].axis_y = 20;
+    frame[2].axis_y = 40;
 
-    scroll_bar.axis_y = MENU_SCREEN_VISIBLE_HEIGHT * screen_menu.location / NUM_OF_ITEMS;
+    //scroll_bar.axis_y = MENU_SCREEN_VISIBLE_HEIGHT * screen_menu.location / NUM_OF_ITEMS;
 }
 
 void menu_cursor_focus()

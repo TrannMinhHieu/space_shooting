@@ -84,6 +84,11 @@ void player_ship_move_down()
     {
         myShip.ship.y += SHIP_Y_STEP;
     }
+    // myShip.ship.y += SHIP_Y_STEP;
+    // if (myShip.ship.y > 40)
+    // {
+    //     myShip.ship.y = 40;
+    // }
 }
 
 /**

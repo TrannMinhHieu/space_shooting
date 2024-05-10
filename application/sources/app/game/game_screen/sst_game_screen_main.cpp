@@ -290,6 +290,7 @@ void game_play_handler(ak_msg_t* msg)
 
     case AC_DISPLAY_SHOW_GAME_HIGHSCORE:
         SCREEN_TRAN(game_highscore_handler, &sst_game_highscore);
+        game_score.current_score = 0;
         break;
 
     default:
