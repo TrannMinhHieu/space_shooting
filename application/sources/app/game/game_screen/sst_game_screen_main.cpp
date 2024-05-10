@@ -183,14 +183,14 @@ void enemy_ship_draw()
  */
 void enemy_missile_draw()
 {
-    for (uint8_t i = 0; i < MAX_NUM_OF_ENEMY_MISSILE; i++)
+    for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
     {
-        if (myEnemyMissile[i].visible != WHITE)
+        if (v_myEnemyMissiles[i].visible != WHITE)
         {
             continue;
         }
-        view_render.drawBitmap(myEnemyMissile[i].x,
-                               myEnemyMissile[i].y,
+        view_render.drawBitmap(v_myEnemyMissiles[i].x,
+                               v_myEnemyMissiles[i].y,
                                bitmap_missile_enemy,
                                SIZE_MISSILE_BITMAP_X,
                                SIZE_MISSILE_BITMAP_Y,

@@ -1,6 +1,7 @@
 #include "sst_missile.h"
 
-Missile myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
+Missile myEnemyMissile;
+std::vector<Missile> v_myEnemyMissiles;
 
 bool is_enemy_missile_out_of_screen(uint8_t enemy_missile_index);
 bool enemy_missile_player_missile_collision(uint8_t enemy_missile_index);
@@ -16,14 +17,17 @@ bool enemy_missile_player_ship_collision(uint8_t enemy_missile_index);
  */
 void enemy_missile_inint()
 {
-    // Iterate over each element of the myEnemyMissile array
-    for (uint8_t i = 0; i < MAX_NUM_OF_ENEMY_MISSILE; i++)
+    // For each element of the v_myEnemyMissiles vector
+    for(uint8_t i = 0; i < myEnemyShip.num_missiles; i++)
     {
         // Set the properties of the current element
-        myEnemyMissile[i].visible = BLACK;
-        myEnemyMissile[i].x = 0;
-        myEnemyMissile[i].y = 0;
-        myEnemyMissile[i].action_image = 1;
+        myEnemyMissile.visible = BLACK;
+        myEnemyMissile.x = 0;
+        myEnemyMissile.y = 0;
+        myEnemyMissile.action_image = 1;
+
+        // Add the current element to the v_myEnemyMissiles vector
+        v_myEnemyMissiles.push_back(myEnemyMissile);
     }
 }
 
@@ -40,8 +44,8 @@ void enemy_missile_inint()
  */
 void enemy_missile_hit()
 {
-    // Iterate over each element of the myEnemyMissile array
-    for (uint8_t i = 0; i < MAX_NUM_OF_ENEMY_MISSILE; i++)
+    // Iterate over each element of the v_myEnemyMissiles vector
+    for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
     {
         // Check if there is a collision between the enemy missile and the player's missile
         if (enemy_missile_player_missile_collision(i))
@@ -50,16 +54,16 @@ void enemy_missile_hit()
 
             // Set the visibility of the explosion to white and update its position to the enemy missile's position
             myExplosion.visible = WHITE;
-            myExplosion.x = myEnemyMissile[i].x;
-            myExplosion.y = myEnemyMissile[i].y;
+            myExplosion.x = v_myEnemyMissiles[i].x;
+            myExplosion.y = v_myEnemyMissiles[i].y;
 
             // Set the visibility of the enemy missile and the player's missile to black
-            myEnemyMissile[i].visible = BLACK;
+            v_myEnemyMissiles[i].visible = BLACK;
             myMissile.visible = BLACK;
 
             // Reset the position of the player's missile and update the enemy missile's position to the enemy ship's position
             myMissile.x = 0;
-            myEnemyMissile[i].x = myEnemyShip.ship.x;
+            v_myEnemyMissiles[i].x = myEnemyShip.ship.x;
 
             // Increment the number of enemy missiles
             myEnemyShip.num_missiles++;
@@ -77,7 +81,7 @@ void enemy_missile_hit()
             myExplosion.y = myShip.ship.y;
 
             // Set the visibility of the enemy missile and the player's ship to black
-            myEnemyMissile[i].visible = BLACK;
+            v_myEnemyMissiles[i].visible = BLACK;
             myShip.ship.visible = BLACK;
 
             // Send a message to the gameplay task to exit the game
@@ -98,19 +102,19 @@ void enemy_missile_hit()
  */
 void enemy_missile_fired()
 {
-    // Iterate over each element of the myEnemyMissile array
-    for (uint8_t i = 0; i < MAX_NUM_OF_ENEMY_MISSILE; i++)
+    // Iterate over each element of the v_myEnemyMissiles vector
+    for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
     {
         // Check if the current enemy missile is not visible (color is black)
-        if (myEnemyMissile[i].visible == BLACK)
+        if (v_myEnemyMissiles[i].visible == BLACK)
         {
             // Set the properties of the missile to make it visible and positioned at the enemy ship's location
-            myEnemyMissile[i].x = myEnemyShip.ship.x;
-            myEnemyMissile[i].y = myEnemyShip.ship.y + SHIP_Y_OFFSET_FOR_MISSILES;
-            myEnemyMissile[i].visible = WHITE;
+            v_myEnemyMissiles[i].x = myEnemyShip.ship.x;
+            v_myEnemyMissiles[i].y = myEnemyShip.ship.y + SHIP_Y_OFFSET_FOR_MISSILES;
+            v_myEnemyMissiles[i].visible = WHITE;
 
             // Print debug message
-            APP_DBG_SIG("Enemy missile[%d] fired at (%d, %d)\n", i, myEnemyMissile[i].x, myEnemyMissile[i].y);
+            APP_DBG_SIG("Enemy missile[%d] fired at (%d, %d)\n", i, v_myEnemyMissiles[i].x, v_myEnemyMissiles[i].y);
 
             // Exit the loop
             break;
@@ -127,19 +131,19 @@ void enemy_missile_fired()
 void enemy_missile_flight()
 {
     // Iterate over each enemy missile
-    for (uint8_t i = 0; i < MAX_NUM_OF_ENEMY_MISSILE; i++)
+    for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
     {
         // Check if the current enemy missile is visible
-        if (myEnemyMissile[i].visible == WHITE)
+        if (v_myEnemyMissiles[i].visible == WHITE)
         {
             // Decrement the x-coordinate by the ship's fly speed
-            myEnemyMissile[i].x -= myShip.fly_speed;
+            v_myEnemyMissiles[i].x -= myShip.fly_speed;
 
             // Check if the enemy missile is out of the screen
             if (is_enemy_missile_out_of_screen(i))
             {
                 // Reset the enemy missile's visibility
-                myEnemyMissile[i].visible = BLACK;
+                v_myEnemyMissiles[i].visible = BLACK;
 
                 // Increment the number of enemy missiles
                 myEnemyShip.num_missiles++;
@@ -158,18 +162,8 @@ void enemy_missile_flight()
  */
 void enemy_missile_reset()
 {
-    for (uint8_t i = 0; i < MAX_NUM_OF_ENEMY_MISSILE; i++)
-    {
-        // Set the visibility of the current enemy missile to black.
-        myEnemyMissile[i].visible = BLACK;
-
-        // Set the x-coordinate and y-coordinate of the current enemy missile to 0.
-        myEnemyMissile[i].x = 0;
-        myEnemyMissile[i].y = 0;
-
-        // Set the action image of the current enemy missile to 1.
-        myEnemyMissile[i].action_image = 1;
-    }
+    // Clear the v_myEnemyMissiles vector
+    v_myEnemyMissiles.clear();
 }
 
 /**
@@ -213,7 +207,7 @@ void enemy_missile_handler(ak_msg_t *msg)
  */
 bool is_enemy_missile_out_of_screen(uint8_t enemy_missile_index)
 {
-    if ((int8_t)(myEnemyMissile[enemy_missile_index].x + SIZE_MISSILE_BITMAP_X) < SCREEN_LEFT_BOUNDARY)
+    if ((int8_t)(v_myEnemyMissiles[enemy_missile_index].x + SIZE_MISSILE_BITMAP_X) < SCREEN_LEFT_BOUNDARY)
     {
         return true;
     }
@@ -231,18 +225,18 @@ bool is_enemy_missile_out_of_screen(uint8_t enemy_missile_index)
 bool enemy_missile_player_missile_collision(uint8_t enemy_missile_index)
 {
     // Check if myMissile and myEnemyMissile are both visible and at the same y position
-    if (myMissile.visible != WHITE || myEnemyMissile[enemy_missile_index].visible != WHITE)
+    if (myMissile.visible != WHITE || v_myEnemyMissiles[enemy_missile_index].visible != WHITE)
     {
         return false;
     };
     // Check if the y positions of the player missile and the enemy missile with offset overlap
-    if (myMissile.y != myEnemyMissile[enemy_missile_index].y)
+    if (myMissile.y != v_myEnemyMissiles[enemy_missile_index].y)
     {
         return false;
     };
 
     // Check if the x positions of the missiles overlap
-    if (myMissile.x + SIZE_MISSILE_BITMAP_X <= myEnemyMissile[enemy_missile_index].x)
+    if (myMissile.x + SIZE_MISSILE_BITMAP_X <= v_myEnemyMissiles[enemy_missile_index].x)
     {
         return false;
     };
@@ -253,18 +247,18 @@ bool enemy_missile_player_missile_collision(uint8_t enemy_missile_index)
 bool enemy_missile_player_ship_collision(uint8_t enemy_missile_index)
 {
     // Check if the ship and the enemy missile are both visible
-    if (myShip.ship.visible != WHITE || myEnemyMissile[enemy_missile_index].visible != WHITE)
+    if (myShip.ship.visible != WHITE || v_myEnemyMissiles[enemy_missile_index].visible != WHITE)
     {
         return false;
     };
     // Check if the y positions of the ship and the enemy missile with offset overlap
-    if (myShip.ship.y != myEnemyMissile[enemy_missile_index].y - SHIP_Y_OFFSET_FOR_MISSILES)
+    if (myShip.ship.y != v_myEnemyMissiles[enemy_missile_index].y - SHIP_Y_OFFSET_FOR_MISSILES)
     {
         return false;
     };
 
     // Check if the x positions of the ship and the enemy missile overlap
-    if (myShip.ship.x + SIZE_BITMAP_SHIP_X <= myEnemyMissile[enemy_missile_index].x)
+    if (myShip.ship.x + SIZE_BITMAP_SHIP_X <= v_myEnemyMissiles[enemy_missile_index].x)
     {
         return false;
     };

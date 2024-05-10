@@ -19,6 +19,12 @@ static char menu_items_name[NUM_OF_ITEMS][15] =
         "EXIT",       // item_3
 };
 
+enum switchToItems {
+    START,
+    HIGH_SCORE,
+    EXIT,
+};
+
 typedef struct
 {
     int screen;
@@ -102,13 +108,13 @@ void menu_cursor_focus()
 {
     switch (screen_menu.location)
     {
-    case 0:
+    case START:
         SCREEN_TRAN(game_play_handler, &sst_game_screen);
         break;
-    case 1:
+    case HIGH_SCORE:
         SCREEN_TRAN(game_highscore_handler, &sst_game_highscore);
         break;
-    case 2:
+    case EXIT:
         SCREEN_TRAN(game_idle_handler, &sst_game_idle);
         break;
     default:
