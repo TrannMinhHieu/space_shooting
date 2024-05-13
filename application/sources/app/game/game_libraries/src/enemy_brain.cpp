@@ -71,12 +71,14 @@ uint8_t strategy_based_enemy_control()
         {
             if (random_factor < 60) // 60% chance to move up if player is above
             {
-                task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+                //task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+                timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG, 100, TIMER_ONE_SHOT);
                 return MOVE_UP;
             }
             else if (random_factor < 80) // 20% chance to fire if player is above
             {
-                task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+                //task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+                timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
                 return FIRE;
             }
         }
@@ -84,12 +86,14 @@ uint8_t strategy_based_enemy_control()
         {
             if (random_factor < 60) // 60% chance to move down if player is below
             {
-                task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+                //task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+                timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG, 100, TIMER_ONE_SHOT);
                 return MOVE_DOWN;
             }
             else if (random_factor < 80) // 20% chance to fire if player is below
             {
-                task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+                //task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+                timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
                 return FIRE;
             }
         }
@@ -98,7 +102,8 @@ uint8_t strategy_based_enemy_control()
             // Player is at the same y-coordinate, decide whether to fire or not with some randomness
             if (random_factor < 20) // 20% chance to fire when player is at the same y-coordinate
             {
-                task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+                //task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+                timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
                 return FIRE;
             }
         }
@@ -205,15 +210,62 @@ void better_strategy_based_enemy_control()
 
     if (decision_interval == 0)
     {
+        //attack_pattern_1(actions_performed_counter);
     }
     else
     {
         decision_interval--;
     }
 }
-void attack_pattern_1()
+void attack_pattern_1(uint8_t actions_performed_counter)
 {
     // TODO: Implement attack pattern 1
+    if(actions_performed_counter == 0)
+    return;
+
+    myEnemyShip.ship.y = 0;
+    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
+    {
+        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
+        actions_performed_counter--;
+    }
+
+    myEnemyShip.ship.y = 10;
+    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
+    {
+        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
+        actions_performed_counter--;
+    }
+
+    myEnemyShip.ship.y = 20;
+    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
+    {
+        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
+        actions_performed_counter--;
+    }
+
+    myEnemyShip.ship.y = 30;
+    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
+    {
+        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
+        actions_performed_counter--;
+    }
+
+    myEnemyShip.ship.y = 40;
+    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
+    {
+        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
+        actions_performed_counter--;
+    }
+
+    myEnemyShip.ship.y = 50;
+    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
+    {
+        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
+        actions_performed_counter--;
+    }
+
+    myEnemyShip.ship.y = 20;
 }
 void attack_pattern_2(uint8_t actions_performed_counter)
 {

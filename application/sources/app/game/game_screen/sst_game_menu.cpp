@@ -122,7 +122,7 @@ void menu_cursor_focus()
     }
 }
 
-void game_menu_handler(ak_msg_t *msg)
+void game_menu_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {

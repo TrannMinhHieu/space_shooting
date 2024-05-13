@@ -2,6 +2,7 @@
 #define __MISSILE_H__
 
 #include <stdio.h>
+#include <vector>
 
 #include "fsm.h"
 #include "port.h"
@@ -25,6 +26,7 @@
 #define SAFE_DISTANCE_TO_FIRE_MISSILE   (80)
 
 #define MAX_NUM_OF_ENEMY_MISSILE        (5)
+#define BASE_NUM_OF_ENEMY_MISSILE       (5)
 
 // Local missile-related constants
 const uint8_t SHIP_Y_OFFSET_FOR_MISSILES = 5;
@@ -36,7 +38,8 @@ typedef struct
     uint8_t action_image;
 } Missile;
 
-extern Missile myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
+//extern Missile myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
 extern Missile myMissile;
+extern std::vector<Missile> v_myEnemyMissiles;
 
 #endif /* __MISSILE_H__ */

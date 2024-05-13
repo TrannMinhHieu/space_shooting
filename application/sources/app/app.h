@@ -271,6 +271,7 @@ enum {
 */
 /*****************************************************************************/
 enum {
+	TERRAIN_INIT_SIG = AK_USER_DEFINE_SIG,
 	TERRAIN_GENERATE_SIG,
 	TERRAIN_UPDATE_SIG,
 	TERRAIN_RESET_SIG,

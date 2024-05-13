@@ -28,6 +28,7 @@
 #include "sst_asteroid.h"
 #include "sst_missile.h"
 #include "sst_explosion.h"
+#include "terrain.h"
 
 #define GAME_OFF    (0)
 #define GAME_PLAY   (1)

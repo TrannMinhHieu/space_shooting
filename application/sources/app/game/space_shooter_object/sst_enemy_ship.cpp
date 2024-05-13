@@ -20,7 +20,7 @@ void enemy_ship_init()
     myEnemyShip.ship.y = SHIP_Y_COORDINATE;
     myEnemyShip.ship.action_image = rand() % 3 + 1;
     myEnemyShip.health = SHIP_LIFE;
-    myEnemyShip.num_missiles = MAX_NUM_OF_ENEMY_MISSILE;
+    myEnemyShip.num_missiles = BASE_NUM_OF_ENEMY_MISSILE;
     APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
     APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 }
@@ -128,9 +128,9 @@ void enemy_ship_health_control()
         // Print debug message
         APP_DBG_SIG("Enemy ship dead\n");
 
-        // Change the game stage to GAME_STAGE_ASTEROID_FEILD
-        task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_SPAWN_SIG);
-        game_stage = GAME_STAGE_ASTEROID_FEILD;
+        // Change the game stage to GAME_STAGE_TERRAIN
+        task_post_pure_msg(TERRAIN_TASK_ID, TERRAIN_INIT_SIG);
+        game_stage = GAME_STAGE_TERRAIN;
 
         // Return from the function
         return;
@@ -215,7 +215,7 @@ void enemy_ship_reset()
     myEnemyShip.ship.y = 0;
     myEnemyShip.ship.action_image = rand() % 3 + 1;
     myEnemyShip.health = SHIP_LIFE + (myShip.fly_speed);
-    myEnemyShip.num_missiles = MAX_NUM_OF_ENEMY_MISSILE + (myShip.fly_speed);
+    myEnemyShip.num_missiles = BASE_NUM_OF_ENEMY_MISSILE * 2;
     APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
     APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 }

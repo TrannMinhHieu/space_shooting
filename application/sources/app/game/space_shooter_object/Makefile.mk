@@ -12,3 +12,4 @@ SOURCES_CPP += sources/app/game/space_shooter_object/sst_enemy_missile.cpp
 
 SOURCES_CPP += sources/app/game/space_shooter_object/sst_asteroid.cpp
 SOURCES_CPP += sources/app/game/space_shooter_object/sst_explosion.cpp
+SOURCES_CPP += sources/app/game/space_shooter_object/terrain.cpp

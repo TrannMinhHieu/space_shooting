@@ -7,6 +7,7 @@ bool is_enemy_missile_out_of_screen(uint8_t enemy_missile_index);
 bool enemy_missile_player_missile_collision(uint8_t enemy_missile_index);
 bool enemy_missile_player_ship_collision(uint8_t enemy_missile_index);
 
+// TODO: Missile fire bug
 /**
  * @brief enemy missiles by setting their properties to default values.
  *

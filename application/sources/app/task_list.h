@@ -28,10 +28,14 @@ enum {
 	/* GAME TASKS*/
 	ASTEROID_TASK_ID,
 	EXPLOSION_TASK_ID,
+	TERRAIN_TASK_ID,
+
 	PLAYER_SHIP_TASK_ID,
 	PLAYER_MISSILE_TASK_ID,
+
 	ENEMY_SHIP_TASK_ID,
 	ENEMY_MISSILE_TASK_ID,
+	
 	GAMEPLAY_TASK_ID,
 
 	/* LINK */
@@ -75,6 +79,7 @@ extern void task_display(ak_msg_t*);
 // Common object handler
 extern void asteroid_handler(ak_msg_t*);
 extern void explosion_handler(ak_msg_t*);
+extern void terrain_handler(ak_msg_t*);
 
 // Player object handler
 extern void player_ship_handler(ak_msg_t*);
