@@ -48,6 +48,7 @@ void asteroid_init()
  */
 void asteroid_spawn()
 {
+    APP_DBG_SIG("Asteroid spawn\n");
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++) 
     {
         myAsteroid[i].visible = WHITE;
@@ -195,6 +196,8 @@ void asteroid_field_control()
             // Set the game stage to "SHIP_FIGHT"
             game_stage = GAME_STAGE_SHIP_FIGHT;
 
+            // Re-arm the enemy ship
+            task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_INIT_SIG);
             // Trigger the enemy ship to take off
             task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_TAKEOFF_SIG);
 

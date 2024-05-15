@@ -36,10 +36,10 @@ void terrain_generate()
 }
 
 void terrain_end();
+static int generated = 0;
 void terrain_update()
 {
     static int x_coord_tracker;
-    static int generated = 0;
     // RAM overflow
     for (uint8_t i = 0; i < v_terrain.size(); i++)
     {
@@ -83,6 +83,7 @@ void terrain_end()
         APP_DBG_SIG("Terrain end\n");
         task_post_pure_msg(TERRAIN_TASK_ID, TERRAIN_RESET_SIG);
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_SPAWN_SIG);
+        generated = 0;
         game_stage = GAME_STAGE_ASTEROID_FEILD;
     }
 

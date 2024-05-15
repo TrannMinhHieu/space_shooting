@@ -26,7 +26,6 @@
 #define SAFE_DISTANCE_TO_FIRE_MISSILE   (80)
 
 #define MAX_NUM_OF_ENEMY_MISSILE        (5)
-#define BASE_NUM_OF_ENEMY_MISSILE       (5)
 
 // Local missile-related constants
 const uint8_t SHIP_Y_OFFSET_FOR_MISSILES = 5;

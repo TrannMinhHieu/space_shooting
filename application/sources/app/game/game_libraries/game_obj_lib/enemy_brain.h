@@ -27,5 +27,6 @@ enum Actions
 extern uint8_t simple_randomize_enemy_control();
 extern uint8_t strategy_based_enemy_control();
 extern uint8_t better_randomize_enemy_control();
+extern uint8_t better_strategy_based_enemy_control();
 
 #endif // ENEMY_BRAIN_H

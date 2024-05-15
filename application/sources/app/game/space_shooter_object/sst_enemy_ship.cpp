@@ -174,6 +174,15 @@ void enemy_ship_move()
         // Update the ship's y position
         myEnemyShip.ship.y += SHIP_Y_STEP;
     }
+
+    // if (myEnemyShip.ship.y < 40 && ship_action == MOVE_DOWN)
+    // {
+    //     // Print debug message
+    //     APP_DBG_SIG("Enemy ship move down\n");
+
+    //     // Update the ship's y position
+    //     myEnemyShip.ship.y += SHIP_Y_STEP;
+    // }
 }
 
 /**

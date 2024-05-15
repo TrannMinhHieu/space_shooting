@@ -198,73 +198,55 @@ uint8_t better_randomize_enemy_control()
     return ship_action;
 }
 
-void better_strategy_based_enemy_control()
+void attack_pattern_1(uint8_t actions_performed_counter);
+uint8_t better_strategy_based_enemy_control()
 {
-    uint8_t actions_performed_counter = 0;
+    static uint8_t actions_performed_counter = 10;
     static uint8_t decision_interval = 0;
 
     if (actions_performed_counter == 0)
     {
-        // Enemy does not perform any actions
+        ship_action = DO_NOTHING;
     }
 
     if (decision_interval == 0)
     {
-        //attack_pattern_1(actions_performed_counter);
+        // TODO: randomize attack pattern
+        attack_pattern_1(actions_performed_counter);
+        decision_interval = 10;
+        APP_DBG_SIG("Decision interval: %d\n", decision_interval);
     }
     else
     {
         decision_interval--;
+        APP_DBG_SIG("Decision interval: %d\n", decision_interval);
     }
+
+    return ship_action;
 }
+//Bug: task can only be posted aftet the function is exited
 void attack_pattern_1(uint8_t actions_performed_counter)
 {
-    // TODO: Implement attack pattern 1
-    if(actions_performed_counter == 0)
-    return;
+    // Define the y-coordinates the ship will move through
+    uint8_t y_positions[] = {0, 10, 20, 30, 40, 50};
+    uint8_t num_positions = sizeof(y_positions) / sizeof(y_positions[0]);
 
-    myEnemyShip.ship.y = 0;
-    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
+    // Iterate over each y-coordinate and perform the attack pattern
+    for (uint8_t pos = 0; pos < num_positions; pos++)
     {
-        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
-        actions_performed_counter--;
+        myEnemyShip.ship.y = y_positions[pos];
+        APP_DBG_SIG("Enemy ship y position: %d\n", myEnemyShip.ship.y);
+        for (uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
+        {
+            // Bug: missile y position is not updated correctly
+            task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+            ship_action = FIRE;
+            actions_performed_counter--;
+            APP_DBG_SIG("Actions performed: %d\n", actions_performed_counter);
+        }
     }
 
-    myEnemyShip.ship.y = 10;
-    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
-    {
-        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
-        actions_performed_counter--;
-    }
-
-    myEnemyShip.ship.y = 20;
-    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
-    {
-        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
-        actions_performed_counter--;
-    }
-
-    myEnemyShip.ship.y = 30;
-    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
-    {
-        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
-        actions_performed_counter--;
-    }
-
-    myEnemyShip.ship.y = 40;
-    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
-    {
-        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
-        actions_performed_counter--;
-    }
-
-    myEnemyShip.ship.y = 50;
-    for(uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
-    {
-        timer_set(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 200, TIMER_ONE_SHOT);
-        actions_performed_counter--;
-    }
-
+    // Reset ship's y position if needed
     myEnemyShip.ship.y = 20;
 }
 void attack_pattern_2(uint8_t actions_performed_counter)

@@ -82,6 +82,7 @@ void player_missile_hit()
         // Hide the player's missile and reset its position
         myMissile.visible = BLACK;
         myMissile.x = 0;
+        is_armed();
 
         // Decrement enemy ship health and print the current value
         myEnemyShip.health--;
