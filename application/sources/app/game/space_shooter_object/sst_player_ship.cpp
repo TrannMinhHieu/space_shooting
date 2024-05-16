@@ -65,9 +65,15 @@ void player_ship_fire()
 void player_ship_move_up()
 {
     APP_DBG_SIG("Ship move up\n");
-    if (myShip.ship.y > 0)
+    if ((int32_t)myShip.ship.y >= 0)
     {
         myShip.ship.y -= SHIP_Y_STEP;
+        APP_DBG_SIG("Ship y %d\n", myShip.ship.y);
+    }
+    else
+    {
+        myShip.ship.y = 0;
+        APP_DBG_SIG("Ship y %d\n", myShip.ship.y);
     }
 }
 

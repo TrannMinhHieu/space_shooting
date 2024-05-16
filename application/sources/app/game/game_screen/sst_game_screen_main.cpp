@@ -29,6 +29,10 @@ void game_stage_control()
     }
     if (game_stage == GAME_STAGE_TERRAIN)
     {
+        if (myShip.ship.y < LCD_HEIGHT - SHIP_Y_STEP)
+        {
+            myShip.ship.y++;
+        }
         task_post_pure_msg(TERRAIN_TASK_ID, TERRAIN_UPDATE_SIG);
     }
 }
@@ -285,7 +289,7 @@ void game_play_handler(ak_msg_t *msg)
 
         task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_INIT_SIG);
         task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_INIT_SIG);
-        game_stage = GAME_STAGE_ASTEROID_FEILD;
+        game_stage = GAME_STAGE_TERRAIN;
         game_state = GAME_PLAY;
         game_time_tick_setup();
         break;

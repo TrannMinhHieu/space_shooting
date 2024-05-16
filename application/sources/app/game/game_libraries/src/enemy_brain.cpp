@@ -244,6 +244,7 @@ void attack_pattern_1(uint8_t actions_performed_counter)
             actions_performed_counter--;
             APP_DBG_SIG("Actions performed: %d\n", actions_performed_counter);
         }
+        //sys_ctrl_delay_ms(1000);
     }
 
     // Reset ship's y position if needed
@@ -251,20 +252,7 @@ void attack_pattern_1(uint8_t actions_performed_counter)
 }
 void attack_pattern_2(uint8_t actions_performed_counter)
 {
-    if(myEnemyShip.ship.x < 130)
-    {
-        myEnemyShip.ship.x += myShip.fly_speed;
-    }
-    else if (myEnemyShip.ship.x > 130)
-    {
-        myEnemyShip.ship.x = 0;
-        myEnemyShip.ship.y = 20;
-    }
     // TODO: Implement attack pattern 2
-    if (myShip.ship.x < 90)
-    {
-        myShip.ship.x += (90 - myShip.ship.x * 2);
-    }
 }
 void attack_pattern_3()
 {

@@ -1,4 +1,4 @@
-#include "terrain.h"
+#include "sst_terrain.h"
 #include <vector>
 
 using namespace std;
@@ -36,20 +36,22 @@ void terrain_generate()
 }
 
 void terrain_end();
+void terrain_collision(uint8_t terrain_index);
 static int generated = 0;
 void terrain_update()
 {
     static int x_coord_tracker;
-    // RAM overflow
     for (uint8_t i = 0; i < v_terrain.size(); i++)
     {
-        v_terrain[i].terrainMover();
+        if (generated < 20)
+        {
+            v_terrain[i].terrainMover();
+        }
         x_coord_tracker = v_terrain.back().x;
-        APP_DBG_SIG("x_coord_tracker %d\n", x_coord_tracker);
-
+        //APP_DBG_SIG("x_coord_tracker %d\n", x_coord_tracker);
+        terrain_collision(i);
         if (generated == 20)
         {
-            // TODO: reset counter to 0
             terrain_end();
             break;
         }
@@ -57,14 +59,35 @@ void terrain_update()
         {
             terrain_generate();
             generated++;
-            APP_DBG_SIG("Generated %d\n", generated);
+            //APP_DBG_SIG("Generated %d\n", generated);
             break;
         }
+
         if (is_terrain_out_of_screen(i))
         {
             v_terrain.erase(v_terrain.begin() + i);
             APP_DBG_SIG("Terrain size %d\n", v_terrain.size());
         }
+    }
+}
+
+void terrain_collision(uint8_t terrain_index)
+{
+    if(v_terrain[terrain_index].x < 5)
+    {
+        return;
+    }
+    else if((int)myShip.ship.y + SIZE_BITMAP_SHIP_Y >= v_terrain[terrain_index].y && (int)myShip.ship.x + SIZE_BITMAP_SHIP_X - 3 >= v_terrain[terrain_index].x)
+    {
+        myShip.ship.visible = BLACK;
+        myExplosion.visible = WHITE;
+        myExplosion.x = myShip.ship.x;
+        myExplosion.y = myShip.ship.y;
+
+        APP_DBG_SIG("Ship hit terrain\n");
+        APP_DBG_SIG("at: terrain[%d] %d, %d\n", terrain_index, v_terrain[terrain_index].x, v_terrain[terrain_index].y);
+
+        task_post_pure_msg(GAMEPLAY_TASK_ID, GAME_EXIT);
     }
 }
 
@@ -84,6 +107,16 @@ void terrain_end()
         task_post_pure_msg(TERRAIN_TASK_ID, TERRAIN_RESET_SIG);
         task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_SPAWN_SIG);
         generated = 0;
+        done = false;
+        uint32_t shipYRound = myShip.ship.y % 10;
+        if (shipYRound > 5)
+        {
+            myShip.ship.y = myShip.ship.y - shipYRound + 10;
+        }
+        else
+        {
+            myShip.ship.y = myShip.ship.y - shipYRound;
+        }
         game_stage = GAME_STAGE_ASTEROID_FEILD;
     }
 

@@ -27,11 +27,11 @@ public:
 
     TerrainCoordinates();
     TerrainCoordinates(int x, int y);
-    void terrainRegenerator();
+
     void terrainMover();
 };
 
 extern std::vector<TerrainCoordinates> v_terrain;
-extern void terrain_handler(ak_msg_t* msg);
+extern void terrain_handler(ak_msg_t *msg);
 
-#endif  // TERRAIN_H
+#endif // TERRAIN_H
