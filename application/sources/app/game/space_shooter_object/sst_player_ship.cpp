@@ -27,6 +27,10 @@ void player_ship_init()
  */
 void player_ship_flight()
 {
+    if((int32_t)myShip.ship.y < 0)
+    {
+        myShip.ship.y = 0;
+    }
     // Cycle through the ship animation
     myShip.ship.action_image++;
     if (myShip.ship.action_image == 4)
@@ -64,15 +68,11 @@ void player_ship_fire()
  */
 void player_ship_move_up()
 {
+    // Bug, ship stuck at y <= 0
     APP_DBG_SIG("Ship move up\n");
-    if ((int32_t)myShip.ship.y >= 0)
+    if (myShip.ship.y > 0)
     {
         myShip.ship.y -= SHIP_Y_STEP;
-        APP_DBG_SIG("Ship y %d\n", myShip.ship.y);
-    }
-    else
-    {
-        myShip.ship.y = 0;
         APP_DBG_SIG("Ship y %d\n", myShip.ship.y);
     }
 }
@@ -89,6 +89,7 @@ void player_ship_move_down()
     if (myShip.ship.y < LCD_HEIGHT - SHIP_Y_STEP)
     {
         myShip.ship.y += SHIP_Y_STEP;
+        APP_DBG_SIG("Ship y %d\n", myShip.ship.y);
     }
     // myShip.ship.y += SHIP_Y_STEP;
     // if (myShip.ship.y > 40)

@@ -38,19 +38,20 @@ void terrain_generate()
 void terrain_end();
 void terrain_collision(uint8_t terrain_index);
 static int generated = 0;
+static int terrainLength = 20 + pow(2, myShip.fly_speed - 1);
 void terrain_update()
 {
     static int x_coord_tracker;
     for (uint8_t i = 0; i < v_terrain.size(); i++)
     {
-        if (generated < 20)
+        if (generated < terrainLength)
         {
             v_terrain[i].terrainMover();
         }
         x_coord_tracker = v_terrain.back().x;
-        //APP_DBG_SIG("x_coord_tracker %d\n", x_coord_tracker);
+        // APP_DBG_SIG("x_coord_tracker %d\n", x_coord_tracker);
         terrain_collision(i);
-        if (generated == 20)
+        if (generated == terrainLength)
         {
             terrain_end();
             break;
@@ -59,13 +60,15 @@ void terrain_update()
         {
             terrain_generate();
             generated++;
-            //APP_DBG_SIG("Generated %d\n", generated);
+            APP_DBG_SIG("Generated %d\n", generated);
             break;
         }
 
         if (is_terrain_out_of_screen(i))
         {
             v_terrain.erase(v_terrain.begin() + i);
+            myShip.score += 5;
+            APP_DBG_SIG("Score %d\n", myShip.score);
             APP_DBG_SIG("Terrain size %d\n", v_terrain.size());
         }
     }
@@ -73,11 +76,11 @@ void terrain_update()
 
 void terrain_collision(uint8_t terrain_index)
 {
-    if(v_terrain[terrain_index].x < 5)
+    if (v_terrain[terrain_index].x < 10)
     {
         return;
     }
-    else if((int)myShip.ship.y + SIZE_BITMAP_SHIP_Y >= v_terrain[terrain_index].y && (int)myShip.ship.x + SIZE_BITMAP_SHIP_X - 3 >= v_terrain[terrain_index].x)
+    else if ((int)myShip.ship.y + SIZE_BITMAP_SHIP_Y >= v_terrain[terrain_index].y && (int)myShip.ship.x + SIZE_BITMAP_SHIP_X >= v_terrain[terrain_index].x)
     {
         myShip.ship.visible = BLACK;
         myExplosion.visible = WHITE;
@@ -88,6 +91,16 @@ void terrain_collision(uint8_t terrain_index)
         APP_DBG_SIG("at: terrain[%d] %d, %d\n", terrain_index, v_terrain[terrain_index].x, v_terrain[terrain_index].y);
 
         task_post_pure_msg(GAMEPLAY_TASK_ID, GAME_EXIT);
+    }
+
+    if((int)myMissile.y + SIZE_MISSILE_BITMAP_Y >= v_terrain[terrain_index].y && (int)myMissile.x + SIZE_MISSILE_BITMAP_Y - 3 >= v_terrain[terrain_index].x)
+    {
+        myMissile.visible = BLACK;
+        myExplosion.visible = WHITE;
+        myExplosion.x = myMissile.x;
+        myExplosion.y = myMissile.y;
+
+        myMissile.x = 0;
     }
 }
 
@@ -104,9 +117,6 @@ void terrain_end()
     if (v_terrain.size() <= 1)
     {
         APP_DBG_SIG("Terrain end\n");
-        task_post_pure_msg(TERRAIN_TASK_ID, TERRAIN_RESET_SIG);
-        task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_SPAWN_SIG);
-        generated = 0;
         done = false;
         uint32_t shipYRound = myShip.ship.y % 10;
         if (shipYRound > 5)
@@ -117,16 +127,20 @@ void terrain_end()
         {
             myShip.ship.y = myShip.ship.y - shipYRound;
         }
+        task_post_pure_msg(TERRAIN_TASK_ID, TERRAIN_RESET_SIG);
+        task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_SPAWN_SIG);
         game_stage = GAME_STAGE_ASTEROID_FEILD;
     }
 
     for (uint8_t i = 0; i < v_terrain.size(); i++)
     {
         v_terrain[i].terrainMover();
-
+        terrain_collision(i);
         if (is_terrain_out_of_screen(i))
         {
             v_terrain.erase(v_terrain.begin() + i);
+            myShip.score += 5;
+            APP_DBG_SIG("Score %d\n", myShip.score);
             APP_DBG_SIG("Terrain size %d\n", v_terrain.size());
         }
     }
@@ -136,6 +150,7 @@ void terrain_reset()
 {
     APP_DBG_SIG("Terrain reset\n");
     v_terrain.clear();
+    generated = 0;
 }
 
 void terrain_handler(ak_msg_t *msg)
