@@ -125,7 +125,7 @@ void asteroid_hit_handler()
             myMissile.x = 0;
             // Send message to increment score
             // TODO:Send message with points value data for player ship
-            task_post_pure_msg(PLAYER_SHIP_TASK_ID, MISSILE_DESTROY_SIG);
+            task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, MISSILE_DESTROY_SIG);
 
             // Move the asteroid to a new random position
             myAsteroid[i].x = (rand() % 39) + 130;
@@ -147,13 +147,13 @@ void asteroid_hit_handler()
             // If ship is hidden, exit the game
             if (myShip.ship.visible == BLACK)
             {
-                task_post_pure_msg(GAMEPLAY_TASK_ID, GAME_EXIT);
+                task_post_pure_msg(SST_GAMEPLAY_TASK_ID, GAME_EXIT);
             }
             else
             {
                 // Send messages to handle ship being hit and explode the asteroid
-                task_post_pure_msg(PLAYER_SHIP_TASK_ID, SHIP_HIT_SIG);
-                task_post_pure_msg(EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
+                task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SHIP_HIT_SIG);
+                task_post_pure_msg(SST_EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
             }
         }
     }
@@ -187,7 +187,7 @@ void asteroid_field_control()
         {
             // Reset all the asteroids
             APP_DBG_SIG("Reset asteroids\n");
-            task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_RESET_SIG);
+            task_post_pure_msg(SST_ASTEROID_TASK_ID, ASTEROID_RESET_SIG);
 
             // Reset the asteroid_count
             asteroid_count = 0;
@@ -197,9 +197,9 @@ void asteroid_field_control()
             game_stage = GAME_STAGE_SHIP_FIGHT;
 
             // Re-arm the enemy ship
-            task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_INIT_SIG);
+            task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_INIT_SIG);
             // Trigger the enemy ship to take off
-            task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_TAKEOFF_SIG);
+            task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_TAKEOFF_SIG);
 
             // Break out of the loop
             break;
@@ -241,7 +241,7 @@ void asteroid_reset()
  * @param msg The message to handle.
  * @return None
  */
-void asteroid_handler(ak_msg_t* msg)
+void sst_asteroid_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {

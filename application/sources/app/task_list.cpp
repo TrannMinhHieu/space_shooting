@@ -21,14 +21,14 @@ const task_t app_task_table[] = {
 	/*************************************************************************/
 	/* GAME TASK */
 	/*************************************************************************/
-	{ASTEROID_TASK_ID			,	TASK_PRI_LEVEL_4	,	asteroid_handler	 	},
-	{EXPLOSION_TASK_ID			,	TASK_PRI_LEVEL_4	,	explosion_handler	 	},
-	{TERRAIN_TASK_ID			,	TASK_PRI_LEVEL_4	,	terrain_handler	 		},
-	{PLAYER_SHIP_TASK_ID		,	TASK_PRI_LEVEL_4	,	player_ship_handler	 	},
-	{PLAYER_MISSILE_TASK_ID		,	TASK_PRI_LEVEL_4	,	player_missile_handler 	},
-	{ENEMY_SHIP_TASK_ID			,	TASK_PRI_LEVEL_4	,	enemy_ship_handler	 	},
-	{ENEMY_MISSILE_TASK_ID		,	TASK_PRI_LEVEL_4	,	enemy_missile_handler	},
-	{GAMEPLAY_TASK_ID			,	TASK_PRI_LEVEL_4	,	game_play_handler	 	},
+	{SST_ASTEROID_TASK_ID			,	TASK_PRI_LEVEL_4	,	sst_asteroid_handler	 	},
+	{SST_EXPLOSION_TASK_ID			,	TASK_PRI_LEVEL_4	,	sst_explosion_handler	 	},
+	{SST_TERRAIN_TASK_ID			,	TASK_PRI_LEVEL_4	,	sst_terrain_handler	 		},
+	{SST_PLAYER_SHIP_TASK_ID		,	TASK_PRI_LEVEL_4	,	sst_player_ship_handler	 	},
+	{SST_PLAYER_MISSILE_TASK_ID		,	TASK_PRI_LEVEL_4	,	sst_player_missile_handler 	},
+	{SST_ENEMY_SHIP_TASK_ID			,	TASK_PRI_LEVEL_4	,	sst_enemy_ship_handler	 	},
+	{SST_ENEMY_MISSILE_TASK_ID		,	TASK_PRI_LEVEL_4	,	sst_enemy_missile_handler	},
+	{SST_GAMEPLAY_TASK_ID			,	TASK_PRI_LEVEL_4	,	sst_game_play_handler	 	},
 
 	/*************************************************************************/
 	/* LINK TASK */

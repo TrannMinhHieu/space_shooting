@@ -90,7 +90,7 @@ void terrain_collision(uint8_t terrain_index)
         APP_DBG_SIG("Ship hit terrain\n");
         APP_DBG_SIG("at: terrain[%d] %d, %d\n", terrain_index, v_terrain[terrain_index].x, v_terrain[terrain_index].y);
 
-        task_post_pure_msg(GAMEPLAY_TASK_ID, GAME_EXIT);
+        task_post_pure_msg(SST_GAMEPLAY_TASK_ID, GAME_EXIT);
     }
 
     if((int)myMissile.y + SIZE_MISSILE_BITMAP_Y >= v_terrain[terrain_index].y && (int)myMissile.x + SIZE_MISSILE_BITMAP_Y - 3 >= v_terrain[terrain_index].x)
@@ -127,8 +127,8 @@ void terrain_end()
         {
             myShip.ship.y = myShip.ship.y - shipYRound;
         }
-        task_post_pure_msg(TERRAIN_TASK_ID, TERRAIN_RESET_SIG);
-        task_post_pure_msg(ASTEROID_TASK_ID, ASTEROID_SPAWN_SIG);
+        task_post_pure_msg(SST_TERRAIN_TASK_ID, TERRAIN_RESET_SIG);
+        task_post_pure_msg(SST_ASTEROID_TASK_ID, ASTEROID_SPAWN_SIG);
         game_stage = GAME_STAGE_ASTEROID_FEILD;
     }
 
@@ -153,7 +153,7 @@ void terrain_reset()
     generated = 0;
 }
 
-void terrain_handler(ak_msg_t *msg)
+void sst_terrain_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {

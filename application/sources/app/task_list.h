@@ -26,17 +26,17 @@ enum {
 	AC_TASK_DISPLAY_ID,
 
 	/* GAME TASKS*/
-	ASTEROID_TASK_ID,
-	EXPLOSION_TASK_ID,
-	TERRAIN_TASK_ID,
+	SST_ASTEROID_TASK_ID,
+	SST_EXPLOSION_TASK_ID,
+	SST_TERRAIN_TASK_ID,
 
-	PLAYER_SHIP_TASK_ID,
-	PLAYER_MISSILE_TASK_ID,
+	SST_PLAYER_SHIP_TASK_ID,
+	SST_PLAYER_MISSILE_TASK_ID,
 
-	ENEMY_SHIP_TASK_ID,
-	ENEMY_MISSILE_TASK_ID,
+	SST_ENEMY_SHIP_TASK_ID,
+	SST_ENEMY_MISSILE_TASK_ID,
 	
-	GAMEPLAY_TASK_ID,
+	SST_GAMEPLAY_TASK_ID,
 
 	/* LINK */
 #if defined (IF_LINK_UART_EN)
@@ -77,20 +77,20 @@ extern void task_display(ak_msg_t*);
 
 /* GAME TASKS */
 // Common object handler
-extern void asteroid_handler(ak_msg_t*);
-extern void explosion_handler(ak_msg_t*);
-extern void terrain_handler(ak_msg_t*);
+extern void sst_asteroid_handler(ak_msg_t*);
+extern void sst_explosion_handler(ak_msg_t*);
+extern void sst_terrain_handler(ak_msg_t*);
 
 // Player object handler
-extern void player_ship_handler(ak_msg_t*);
-extern void player_missile_handler(ak_msg_t*);
+extern void sst_player_ship_handler(ak_msg_t*);
+extern void sst_player_missile_handler(ak_msg_t*);
 
 // Enemy object handler
-extern void enemy_missile_handler(ak_msg_t*);
-extern void enemy_ship_handler(ak_msg_t*);
+extern void sst_enemy_missile_handler(ak_msg_t*);
+extern void sst_enemy_ship_handler(ak_msg_t*);
 
 // Game play handler
-extern void game_play_handler(ak_msg_t*);
+extern void sst_game_play_handler(ak_msg_t*);
 
 /* LINK TASK */
 extern void task_link_phy(ak_msg_t*);

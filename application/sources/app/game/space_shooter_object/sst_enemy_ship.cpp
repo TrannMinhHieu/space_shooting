@@ -122,14 +122,14 @@ void enemy_ship_health_control()
         myShip.score += 100;
 
         // Reset the enemy ship and enemy missile tasks
-        task_post_pure_msg(ENEMY_SHIP_TASK_ID, ENEMY_SHIP_RESET_SIG);
-        task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_RESET_SIG);
+        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_RESET_SIG);
+        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_RESET_SIG);
 
         // Print debug message
         APP_DBG_SIG("Enemy ship dead\n");
 
         // Change the game stage to GAME_STAGE_TERRAIN
-        task_post_pure_msg(TERRAIN_TASK_ID, TERRAIN_INIT_SIG);
+        task_post_pure_msg(SST_TERRAIN_TASK_ID, TERRAIN_INIT_SIG);
         game_stage = GAME_STAGE_TERRAIN;
 
         // Return from the function
@@ -204,7 +204,7 @@ void enemy_ship_fire()
 
         // Send a message to fire a missile
         APP_DBG_SIG("Enemy ship fire missile\n");
-        task_post_pure_msg(ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_FIRE_SIG);
+        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_FIRE_SIG);
     }
 }
 
@@ -229,7 +229,7 @@ void enemy_ship_reset()
     APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 }
 
-void enemy_ship_handler(ak_msg_t *msg)
+void sst_enemy_ship_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {

@@ -49,7 +49,7 @@ void scr_info_handle(ak_msg_t* msg) {
 
 	case AC_DISPLAY_SHOW_GAME_MENU: {
 		APP_DBG_SIG("AC_DISPLAY_SHOW_GAME_PLAY\n");
-		//SCREEN_TRAN(game_play_handler, &game_screen);
+		//SCREEN_TRAN(sst_game_play_handler, &game_screen);
 		SCREEN_TRAN(game_menu_handler, &sst_game_menu);
 	}
 		break;

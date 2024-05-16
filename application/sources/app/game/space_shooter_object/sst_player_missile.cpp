@@ -110,7 +110,7 @@ void player_missile_reset()
  * @param msg The message to be handled.
  * @return None
  */
-void player_missile_handler(ak_msg_t *msg)
+void sst_player_missile_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {

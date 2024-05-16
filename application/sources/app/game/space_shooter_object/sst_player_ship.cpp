@@ -57,7 +57,7 @@ void player_ship_fire()
 {
     // Send message to fire a missile
     APP_DBG_SIG("Ship fire missile\n");
-    task_post_pure_msg(PLAYER_MISSILE_TASK_ID, MISSILE_FIRE_SIG);
+    task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, MISSILE_FIRE_SIG);
 }
 
 /**
@@ -121,7 +121,7 @@ void player_ship_reset()
  * @param None
  * @return None
  */
-void player_ship_handler(ak_msg_t* msg)
+void sst_player_ship_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {

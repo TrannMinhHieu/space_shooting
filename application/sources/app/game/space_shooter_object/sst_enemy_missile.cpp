@@ -86,7 +86,7 @@ void enemy_missile_hit()
             myShip.ship.visible = BLACK;
 
             // Send a message to the gameplay task to exit the game
-            task_post_pure_msg(GAMEPLAY_TASK_ID, GAME_EXIT);
+            task_post_pure_msg(SST_GAMEPLAY_TASK_ID, GAME_EXIT);
         }
     }
 }
@@ -175,7 +175,7 @@ void enemy_missile_reset()
  *
  * @throws None.
  */
-void enemy_missile_handler(ak_msg_t *msg)
+void sst_enemy_missile_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {

@@ -63,7 +63,7 @@ void explosion_reset()
  * @param msg 
  * @return None
  */
-void explosion_handler(ak_msg_t *msg)
+void sst_explosion_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {

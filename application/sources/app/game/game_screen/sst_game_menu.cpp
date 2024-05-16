@@ -109,7 +109,7 @@ void menu_cursor_focus()
     switch (screen_menu.location)
     {
     case START:
-        SCREEN_TRAN(game_play_handler, &sst_game_screen);
+        SCREEN_TRAN(sst_game_play_handler, &sst_game_screen);
         break;
     case HIGH_SCORE:
         SCREEN_TRAN(game_highscore_handler, &sst_game_highscore);
