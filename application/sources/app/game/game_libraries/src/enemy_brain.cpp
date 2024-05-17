@@ -24,7 +24,7 @@ uint8_t ship_action;
 uint8_t simple_randomize_enemy_control()
 {
     // TODO: use better randomize function
-
+    // TODO: enemy ship not fire bug
     uint8_t random = rand() % 100;
 
     // 5% chance to move up
@@ -71,13 +71,13 @@ uint8_t strategy_based_enemy_control()
         {
             if (random_factor < 60) // 60% chance to move up if player is above
             {
-                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
+                // task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
                 timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG, 100, TIMER_ONE_SHOT);
                 return MOVE_UP;
             }
             else if (random_factor < 80) // 20% chance to fire if player is above
             {
-                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
+                // task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
                 timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
                 return FIRE;
             }
@@ -86,13 +86,13 @@ uint8_t strategy_based_enemy_control()
         {
             if (random_factor < 60) // 60% chance to move down if player is below
             {
-                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
+                // task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
                 timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG, 100, TIMER_ONE_SHOT);
                 return MOVE_DOWN;
             }
             else if (random_factor < 80) // 20% chance to fire if player is below
             {
-                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
+                // task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
                 timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
                 return FIRE;
             }
@@ -102,7 +102,7 @@ uint8_t strategy_based_enemy_control()
             // Player is at the same y-coordinate, decide whether to fire or not with some randomness
             if (random_factor < 20) // 20% chance to fire when player is at the same y-coordinate
             {
-                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
+                // task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
                 timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
                 return FIRE;
             }
@@ -198,22 +198,26 @@ uint8_t better_randomize_enemy_control()
     return ship_action;
 }
 
-void attack_pattern_1(uint8_t actions_performed_counter);
+void attack_pattern_1();
 uint8_t better_strategy_based_enemy_control()
 {
-    static uint8_t actions_performed_counter = 10;
+    static uint8_t actions_performed_counter = 12;
     static uint8_t decision_interval = 0;
 
     if (actions_performed_counter == 0)
     {
-        ship_action = DO_NOTHING;
+        decision_interval = 100;
+        actions_performed_counter = 12;
+        return DO_NOTHING;
     }
 
     if (decision_interval == 0)
     {
         // TODO: randomize attack pattern
-        attack_pattern_1(actions_performed_counter);
-        decision_interval = 10;
+        attack_pattern_1();
+        actions_performed_counter--;
+        APP_DBG_SIG("Actions performed: %d\n", actions_performed_counter);
+        decision_interval = 15;
         APP_DBG_SIG("Decision interval: %d\n", decision_interval);
     }
     else
@@ -224,35 +228,35 @@ uint8_t better_strategy_based_enemy_control()
 
     return ship_action;
 }
-//Bug: task can only be posted aftet the function is exited
-void attack_pattern_1(uint8_t actions_performed_counter)
+// Bug: task can only be posted aftet the function is exited
+void attack_pattern_1()
 {
     // Define the y-coordinates the ship will move through
     uint8_t y_positions[] = {0, 10, 20, 30, 40, 50};
     uint8_t num_positions = sizeof(y_positions) / sizeof(y_positions[0]);
+    uint8_t pos = rand() % num_positions;
 
-    // Iterate over each y-coordinate and perform the attack pattern
-    for (uint8_t pos = 0; pos < num_positions; pos++)
+    myEnemyShip.ship.y = y_positions[pos];
+    APP_DBG_SIG("Enemy ship y position: %d\n", myEnemyShip.ship.y);
+    if (uint8_t missile_count = 0; missile_count < 1)
     {
-        myEnemyShip.ship.y = y_positions[pos];
-        APP_DBG_SIG("Enemy ship y position: %d\n", myEnemyShip.ship.y);
-        for (uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
-        {
-            // Bug: missile y position is not updated correctly
-            task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
-            ship_action = FIRE;
-            actions_performed_counter--;
-            APP_DBG_SIG("Actions performed: %d\n", actions_performed_counter);
-        }
-        //sys_ctrl_delay_ms(1000);
+        // Bug: missile y position is not updated correctly
+        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
+        ship_action = FIRE;
+        missile_count++;
     }
-
-    // Reset ship's y position if needed
-    myEnemyShip.ship.y = 20;
 }
 void attack_pattern_2(uint8_t actions_performed_counter)
 {
     // TODO: Implement attack pattern 2
+    uint8_t y_positions[] = {0, 10, 20, 30, 40, 50};
+    uint8_t num_positions = sizeof(y_positions) / sizeof(y_positions[0]);
+    uint8_t pos = rand() % num_positions;
+
+    myEnemyShip.ship.y = y_positions[pos];
+    APP_DBG_SIG("Enemy ship y position: %d\n", myEnemyShip.ship.y);
+
+    // draw an energy bar
 }
 void attack_pattern_3()
 {

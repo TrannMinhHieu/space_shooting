@@ -23,7 +23,7 @@
 #define SHIP_Y_COORDINATE       (20)
 
 #define SHIP_LIFE               (3)
-#define BASE_NUM_OF_ENEMY_MISSILE       (6)
+#define BASE_NUM_OF_ENEMY_MISSILE       (12)
 
 typedef struct 
 {

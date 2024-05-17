@@ -38,7 +38,7 @@ void enemy_ship_takeoff()
 
     // Set enemy ship health and number of missiles
     myEnemyShip.health = SHIP_LIFE + myShip.fly_speed;
-    myEnemyShip.num_missiles = BASE_NUM_OF_ENEMY_MISSILE * 2;
+    myEnemyShip.num_missiles = BASE_NUM_OF_ENEMY_MISSILE;
     APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
     APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 
@@ -98,11 +98,12 @@ void enemy_ship_flight()
         // Call the randomize_enemy_ship_control function to determine the ship's next action
         if (myShip.score > 800)
         {
-            ship_action = strategy_based_enemy_control();
+            ship_action = better_strategy_based_enemy_control();
         }
         else
         {
             ship_action = better_randomize_enemy_control();
+            //ship_action = better_strategy_based_enemy_control();
         }
     }
 
@@ -143,23 +144,17 @@ void enemy_ship_health_control()
 }
 
 /**
- * @brief Moves the enemy ship up or down based on its visibility and ship action.
+ * @brief Moves the enemy ship up or down based on the enemy ship action.
  *
- * @details This function checks if the enemy ship is visible and its x position is less than 100.
- * If the ship is visible and the ship action is MOVE_UP, the ship is moved up by SHIP_Y_STEP units.
- * If the ship is visible and the ship action is MOVE_DOWN, the ship is moved down by SHIP_Y_STEP units.
+ * @details This function is responsible for moving the enemy ship up or down based on the enemy ship action. 
+ * If the enemy ship action is MOVE_UP, it moves the enemy ship up.
+ * If the enemy ship action is MOVE_DOWN, it moves the enemy ship down.
  *
  * @param None
  * @return None
  */
 void enemy_ship_move()
 {
-    // Check if the enemy ship is visible and its x position is less than 100
-    if (myEnemyShip.ship.visible != WHITE || myEnemyShip.ship.x > 100)
-    {
-        return;
-    }
-
     // Move the ship up if it is visible and the ship_action is MOVE_UP
     if (myEnemyShip.ship.y > 0 && ship_action == MOVE_UP)
     {
@@ -202,11 +197,8 @@ void enemy_ship_move()
 void enemy_ship_fire()
 {
     // Check if the ship action is set to FIRE and if the enemy ship has any missiles remaining
-    if (myEnemyShip.num_missiles > 0 && ship_action == FIRE)
+    if (ship_action == FIRE)
     {
-        // Decrement the number of missiles by one
-        myEnemyShip.num_missiles--;
-
         // Send a message to fire a missile
         APP_DBG_SIG("Enemy ship fire missile\n");
         task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_FIRE_SIG);

@@ -65,9 +65,6 @@ void enemy_missile_hit()
             // Reset the position of the player's missile and update the enemy missile's position to the enemy ship's position
             myMissile.x = 0;
             v_myEnemyMissiles[i].x = myEnemyShip.ship.x;
-
-            // Increment the number of enemy missiles
-            myEnemyShip.num_missiles++;
         }
 
         // Check if there is a collision between the enemy missile and the player's ship
@@ -143,11 +140,9 @@ void enemy_missile_flight()
             // Check if the enemy missile is out of the screen
             if (is_enemy_missile_out_of_screen(i))
             {
+                APP_DBG_SIG("Enemy missile[%d] out of screen\n", i);
                 // Reset the enemy missile's visibility
                 v_myEnemyMissiles[i].visible = BLACK;
-
-                // Increment the number of enemy missiles
-                myEnemyShip.num_missiles++;
             }
         }
     }

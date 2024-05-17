@@ -221,7 +221,7 @@ void terrain_end()
         done = false;
 
         // Round the ship's y position to the nearest tens of integer
-        round_to_tens_of_integer(myShip.ship.y);
+        myShip.ship.y = round_to_tens_of_integer(myShip.ship.y);
 
         // Post a message to reset the terrain
         task_post_pure_msg(SST_TERRAIN_TASK_ID, SST_TERRAIN_RESET_SIG);
