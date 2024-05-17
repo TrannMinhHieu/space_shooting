@@ -103,7 +103,6 @@ void enemy_ship_flight()
         else
         {
             ship_action = better_randomize_enemy_control();
-            //ship_action = better_strategy_based_enemy_control();
         }
     }
 

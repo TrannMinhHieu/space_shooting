@@ -176,6 +176,11 @@ bool player_missile_enemy_ship_collision()
         return false;
     }
 
+    if (myMissile.x > myEnemyShip.ship.x + SIZE_BITMAP_SHIP_X)
+    {
+        return false;
+    }
+
     // If all conditions are met, return true
     return true;
 }

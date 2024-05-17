@@ -199,6 +199,8 @@ uint8_t better_randomize_enemy_control()
 }
 
 void attack_pattern_1();
+void attack_pattern_2();
+void attack_pattern_3();
 uint8_t better_strategy_based_enemy_control()
 {
     static uint8_t actions_performed_counter = 12;
@@ -246,7 +248,7 @@ void attack_pattern_1()
         missile_count++;
     }
 }
-void attack_pattern_2(uint8_t actions_performed_counter)
+void attack_pattern_2()
 {
     // TODO: Implement attack pattern 2
     uint8_t y_positions[] = {0, 10, 20, 30, 40, 50};
@@ -257,8 +259,13 @@ void attack_pattern_2(uint8_t actions_performed_counter)
     APP_DBG_SIG("Enemy ship y position: %d\n", myEnemyShip.ship.y);
 
     // draw an energy bar
+    view_render.drawRoundRect(myEnemyShip.ship.x - 100, myEnemyShip.ship.y - 2, 4, 4, 1, WHITE);
 }
 void attack_pattern_3()
 {
     // TODO: Implement attack pattern 3
+    // @brief enemy slam into player
+
+    uint32_t player_prev_position = myShip.ship.y;
+
 }
