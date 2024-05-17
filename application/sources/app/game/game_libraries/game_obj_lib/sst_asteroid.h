@@ -47,6 +47,7 @@ typedef struct
     bool visible;
     int32_t x, y;
     uint8_t action_image;
+    const uint8_t asteroid_score = 10;
 } Asteroid;
 
 extern Asteroid myAsteroid[NUM_ASTEROIDS];

@@ -123,9 +123,9 @@ void asteroid_hit_handler()
             // Reset position of missile
             myMissile.visible = BLACK;
             myMissile.x = 0;
-            // Send message to increment score
-            // TODO:Send message with points value data for player ship
-            task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_MISSILE_DESTROY_SIG);
+
+            // Send message with points value data for player ship
+            task_post_common_msg(SST_PLAYER_SHIP_TASK_ID, SST_SCORE_UPDATE_SIG, (uint8_t *) &myAsteroid[i].asteroid_score, sizeof(myAsteroid[i].asteroid_score));
 
             // Move the asteroid to a new random position
             myAsteroid[i].x = (rand() % 39) + 130;

@@ -44,6 +44,7 @@ typedef struct
     Ship ship;
     uint8_t health;
     uint8_t num_missiles;
+    const uint8_t enemy_ship_score = 100;
 } EnemyShip;
 
 extern PlayerShip myShip;

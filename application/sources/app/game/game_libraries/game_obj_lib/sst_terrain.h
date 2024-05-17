@@ -24,6 +24,7 @@ class TerrainCoordinates
 public:
     int x;
     int y;
+    static const int terrain_score;
 
     TerrainCoordinates();
     TerrainCoordinates(int x, int y);

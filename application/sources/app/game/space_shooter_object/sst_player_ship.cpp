@@ -147,11 +147,15 @@ void sst_player_ship_handler(ak_msg_t* msg)
     case SST_SHIP_MOVE_DOWN_SIG:
         player_ship_move_down();
         break;
-    case SST_MISSILE_DESTROY_SIG:
-        // TODO: Handle point values data sent by asteroid and enemy ship
-        myShip.score += 10;
+    case SST_SCORE_UPDATE_SIG:
+    {
+        // Handle point values data sent by asteroid, enemy ship, and terrain
+        uint8_t* inData = get_data_common_msg(msg);
+        uint32_t scoreData = *(uint32_t *)inData;
+        myShip.score += scoreData;  
         APP_DBG_SIG("Ship score %d\n", myShip.score);
         break;
+    }
     case SST_SHIP_RESET_SIG:
         player_ship_reset();
         break;

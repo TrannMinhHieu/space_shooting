@@ -123,9 +123,8 @@ void enemy_ship_health_control()
         // Make the enemy ship invisible
         myEnemyShip.ship.visible = BLACK;
 
-        // TODO: Send message with points value data for player ship
-        // Increase the player's score by 100
-        myShip.score += 100;
+        // Send message with points value data for player ship
+        task_post_common_msg(SST_PLAYER_SHIP_TASK_ID, SST_SCORE_UPDATE_SIG, (uint8_t *) &myEnemyShip.enemy_ship_score, sizeof(myEnemyShip.enemy_ship_score));
 
         // Reset the enemy ship and enemy missile tasks
         task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_RESET_SIG);

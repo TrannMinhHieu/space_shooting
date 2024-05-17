@@ -204,7 +204,7 @@ enum {
 	SST_SHIP_MOVE_DOWN_SIG,
 	SST_SHIP_RESET_SIG,
 	SST_SHIP_HIT_SIG,
-	SST_MISSILE_DESTROY_SIG
+	SST_SCORE_UPDATE_SIG
 };
 
 /*****************************************************************************/

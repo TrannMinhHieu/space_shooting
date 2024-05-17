@@ -14,6 +14,7 @@ void terrain_collision(uint8_t terrain_index);
  * @todo Add perlin noise
  */
 std::vector<TerrainCoordinates> v_terrain;
+const int TerrainCoordinates::terrain_score = 5;
 /**
  * @brief Initialize the terrain coordinates.
  */
@@ -115,8 +116,8 @@ void terrain_update()
         if (is_terrain_out_of_screen(i))
         {
             v_terrain.erase(v_terrain.begin() + i);
-            myShip.score += 5;
-            APP_DBG_SIG("Score %d\n", myShip.score);
+            // Send message to update score
+            task_post_common_msg(SST_PLAYER_SHIP_TASK_ID, SST_SCORE_UPDATE_SIG, (uint8_t *) &v_terrain[i].terrain_score, sizeof(v_terrain[i].terrain_score));
             APP_DBG_SIG("Terrain size %d\n", v_terrain.size());
         }
     }
