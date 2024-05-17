@@ -38,12 +38,19 @@ void player_ship_flight()
         myShip.ship.action_image = 1;
     }
 
-    if (myShip.score % 200 == 0 && myShip.fly_speed < 8 && myShip.score > 0)
+    // Score counter to increase ship speed
+    static uint8_t scoreCounter = 0;
+    static uint8_t prevScore = 0;
+    if (scoreCounter >= 200)
     {
-        // Increase the ship speed as the score increases
+        scoreCounter = 0;
+        prevScore = myShip.score;
         myShip.fly_speed++;
         APP_DBG_SIG("Ship fly speed %d\n", myShip.fly_speed);
-        myShip.score += 10; // break point
+    }
+    else
+    {
+        scoreCounter = myShip.score - prevScore;
     }
 }
 
@@ -57,7 +64,7 @@ void player_ship_fire()
 {
     // Send message to fire a missile
     APP_DBG_SIG("Ship fire missile\n");
-    task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, MISSILE_FIRE_SIG);
+    task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, SST_MISSILE_FIRE_SIG);
 }
 
 /**
@@ -125,27 +132,27 @@ void sst_player_ship_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
-    case SHIP_INIT_SIG:
+    case SST_SHIP_INIT_SIG:
         player_ship_init();
         break;
-    case SHIP_FLIGHT_SIG:
+    case SST_SHIP_FLIGHT_SIG:
         player_ship_flight();
         break;
-    case SHIP_FIRE_SIG:
+    case SST_SHIP_FIRE_SIG:
         player_ship_fire();
         break;
-    case SHIP_MOVE_UP_SIG:
+    case SST_SHIP_MOVE_UP_SIG:
         player_ship_move_up();
         break;
-    case SHIP_MOVE_DOWN_SIG:
+    case SST_SHIP_MOVE_DOWN_SIG:
         player_ship_move_down();
         break;
-    case MISSILE_DESTROY_SIG:
+    case SST_MISSILE_DESTROY_SIG:
         // TODO: Handle point values data sent by asteroid and enemy ship
         myShip.score += 10;
         APP_DBG_SIG("Ship score %d\n", myShip.score);
         break;
-    case SHIP_RESET_SIG:
+    case SST_SHIP_RESET_SIG:
         player_ship_reset();
         break;
     default:

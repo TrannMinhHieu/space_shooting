@@ -125,7 +125,7 @@ void asteroid_hit_handler()
             myMissile.x = 0;
             // Send message to increment score
             // TODO:Send message with points value data for player ship
-            task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, MISSILE_DESTROY_SIG);
+            task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_MISSILE_DESTROY_SIG);
 
             // Move the asteroid to a new random position
             myAsteroid[i].x = (rand() % 39) + 130;
@@ -152,8 +152,8 @@ void asteroid_hit_handler()
             else
             {
                 // Send messages to handle ship being hit and explode the asteroid
-                task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SHIP_HIT_SIG);
-                task_post_pure_msg(SST_EXPLOSION_TASK_ID, EXPLPOSION_EXPLODE_SIG);
+                task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_HIT_SIG);
+                task_post_pure_msg(SST_EXPLOSION_TASK_ID, SST_EXPLPOSION_EXPLODE_SIG);
             }
         }
     }
@@ -187,7 +187,7 @@ void asteroid_field_control()
         {
             // Reset all the asteroids
             APP_DBG_SIG("Reset asteroids\n");
-            task_post_pure_msg(SST_ASTEROID_TASK_ID, ASTEROID_RESET_SIG);
+            task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_RESET_SIG);
 
             // Reset the asteroid_count
             asteroid_count = 0;
@@ -197,9 +197,9 @@ void asteroid_field_control()
             game_stage = GAME_STAGE_SHIP_FIGHT;
 
             // Re-arm the enemy ship
-            task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_INIT_SIG);
+            task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_INIT_SIG);
             // Trigger the enemy ship to take off
-            task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_TAKEOFF_SIG);
+            task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_TAKEOFF_SIG);
 
             // Break out of the loop
             break;
@@ -245,21 +245,21 @@ void sst_asteroid_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
-    case ASTEROID_INIT_SIG:
+    case SST_ASTEROID_INIT_SIG:
         asteroid_init();
         break;
-    case ASTEROID_SPAWN_SIG:
+    case SST_ASTEROID_SPAWN_SIG:
         asteroid_spawn();
         break;
-    case ASTEROID_FLIGHT_SIG:
+    case SST_ASTEROID_FLIGHT_SIG:
         asteroid_flight();
         asteroid_field_control();
         break;
-    case SHIP_HIT_SIG:
-    case MISSILE_HIT_SIG:
+    case SST_SHIP_HIT_SIG:
+    case SST_MISSILE_HIT_SIG:
         asteroid_hit_handler();
         break;
-    case ASTEROID_RESET_SIG:
+    case SST_ASTEROID_RESET_SIG:
         asteroid_reset();
         break;
     default:

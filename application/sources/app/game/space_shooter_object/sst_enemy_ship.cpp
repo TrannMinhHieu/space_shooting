@@ -28,13 +28,19 @@ void enemy_ship_init()
 /**
  * @brief Initializes the enemy ship for takeoff.
  *
- * @details This function sets the initial values for the enemy ship's position, visibility, action image, and action.
+ * @details This function sets the initial values for the enemy ship's health, number of missiles, position, visibility, action image, and action.
  * @param: None
  * @return: None
  */
 void enemy_ship_takeoff()
 {
     APP_DBG_SIG("Enemy ship takeoff\n");
+
+    // Set enemy ship health and number of missiles
+    myEnemyShip.health = SHIP_LIFE + myShip.fly_speed;
+    myEnemyShip.num_missiles = BASE_NUM_OF_ENEMY_MISSILE * 2;
+    APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
+    APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 
     // Set enemy ship position
     myEnemyShip.ship.x = 150;
@@ -45,7 +51,7 @@ void enemy_ship_takeoff()
     myEnemyShip.ship.action_image = 1;
 }
 
-// TODO: add this function. @brief Retreats the enemy ship when "x" time have passed
+// TODO: add this function: @brief Retreats the enemy ship when "x" time have passed
 void enemy_ship_retreat()
 {
     APP_DBG_SIG("Enemy ship retreat\n");
@@ -122,14 +128,14 @@ void enemy_ship_health_control()
         myShip.score += 100;
 
         // Reset the enemy ship and enemy missile tasks
-        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_RESET_SIG);
-        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_RESET_SIG);
+        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_RESET_SIG);
+        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_RESET_SIG);
 
         // Print debug message
         APP_DBG_SIG("Enemy ship dead\n");
 
         // Change the game stage to GAME_STAGE_TERRAIN
-        task_post_pure_msg(SST_TERRAIN_TASK_ID, TERRAIN_INIT_SIG);
+        task_post_pure_msg(SST_TERRAIN_TASK_ID, SST_TERRAIN_INIT_SIG);
         game_stage = GAME_STAGE_TERRAIN;
 
         // Return from the function
@@ -204,7 +210,7 @@ void enemy_ship_fire()
 
         // Send a message to fire a missile
         APP_DBG_SIG("Enemy ship fire missile\n");
-        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, ENEMY_MISSILE_FIRE_SIG);
+        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_FIRE_SIG);
     }
 }
 
@@ -223,8 +229,8 @@ void enemy_ship_reset()
     myEnemyShip.ship.x = 0;
     myEnemyShip.ship.y = 0;
     myEnemyShip.ship.action_image = rand() % 3 + 1;
-    myEnemyShip.health = SHIP_LIFE + (myShip.fly_speed);
-    myEnemyShip.num_missiles = BASE_NUM_OF_ENEMY_MISSILE * 2;
+    myEnemyShip.health = SHIP_LIFE;
+    myEnemyShip.num_missiles = BASE_NUM_OF_ENEMY_MISSILE;
     APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
     APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 }
@@ -233,23 +239,23 @@ void sst_enemy_ship_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {
-    case ENEMY_SHIP_INIT_SIG:
+    case SST_ENEMY_SHIP_INIT_SIG:
         enemy_ship_init();
         break;
-    case ENEMY_SHIP_TAKEOFF_SIG:
+    case SST_ENEMY_SHIP_TAKEOFF_SIG:
         enemy_ship_takeoff();
         break;
-    case ENEMY_SHIP_FLIGHT_SIG:
+    case SST_ENEMY_SHIP_FLIGHT_SIG:
         enemy_ship_flight();
         enemy_ship_health_control();
         break;
-    case ENEMY_SHIP_MOVE_SIG:
+    case SST_ENEMY_SHIP_MOVE_SIG:
         enemy_ship_move();
         break;
-    case ENEMY_SHIP_FIRE_SIG:
+    case SST_ENEMY_SHIP_FIRE_SIG:
         enemy_ship_fire();
         break;
-    case ENEMY_SHIP_RESET_SIG:
+    case SST_ENEMY_SHIP_RESET_SIG:
         enemy_ship_reset();
         break;
     default:

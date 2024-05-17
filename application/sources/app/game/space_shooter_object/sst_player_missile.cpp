@@ -114,19 +114,19 @@ void sst_player_missile_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {
-    case MISSILE_INIT_SIG:
+    case SST_MISSILE_INIT_SIG:
         player_missile_inint();
         break;
-    case MISSILE_FIRE_SIG:
+    case SST_MISSILE_FIRE_SIG:
         player_missile_fired();
         break;
-    case MISSILE_FLIGHT_SIG:
+    case SST_MISSILE_FLIGHT_SIG:
         player_missile_flight();
         break;
-    case MISSILE_HIT_SIG:
+    case SST_MISSILE_HIT_SIG:
         player_missile_hit();
         break;
-    case MISSILE_RESET_SIG:
+    case SST_MISSILE_RESET_SIG:
         player_missile_reset();
         break;
     default:

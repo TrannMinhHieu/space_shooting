@@ -38,7 +38,7 @@ void terrain_generate()
 void terrain_end();
 void terrain_collision(uint8_t terrain_index);
 static int generated = 0;
-static int terrainLength = 20 + pow(2, myShip.fly_speed - 1);
+static int terrainLength = 20;
 void terrain_update()
 {
     static int x_coord_tracker;
@@ -127,8 +127,8 @@ void terrain_end()
         {
             myShip.ship.y = myShip.ship.y - shipYRound;
         }
-        task_post_pure_msg(SST_TERRAIN_TASK_ID, TERRAIN_RESET_SIG);
-        task_post_pure_msg(SST_ASTEROID_TASK_ID, ASTEROID_SPAWN_SIG);
+        task_post_pure_msg(SST_TERRAIN_TASK_ID, SST_TERRAIN_RESET_SIG);
+        task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_SPAWN_SIG);
         game_stage = GAME_STAGE_ASTEROID_FEILD;
     }
 
@@ -151,19 +151,21 @@ void terrain_reset()
     APP_DBG_SIG("Terrain reset\n");
     v_terrain.clear();
     generated = 0;
+    terrainLength = terrainLength * 2;
 }
 
 void sst_terrain_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {
-    case TERRAIN_INIT_SIG:
+    case SST_TERRAIN_INIT_SIG:
         terrain_init();
+        APP_DBG_SIG("Terrain lenght: %d\n", terrainLength);
         break;
-    case TERRAIN_UPDATE_SIG:
+    case SST_TERRAIN_UPDATE_SIG:
         terrain_update();
         break;
-    case TERRAIN_RESET_SIG:
+    case SST_TERRAIN_RESET_SIG:
         terrain_reset();
         break;
     default:

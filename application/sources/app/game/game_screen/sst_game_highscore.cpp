@@ -73,6 +73,8 @@ void game_highscore_handler(ak_msg_t* msg)
         view_render_display_on();
 
         score_sort();
+
+        timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE, AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
     }
     break;
 
@@ -91,6 +93,11 @@ void game_highscore_handler(ak_msg_t* msg)
         SCREEN_TRAN(game_menu_handler, &sst_game_menu);
     }
     break;
+
+    case AC_DISPLAY_SHOW_IDLE:
+    {
+        SCREEN_TRAN(game_idle_handler, &sst_game_idle);
+    }
     default:
         break;
     }

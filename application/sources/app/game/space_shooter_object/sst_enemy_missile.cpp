@@ -179,19 +179,19 @@ void sst_enemy_missile_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {
-    case ENEMY_MISSILE_INIT_SIG:
+    case SST_ENEMY_MISSILE_INIT_SIG:
         enemy_missile_inint();
         break;
-    case ENEMY_MISSILE_FIRE_SIG:
+    case SST_ENEMY_MISSILE_FIRE_SIG:
         enemy_missile_fired();
         break;
-    case ENEMY_MISSILE_FLIGHT_SIG:
+    case SST_ENEMY_MISSILE_FLIGHT_SIG:
         enemy_missile_flight();
         break;
-    case ENEMY_MISSILE_HIT_SIG:
+    case SST_ENEMY_MISSILE_HIT_SIG:
         enemy_missile_hit();
         break;
-    case ENEMY_MISSILE_RESET_SIG:
+    case SST_ENEMY_MISSILE_RESET_SIG:
         enemy_missile_reset();
         break;
     default:

@@ -197,14 +197,14 @@ enum {
 */
 /*****************************************************************************/
 enum {
-	SHIP_INIT_SIG = AK_USER_DEFINE_SIG,
-	SHIP_FLIGHT_SIG,
-	SHIP_FIRE_SIG,
-	SHIP_MOVE_UP_SIG,
-	SHIP_MOVE_DOWN_SIG,
-	SHIP_RESET_SIG,
-	SHIP_HIT_SIG,
-	MISSILE_DESTROY_SIG
+	SST_SHIP_INIT_SIG = AK_USER_DEFINE_SIG,
+	SST_SHIP_FLIGHT_SIG,
+	SST_SHIP_FIRE_SIG,
+	SST_SHIP_MOVE_UP_SIG,
+	SST_SHIP_MOVE_DOWN_SIG,
+	SST_SHIP_RESET_SIG,
+	SST_SHIP_HIT_SIG,
+	SST_MISSILE_DESTROY_SIG
 };
 
 /*****************************************************************************/
@@ -212,12 +212,12 @@ enum {
 */
 /*****************************************************************************/
 enum {
-	ENEMY_SHIP_INIT_SIG = AK_USER_DEFINE_SIG,
-	ENEMY_SHIP_TAKEOFF_SIG,
-	ENEMY_SHIP_MOVE_SIG,
-	ENEMY_SHIP_FLIGHT_SIG,
-	ENEMY_SHIP_FIRE_SIG,
-	ENEMY_SHIP_RESET_SIG,
+	SST_ENEMY_SHIP_INIT_SIG = AK_USER_DEFINE_SIG,
+	SST_ENEMY_SHIP_TAKEOFF_SIG,
+	SST_ENEMY_SHIP_MOVE_SIG,
+	SST_ENEMY_SHIP_FLIGHT_SIG,
+	SST_ENEMY_SHIP_FIRE_SIG,
+	SST_ENEMY_SHIP_RESET_SIG,
 };
 
 /*****************************************************************************/
@@ -225,11 +225,11 @@ enum {
 */
 /*****************************************************************************/
 enum {
-	MISSILE_INIT_SIG = AK_USER_DEFINE_SIG,
-	MISSILE_FIRE_SIG,
-	MISSILE_FLIGHT_SIG,
-	MISSILE_HIT_SIG,
-	MISSILE_RESET_SIG,
+	SST_MISSILE_INIT_SIG = AK_USER_DEFINE_SIG,
+	SST_MISSILE_FIRE_SIG,
+	SST_MISSILE_FLIGHT_SIG,
+	SST_MISSILE_HIT_SIG,
+	SST_MISSILE_RESET_SIG,
 };
 
 /*****************************************************************************/
@@ -237,11 +237,11 @@ enum {
 */
 /*****************************************************************************/
 enum {
-	ENEMY_MISSILE_INIT_SIG = AK_USER_DEFINE_SIG,
-	ENEMY_MISSILE_FIRE_SIG,
-	ENEMY_MISSILE_FLIGHT_SIG,
-	ENEMY_MISSILE_HIT_SIG,
-	ENEMY_MISSILE_RESET_SIG,
+	SST_ENEMY_MISSILE_INIT_SIG = AK_USER_DEFINE_SIG,
+	SST_ENEMY_MISSILE_FIRE_SIG,
+	SST_ENEMY_MISSILE_FLIGHT_SIG,
+	SST_ENEMY_MISSILE_HIT_SIG,
+	SST_ENEMY_MISSILE_RESET_SIG,
 };
 
 /*****************************************************************************/
@@ -249,11 +249,11 @@ enum {
 */
 /*****************************************************************************/
 enum {
-	ASTEROID_INIT_SIG = AK_USER_DEFINE_SIG,
-	ASTEROID_SPAWN_SIG,
-	ASTEROID_FLIGHT_SIG,
-	ASTEROID_HIT_SIG,
-	ASTEROID_RESET_SIG,
+	SST_ASTEROID_INIT_SIG = AK_USER_DEFINE_SIG,
+	SST_ASTEROID_SPAWN_SIG,
+	SST_ASTEROID_FLIGHT_SIG,
+	SST_ASTEROID_HIT_SIG,
+	SST_ASTEROID_RESET_SIG,
 };
 
 /*****************************************************************************/
@@ -261,9 +261,9 @@ enum {
 */
 /*****************************************************************************/
 enum {
-	EXPLOSION_INIT_SIG = AK_USER_DEFINE_SIG,
-	EXPLPOSION_EXPLODE_SIG,
-	EXPLOSION_RESET_SIG,
+	SST_EXPLOSION_INIT_SIG = AK_USER_DEFINE_SIG,
+	SST_EXPLPOSION_EXPLODE_SIG,
+	SST_EXPLOSION_RESET_SIG,
 };
 
 /*****************************************************************************/
@@ -271,10 +271,10 @@ enum {
 */
 /*****************************************************************************/
 enum {
-	TERRAIN_INIT_SIG = AK_USER_DEFINE_SIG,
-	TERRAIN_GENERATE_SIG,
-	TERRAIN_UPDATE_SIG,
-	TERRAIN_RESET_SIG,
+	SST_TERRAIN_INIT_SIG = AK_USER_DEFINE_SIG,
+	SST_TERRAIN_GENERATE_SIG,
+	SST_TERRAIN_UPDATE_SIG,
+	SST_TERRAIN_RESET_SIG,
 };
 
 /*****************************************************************************/

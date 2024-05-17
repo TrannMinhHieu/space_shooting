@@ -34,17 +34,17 @@ uint8_t simple_randomize_enemy_control()
     uint16_t rate = (myShip.fly_speed - 1) * 2;
     if (random < 5 + rate)
     {
-        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
         return MOVE_UP;
     }
     else if (random < 10 + rate)
     {
-        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
         return MOVE_DOWN;
     }
     else if (random < 17 + rate)
     {
-        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
         return FIRE;
     }
 
@@ -71,14 +71,14 @@ uint8_t strategy_based_enemy_control()
         {
             if (random_factor < 60) // 60% chance to move up if player is above
             {
-                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
-                timer_set(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG, 100, TIMER_ONE_SHOT);
+                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
+                timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG, 100, TIMER_ONE_SHOT);
                 return MOVE_UP;
             }
             else if (random_factor < 80) // 20% chance to fire if player is above
             {
-                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
-                timer_set(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
+                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
+                timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
                 return FIRE;
             }
         }
@@ -86,14 +86,14 @@ uint8_t strategy_based_enemy_control()
         {
             if (random_factor < 60) // 60% chance to move down if player is below
             {
-                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
-                timer_set(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG, 100, TIMER_ONE_SHOT);
+                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
+                timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG, 100, TIMER_ONE_SHOT);
                 return MOVE_DOWN;
             }
             else if (random_factor < 80) // 20% chance to fire if player is below
             {
-                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
-                timer_set(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
+                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
+                timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
                 return FIRE;
             }
         }
@@ -102,8 +102,8 @@ uint8_t strategy_based_enemy_control()
             // Player is at the same y-coordinate, decide whether to fire or not with some randomness
             if (random_factor < 20) // 20% chance to fire when player is at the same y-coordinate
             {
-                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
-                timer_set(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
+                //task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
+                timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
                 return FIRE;
             }
         }
@@ -166,18 +166,18 @@ uint8_t better_randomize_enemy_control()
         // Determine action based on probabilities
         if (random_factor < move_up_probability)
         {
-            task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+            task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
             ship_action = MOVE_UP;
         }
         else if (random_factor < move_up_probability + move_down_probability)
         {
-            task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_MOVE_SIG);
+            task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
             ship_action = MOVE_DOWN;
         }
         else if (random_factor < move_up_probability + move_down_probability + fire_probability)
         {
-            timer_set(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
-            // task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+            timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
+            // task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
             //  std::this_thread::sleep_for(std::chrono::milliseconds(800));
             ship_action = FIRE;
         }
@@ -239,7 +239,7 @@ void attack_pattern_1(uint8_t actions_performed_counter)
         for (uint8_t i = 0; i < myEnemyShip.num_missiles / 6; i++)
         {
             // Bug: missile y position is not updated correctly
-            task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, ENEMY_SHIP_FIRE_SIG);
+            task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
             ship_action = FIRE;
             actions_performed_counter--;
             APP_DBG_SIG("Actions performed: %d\n", actions_performed_counter);

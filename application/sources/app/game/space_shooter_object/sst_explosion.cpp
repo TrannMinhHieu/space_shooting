@@ -67,13 +67,13 @@ void sst_explosion_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {
-    case EXPLOSION_INIT_SIG:
+    case SST_EXPLOSION_INIT_SIG:
         explosion_init();
         break;
-    case EXPLPOSION_EXPLODE_SIG:
+    case SST_EXPLPOSION_EXPLODE_SIG:
         explosion_explode();
         break;
-    case EXPLOSION_RESET_SIG:
+    case SST_EXPLOSION_RESET_SIG:
         explosion_reset();
         break;
     default:
