@@ -170,7 +170,7 @@ void terrain_collision(uint8_t terrain_index)
         }
 
         // Check if the missile and the terrain are colliding
-        if ((int)myMissile.y + SIZE_MISSILE_BITMAP_Y >= v_terrain[terrain_index].y && (int)myMissile.x + SIZE_MISSILE_BITMAP_Y - 3 >= v_terrain[terrain_index].x)
+        if ((int)myMissile.y + SIZE_BITMAP_MISSILE_Y >= v_terrain[terrain_index].y && (int)myMissile.x + SIZE_BITMAP_MISSILE_Y - 3 >= v_terrain[terrain_index].x)
         {
             // Make the missile invisible
             myMissile.visible = BLACK;

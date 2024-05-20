@@ -21,8 +21,8 @@
 // Global missile-related constants
 #define MAX_PLAYER_MISSILE_DISTANCE     (120)
 #define PLAYER_MISSILE_SPEED            (5)
-#define SIZE_MISSILE_BITMAP_X           (10)
-#define SIZE_MISSILE_BITMAP_Y           (5)
+#define SIZE_BITMAP_MISSILE_X           (10)
+#define SIZE_BITMAP_MISSILE_Y           (5)
 
 //#define MAX_NUM_OF_ENEMY_MISSILE        (5)
 

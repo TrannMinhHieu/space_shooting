@@ -171,7 +171,7 @@ bool player_missile_enemy_ship_collision()
     }
 
     // Check if the x-coordinate of the missile plus the size of the missile bitmap is equal to the x-coordinate of the enemy ship.
-    if (myMissile.x + SIZE_MISSILE_BITMAP_X <= myEnemyShip.ship.x)
+    if (myMissile.x + SIZE_BITMAP_MISSILE_X <= myEnemyShip.ship.x)
     {
         return false;
     }

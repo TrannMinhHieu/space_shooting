@@ -307,7 +307,7 @@ bool asteroid_missile_collision(uint8_t asteroid_index)
     }
 
     // Check if the missile and asteroid have the same x-coordinate
-    if (myMissile.x + SIZE_MISSILE_BITMAP_X <= (uint32_t)myAsteroid[asteroid_index].x)
+    if (myMissile.x + SIZE_BITMAP_MISSILE_X <= (uint32_t)myAsteroid[asteroid_index].x)
     {
         return false;
     }

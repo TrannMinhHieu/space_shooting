@@ -137,8 +137,8 @@ void player_missile_draw()
     view_render.drawBitmap(myMissile.x,
                            myMissile.y,
                            sst_bitmap_missile,
-                           SIZE_MISSILE_BITMAP_X,
-                           SIZE_MISSILE_BITMAP_Y,
+                           SIZE_BITMAP_MISSILE_X,
+                           SIZE_BITMAP_MISSILE_Y,
                            WHITE);
 }
 
@@ -192,8 +192,8 @@ void enemy_missile_draw()
         view_render.drawBitmap(v_myEnemyMissiles[i].x,
                                v_myEnemyMissiles[i].y,
                                sst_bitmap_missile_enemy,
-                               SIZE_MISSILE_BITMAP_X,
-                               SIZE_MISSILE_BITMAP_Y,
+                               SIZE_BITMAP_MISSILE_X,
+                               SIZE_BITMAP_MISSILE_Y,
                                WHITE);
     }
 }

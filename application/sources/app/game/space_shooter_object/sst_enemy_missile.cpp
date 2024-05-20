@@ -203,7 +203,7 @@ void sst_enemy_missile_handler(ak_msg_t *msg)
  */
 bool is_enemy_missile_out_of_screen(uint8_t enemy_missile_index)
 {
-    if ((int8_t)(v_myEnemyMissiles[enemy_missile_index].x + SIZE_MISSILE_BITMAP_X) < SCREEN_LEFT_BOUNDARY)
+    if ((int8_t)(v_myEnemyMissiles[enemy_missile_index].x + SIZE_BITMAP_MISSILE_X) < SCREEN_LEFT_BOUNDARY)
     {
         return true;
     }
@@ -232,7 +232,7 @@ bool enemy_missile_player_missile_collision(uint8_t enemy_missile_index)
     };
 
     // Check if the x positions of the missiles overlap
-    if (myMissile.x + SIZE_MISSILE_BITMAP_X <= v_myEnemyMissiles[enemy_missile_index].x)
+    if (myMissile.x + SIZE_BITMAP_MISSILE_X <= v_myEnemyMissiles[enemy_missile_index].x)
     {
         return false;
     };
