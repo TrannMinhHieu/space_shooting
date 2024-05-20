@@ -16,7 +16,7 @@ bool asteroid_ship_collision(uint8_t asteroid_index);
  * @param None
  * @return None
  */
-void asteroid_init()
+void sst_asteroid_init()
 {
     // Print debug message
     APP_DBG_SIG("Asteroid init\n");
@@ -46,7 +46,7 @@ void asteroid_init()
  * @param None
  * @return None
  */
-void asteroid_spawn()
+void sst_asteroid_spawn()
 {
     APP_DBG_SIG("Asteroid spawn\n");
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++) 
@@ -64,7 +64,7 @@ void asteroid_spawn()
  * @param None
  * @return None
  */
-void asteroid_flight()
+void sst_asteroid_flight()
 {
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
@@ -104,7 +104,7 @@ void asteroid_flight()
  * @param None
  * @return None
  */
-void asteroid_hit_handler()
+void sst_asteroid_hit_handler()
 {
     // Iterate through each asteroid in the myAsteroid array
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
@@ -169,7 +169,7 @@ void asteroid_hit_handler()
  * @param None
  * @return None
  */
-void asteroid_field_control()
+void sst_asteroid_field_control()
 {
     // Iterate through each asteroid in the myAsteroid array
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
@@ -216,7 +216,7 @@ void asteroid_field_control()
  * @param None
  * @return None
  */
-void asteroid_reset()
+void sst_asteroid_reset()
 {
     // Print a debug message indicating that the asteroids are being reset.
     APP_DBG_SIG("Asteroid reset\n");
@@ -246,21 +246,21 @@ void sst_asteroid_handler(ak_msg_t* msg)
     switch (msg->sig)
     {
     case SST_ASTEROID_INIT_SIG:
-        asteroid_init();
+        sst_asteroid_init();
         break;
     case SST_ASTEROID_SPAWN_SIG:
-        asteroid_spawn();
+        sst_asteroid_spawn();
         break;
     case SST_ASTEROID_FLIGHT_SIG:
-        asteroid_flight();
-        asteroid_field_control();
+        sst_asteroid_flight();
+        sst_asteroid_field_control();
         break;
     case SST_SHIP_HIT_SIG:
     case SST_MISSILE_HIT_SIG:
-        asteroid_hit_handler();
+        sst_asteroid_hit_handler();
         break;
     case SST_ASTEROID_RESET_SIG:
-        asteroid_reset();
+        sst_asteroid_reset();
         break;
     default:
         // Do nothing for unknown signals

@@ -8,7 +8,7 @@ Explosion_t myExplosion;
  * @param None
  * @return None
  */
-void explosion_init()
+void sst_explosion_init()
 {
     // Print a debug message indicating that the explosion is being initialized.
     APP_DBG_SIG("Explosion init\n");
@@ -26,7 +26,7 @@ void explosion_init()
  * @param None
  * @return None 
  */
-void explosion_explode()
+void sst_explosion_explode()
 {
     if (myExplosion.visible != WHITE)
     {
@@ -49,7 +49,7 @@ void explosion_explode()
  * @param None
  * @return None
 */
-void explosion_reset()
+void sst_explosion_reset()
 {
     APP_DBG_SIG("Explosion reset\n");
     myExplosion.visible = BLACK;
@@ -68,13 +68,13 @@ void sst_explosion_handler(ak_msg_t *msg)
     switch (msg->sig)
     {
     case SST_EXPLOSION_INIT_SIG:
-        explosion_init();
+        sst_explosion_init();
         break;
     case SST_EXPLPOSION_EXPLODE_SIG:
-        explosion_explode();
+        sst_explosion_explode();
         break;
     case SST_EXPLOSION_RESET_SIG:
-        explosion_reset();
+        sst_explosion_reset();
         break;
     default:
         break;

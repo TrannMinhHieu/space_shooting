@@ -16,7 +16,7 @@ bool enemy_missile_player_ship_collision(uint8_t enemy_missile_index);
  *
  * @throws None
  */
-void enemy_missile_inint()
+void sst_enemy_missile_inint()
 {
     // For each element of the v_myEnemyMissiles vector
     for(uint8_t i = 0; i < myEnemyShip.num_missiles; i++)
@@ -43,7 +43,7 @@ void enemy_missile_inint()
 /**
  * Handles the collision events when an enemy missile hits either the player's missile or the player's ship.
  */
-void enemy_missile_hit()
+void sst_enemy_missile_hit()
 {
     // Iterate over each element of the v_myEnemyMissiles vector
     for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
@@ -98,7 +98,7 @@ void enemy_missile_hit()
  *
  * @throws None
  */
-void enemy_missile_fired()
+void sst_enemy_missile_fired()
 {
     // Iterate over each element of the v_myEnemyMissiles vector
     for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
@@ -126,7 +126,7 @@ void enemy_missile_fired()
  * @return void
  * @throws None
  */
-void enemy_missile_flight()
+void sst_enemy_missile_flight()
 {
     // Iterate over each enemy missile
     for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
@@ -156,7 +156,7 @@ void enemy_missile_flight()
  *
  * @throws None
  */
-void enemy_missile_reset()
+void sst_enemy_missile_reset()
 {
     // Clear the v_myEnemyMissiles vector
     v_myEnemyMissiles.clear();
@@ -175,19 +175,19 @@ void sst_enemy_missile_handler(ak_msg_t *msg)
     switch (msg->sig)
     {
     case SST_ENEMY_MISSILE_INIT_SIG:
-        enemy_missile_inint();
+        sst_enemy_missile_inint();
         break;
     case SST_ENEMY_MISSILE_FIRE_SIG:
-        enemy_missile_fired();
+        sst_enemy_missile_fired();
         break;
     case SST_ENEMY_MISSILE_FLIGHT_SIG:
-        enemy_missile_flight();
+        sst_enemy_missile_flight();
         break;
     case SST_ENEMY_MISSILE_HIT_SIG:
-        enemy_missile_hit();
+        sst_enemy_missile_hit();
         break;
     case SST_ENEMY_MISSILE_RESET_SIG:
-        enemy_missile_reset();
+        sst_enemy_missile_reset();
         break;
     default:
         break;

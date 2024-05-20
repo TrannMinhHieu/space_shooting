@@ -12,7 +12,7 @@ EnemyShip_t myEnemyShip;
  * @param: None
  * @return: None
  */
-void enemy_ship_init()
+void sst_enemy_ship_init()
 {
     APP_DBG_SIG("Enemy ship init\n");
     myEnemyShip.ship.visible = BLACK;
@@ -32,7 +32,7 @@ void enemy_ship_init()
  * @param: None
  * @return: None
  */
-void enemy_ship_takeoff()
+void sst_enemy_ship_takeoff()
 {
     APP_DBG_SIG("Enemy ship takeoff\n");
 
@@ -79,7 +79,7 @@ void enemy_ship_retreat()
  * @param None
  * @return None
  */
-void enemy_ship_flight()
+void sst_enemy_ship_flight()
 {
     // Check if the enemy ship is visible
     if (myEnemyShip.ship.visible != WHITE)
@@ -115,7 +115,7 @@ void enemy_ship_flight()
         myEnemyShip.ship.action_image = 1;
     }
 }
-void enemy_ship_health_control()
+void sst_enemy_ship_health_control()
 {
     // Check if the health of the enemy ship is less than or equal to 0
     if (myEnemyShip.health <= 0)
@@ -152,7 +152,7 @@ void enemy_ship_health_control()
  * @param None
  * @return None
  */
-void enemy_ship_move()
+void sst_enemy_ship_move()
 {
     // Move the ship up if it is visible and the ship_action is MOVE_UP
     if (myEnemyShip.ship.y > 0 && ship_action == MOVE_UP)
@@ -193,7 +193,7 @@ void enemy_ship_move()
  * @param None
  * @return None
  */
-void enemy_ship_fire()
+void sst_enemy_ship_fire()
 {
     // Check if the ship action is set to FIRE and if the enemy ship has any missiles remaining
     if (ship_action == FIRE)
@@ -212,7 +212,7 @@ void enemy_ship_fire()
  * @param None
  * @return None
  */
-void enemy_ship_reset()
+void sst_enemy_ship_reset()
 {
     APP_DBG_SIG("Enemy ship reset\n");
     myEnemyShip.ship.visible = BLACK;
@@ -230,23 +230,23 @@ void sst_enemy_ship_handler(ak_msg_t *msg)
     switch (msg->sig)
     {
     case SST_ENEMY_SHIP_INIT_SIG:
-        enemy_ship_init();
+        sst_enemy_ship_init();
         break;
     case SST_ENEMY_SHIP_TAKEOFF_SIG:
-        enemy_ship_takeoff();
+        sst_enemy_ship_takeoff();
         break;
     case SST_ENEMY_SHIP_FLIGHT_SIG:
-        enemy_ship_flight();
-        enemy_ship_health_control();
+        sst_enemy_ship_flight();
+        sst_enemy_ship_health_control();
         break;
     case SST_ENEMY_SHIP_MOVE_SIG:
-        enemy_ship_move();
+        sst_enemy_ship_move();
         break;
     case SST_ENEMY_SHIP_FIRE_SIG:
-        enemy_ship_fire();
+        sst_enemy_ship_fire();
         break;
     case SST_ENEMY_SHIP_RESET_SIG:
-        enemy_ship_reset();
+        sst_enemy_ship_reset();
         break;
     default:
         break;

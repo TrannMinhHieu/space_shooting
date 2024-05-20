@@ -8,7 +8,7 @@ PlayerShip_t myShip;
  * @param None
  * @return None
  */
-void player_ship_init()
+void sst_player_ship_init()
 {
     APP_DBG_SIG("Ship init\n");
     myShip.ship.x = SHIP_X_COORDINATE;
@@ -25,7 +25,7 @@ void player_ship_init()
  * @param None
  * @return None
  */
-void player_ship_flight()
+void sst_player_ship_flight()
 {
     if((int32_t)myShip.ship.y < 0)
     {
@@ -60,7 +60,7 @@ void player_ship_flight()
  * @param None
  * @return None
  */
-void player_ship_fire()
+void sst_player_ship_fire()
 {
     // Send message to fire a missile
     APP_DBG_SIG("Ship fire missile\n");
@@ -73,7 +73,7 @@ void player_ship_fire()
  * @param None
  * @return None
  */
-void player_ship_move_up()
+void sst_player_ship_move_up()
 {
     // Bug, ship stuck at y <= 0
     APP_DBG_SIG("Ship move up\n");
@@ -90,7 +90,7 @@ void player_ship_move_up()
  * @param None
  * @return None
  */
-void player_ship_move_down()
+void sst_player_ship_move_down()
 {
     APP_DBG_SIG("Ship move down\n");
     if (myShip.ship.y <= LCD_HEIGHT - SHIP_Y_STEP - 5)
@@ -111,7 +111,7 @@ void player_ship_move_down()
  * @param None
  * @return None
  */
-void player_ship_reset()
+void sst_player_ship_reset()
 {
     APP_DBG_SIG("Ship reset\n");
     myShip.ship.x = SHIP_X_COORDINATE;
@@ -133,19 +133,19 @@ void sst_player_ship_handler(ak_msg_t* msg)
     switch (msg->sig)
     {
     case SST_SHIP_INIT_SIG:
-        player_ship_init();
+        sst_player_ship_init();
         break;
     case SST_SHIP_FLIGHT_SIG:
-        player_ship_flight();
+        sst_player_ship_flight();
         break;
     case SST_SHIP_FIRE_SIG:
-        player_ship_fire();
+        sst_player_ship_fire();
         break;
     case SST_SHIP_MOVE_UP_SIG:
-        player_ship_move_up();
+        sst_player_ship_move_up();
         break;
     case SST_SHIP_MOVE_DOWN_SIG:
-        player_ship_move_down();
+        sst_player_ship_move_down();
         break;
     case SST_SCORE_UPDATE_SIG:
     {
@@ -157,7 +157,7 @@ void sst_player_ship_handler(ak_msg_t* msg)
         break;
     }
     case SST_SHIP_RESET_SIG:
-        player_ship_reset();
+        sst_player_ship_reset();
         break;
     default:
         break;

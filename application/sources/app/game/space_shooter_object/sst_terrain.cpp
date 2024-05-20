@@ -52,7 +52,7 @@ void TerrainCoordinates::terrainMover()
  *
  * @note Pre-added two terrain coordinates for smooth terrain initialization.
  */
-void terrain_init()
+void sst_terrain_init()
 {
     APP_DBG_SIG("Terrain init\n");
     v_terrain.push_back(TerrainCoordinates(140, 60));
@@ -82,7 +82,7 @@ static int terrainLength = 20;
  * @param None
  * @return None
  */
-void terrain_update()
+void sst_terrain_update()
 {
     static int x_coord_tracker;
     for (uint8_t i = 0; i < v_terrain.size(); i++)
@@ -276,7 +276,7 @@ void terrain_end()
  * @param None
  * @return None
  */
-void terrain_reset()
+void sst_terrain_reset()
 {
     // Print debug message
     APP_DBG_SIG("Terrain reset\n");
@@ -307,18 +307,18 @@ void sst_terrain_handler(ak_msg_t *msg)
     {
     // Initialize the terrain
     case SST_TERRAIN_INIT_SIG:
-        terrain_init();
+        sst_terrain_init();
         APP_DBG_SIG("Terrain length: %d\n", terrainLength);
         break;
 
     // Update the terrain
     case SST_TERRAIN_UPDATE_SIG:
-        terrain_update();
+        sst_terrain_update();
         break;
 
     // Reset the terrain
     case SST_TERRAIN_RESET_SIG:
-        terrain_reset();
+        sst_terrain_reset();
         break;
 
     // Do nothing for other message signatures

@@ -11,7 +11,7 @@ bool player_missile_enemy_ship_collision();
  * @param None
  * @return None
  */
-void player_missile_inint()
+void sst_player_missile_inint()
 {
     APP_DBG_SIG("Missile init\n");
     myMissile.x = 0;
@@ -28,7 +28,7 @@ void player_missile_inint()
  * @param None
  * @return None
  */
-void player_missile_fired()
+void sst_player_missile_fired()
 {
     // Check if the missile is armed
     if (!is_armed())
@@ -49,7 +49,7 @@ void player_missile_fired()
  * @param None
  * @return None
  */
-void player_missile_flight()
+void sst_player_missile_flight()
 {
     if (myMissile.visible == WHITE)
     {
@@ -67,7 +67,7 @@ void player_missile_flight()
     }
 }
 
-void player_missile_hit()
+void sst_player_missile_hit()
 {
     // Check if there is a collision between the player's missile and the enemy ship
     if (player_missile_enemy_ship_collision())
@@ -96,7 +96,7 @@ void player_missile_hit()
  * @param None
  * @return None
  */
-void player_missile_reset()
+void sst_player_missile_reset()
 {
     APP_DBG_SIG("Missile reset\n");
     myMissile.visible = BLACK;
@@ -115,19 +115,19 @@ void sst_player_missile_handler(ak_msg_t *msg)
     switch (msg->sig)
     {
     case SST_MISSILE_INIT_SIG:
-        player_missile_inint();
+        sst_player_missile_inint();
         break;
     case SST_MISSILE_FIRE_SIG:
-        player_missile_fired();
+        sst_player_missile_fired();
         break;
     case SST_MISSILE_FLIGHT_SIG:
-        player_missile_flight();
+        sst_player_missile_flight();
         break;
     case SST_MISSILE_HIT_SIG:
-        player_missile_hit();
+        sst_player_missile_hit();
         break;
     case SST_MISSILE_RESET_SIG:
-        player_missile_reset();
+        sst_player_missile_reset();
         break;
     default:
         break;
