@@ -1,69 +1,85 @@
 #include "sst_game_idle.h"
 #include <vector>
 
-#define MAX_CELESTIAL_OBJECTS (60)
-class Celestial
-{
-public:
-    int x;
-    int y;
+#define MAX_BALL_DISPLAY (16)
 
-    Celestial()
+class ball
+{
+    // rand from a to b
+    // (rand() % (b - a + 1)) + a
+public:
+    static int total;
+    int id, x, y, slope, axis_x, axis_y, radius;
+
+    ball()
     {
-        x = rand() % (LCD_WIDTH - 10);
-        y = rand() % (LCD_HEIGHT - 10);
+        axis_x = 1;
+        axis_y = 1;
+        slope = (rand() % (31)) - 15;
+        radius = (rand() % (7)) + 6;
+        x = rand() % (LCD_WIDTH - radius);
+        y = rand() % (LCD_HEIGHT - radius);
     }
 
-    void celestialDrift()
+    int distance(ball &__ball)
     {
-        x = x - 2;
+        uint8_t dx, dy;
+        dx = abs(x - __ball.x);
+        dy = abs(y - __ball.y);
+        return sqrt(dx * dx + dy * dy);
+    }
+
+    bool is_hit_to_other(ball &__ball)
+    {
+        if ((radius + __ball.radius) <= distance(__ball))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void moving()
+    {
+        if (axis_x > 0)
+        {
+            x = x + 2;
+        }
+        else
+        {
+            x = x - 2;
+        }
+
+        if (axis_y > 0)
+        {
+            y += 2 * atan(slope);
+        }
+        else
+        {
+            y -= 2 * atan(slope);
+        }
+
+        if (x > (LCD_WIDTH - radius) || x < radius)
+        {
+            axis_x = -axis_x;
+            if (x < radius)
+            {
+                x = radius;
+            }
+        }
+
+        if (y > (LCD_HEIGHT - radius) || y < radius)
+        {
+            axis_y = -axis_y;
+            if (y < radius)
+            {
+                y = radius;
+            }
+        }
     }
 };
-std::vector<Celestial> v_spaces;
-
-void celestial_ilde_render()
-{
-    for (Celestial p : v_spaces)
-    {
-        view_render.drawPixel(p.x, p.y, WHITE);
-    }
-}
-
-void player_ship_idle_draw()
-{
-    // If ship is not visible, do nothing and return
-    if (myShip.ship.visible != WHITE)
-    {
-        return;
-    }
-    switch (myShip.ship.action_image)
-    {
-    case 1:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_1,
-                               SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
-        break;
-    case 2:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_2,
-                               SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
-        break;
-    case 3:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_3,
-                               SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
-        break;
-    default:
-        break;
-    }
-}
-
-void player_ship_idle_flight()
-{
-    // Cycle through the ship animation
-    myShip.ship.action_image++;
-    if (myShip.ship.action_image == 4)
-    {
-        myShip.ship.action_image = 1;
-    }
-}
 
 static void idle_render();
 
@@ -81,10 +97,15 @@ view_screen_t sst_game_idle = {
     .focus_item = 0,
 };
 
+std::vector<ball> v_idle_ball;
+int ball::total;
+
 void idle_render()
 {
-    celestial_ilde_render();
-    player_ship_idle_draw();
+    for (ball _ball : v_idle_ball)
+    {
+        view_render.drawCircle(_ball.x, _ball.y, _ball.radius, 144);
+    }
 }
 
 void game_idle_handler(ak_msg_t *msg)
@@ -92,39 +113,84 @@ void game_idle_handler(ak_msg_t *msg)
     switch (msg->sig)
     {
     case SCREEN_ENTRY:
+    {
         APP_DBG_SIG("SCREEN_IDLE_ENTRY\n");
-        for (int i = 0; i < MAX_CELESTIAL_OBJECTS; i++)
+        if (v_idle_ball.empty())
         {
-            v_spaces.push_back(Celestial());
+            ball new_ball;
+            new_ball.id = ball::total++;
+            v_idle_ball.push_back(new_ball);
         }
-        myShip.ship.visible = WHITE;
-        myShip.ship.action_image = 1;
-        myShip.ship.x = 50;
-        myShip.ship.y = 20;
-        timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE_INTERAL, TIMER_PERIODIC);
-        break;
+
+        timer_set(AC_TASK_DISPLAY_ID,
+                  AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE,
+                  AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE_INTERAL,
+                  TIMER_PERIODIC);
+    }
+    break;
 
     case AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE:
-        for (uint8_t i = 0; i < v_spaces.size(); i++)
+    {
+        for (unsigned int i = 0; i < v_idle_ball.size(); i++)
         {
-            v_spaces[i].celestialDrift();
-            if (v_spaces[i].x < 0)
-            {
-                v_spaces[i].x = (rand() % 10) + 130;
-                v_spaces[i].y = rand() % (LCD_HEIGHT - 10);
-            }
+            v_idle_ball[i].moving();
         }
-
-        player_ship_idle_flight();
-        break;
+    }
+    break;
 
     case AC_DISPLAY_BUTTON_MODE_RELEASED:
-        APP_DBG_SIG("AC_DISPLAY_BUTTON_MODE_RELEASED\n");
+    {
+        APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_RELEASED\n");
         timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE);
-        task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_RESET_SIG);
-        v_spaces.clear();
         SCREEN_TRAN(game_menu_handler, &sst_game_menu);
-        break;
+    }
+    break;
+
+    case AC_DISPLAY_BUTTON_UP_RELEASED:
+    {
+        APP_DBG_SIG("AC_DISPLAY_BUTON_UP_RELEASED\n");
+        ball new_ball;
+        new_ball.id = ball::total++;
+
+        if (v_idle_ball.empty())
+        {
+            timer_set(AC_TASK_DISPLAY_ID,
+                      AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE,
+                      AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE_INTERAL,
+                      TIMER_PERIODIC);
+        }
+
+        if (v_idle_ball.size() < MAX_BALL_DISPLAY)
+        {
+            v_idle_ball.push_back(new_ball);
+        }
+        else
+        {
+            BUZZER_PlayTones(tones_3beep);
+        }
+    }
+    break;
+
+    case AC_DISPLAY_BUTTON_DOWN_RELEASED:
+    {
+        APP_DBG_SIG("AC_DISPLAY_BUTON_DOWN_RELEASED\n");
+        if (v_idle_ball.size())
+        {
+            ball::total--;
+            v_idle_ball.pop_back();
+        }
+        else
+        {
+            timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE);
+            BUZZER_PlayTones(tones_3beep);
+        }
+        if (v_idle_ball.empty()) {
+        	timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE);
+        	SCREEN_TRAN(game_menu_handler, &sst_game_menu);
+        }
+    }
+    break;
+
     default:
         break;
     }
