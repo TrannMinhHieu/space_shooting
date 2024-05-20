@@ -1,6 +1,6 @@
 #include "sst_missile.h"
 
-Missile myMissile;
+Missile_t myMissile;
 
 bool is_armed();
 bool player_missile_enemy_ship_collision();

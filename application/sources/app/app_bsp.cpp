@@ -32,7 +32,7 @@ void btn_mode_callback(void* b) {
 
 	case BUTTON_SW_STATE_RELEASED: {
 		APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_RELEASED\n");
-		if(game_state == GAME_PLAY) {
+		if(sst_game_state == GAME_PLAY) {
 			task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_FIRE_SIG);
 		} else {
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_MODE_RELEASED);
@@ -61,7 +61,7 @@ void btn_up_callback(void* b) {
 
 	case BUTTON_SW_STATE_RELEASED: {
 		APP_DBG("[btn_up_callback] BUTTON_SW_STATE_RELEASED\n");
-		if(game_state == GAME_PLAY) {
+		if(sst_game_state == GAME_PLAY) {
 			task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_MOVE_UP_SIG);
 		} else {
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_UP_RELEASED);
@@ -89,7 +89,7 @@ void btn_down_callback(void* b) {
 
 	case BUTTON_SW_STATE_RELEASED: {
 		APP_DBG("[btn_down_callback] BUTTON_SW_STATE_RELEASED\n");
-		if (game_state == GAME_PLAY) {
+		if (sst_game_state == GAME_PLAY) {
 			task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_MOVE_DOWN_SIG);
 		} else {
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_DOWN_RELEASED);

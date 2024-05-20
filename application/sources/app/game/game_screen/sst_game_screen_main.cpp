@@ -1,11 +1,7 @@
 #include "sst_game_screen.h"
 
-uint8_t game_state;
-uint8_t game_stage;
-
-void info_screen_draw()
-{
-}
+uint8_t sst_game_state;
+uint8_t sst_game_stage;
 
 /**
  * Controls the game stage and posts messages based on the current game stage.
@@ -15,19 +11,19 @@ void info_screen_draw()
 void game_stage_control()
 {
     // Post messages based on the current game stage
-    if (game_stage == GAME_STAGE_SHIP_FIGHT)
+    if (sst_game_stage == GAME_STAGE_SHIP_FIGHT)
     {
         task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, SST_MISSILE_HIT_SIG);
         task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_FLIGHT_SIG);
         task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_HIT_SIG);
         task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FLIGHT_SIG);
     }
-    if (game_stage == GAME_STAGE_ASTEROID_FEILD)
+    if (sst_game_stage == GAME_STAGE_ASTEROID_FEILD)
     {
         task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_FLIGHT_SIG);
         task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_HIT_SIG);
     }
-    if (game_stage == GAME_STAGE_TERRAIN)
+    if (sst_game_stage == GAME_STAGE_TERRAIN)
     {
         if (myShip.ship.y < LCD_HEIGHT - SHIP_Y_STEP)
         {
@@ -53,16 +49,18 @@ void asteroid_draw()
         switch (myAsteroid[i].action_image)
         {
         case 1:
-            view_render.drawBitmap(myAsteroid[i].x, myAsteroid[i].y, bitmap_asteroid_1,
+            view_render.drawBitmap(myAsteroid[i].x, myAsteroid[i].y, sst_bitmap_asteroid_1,
                                    SIZE_BITMAP_ASTEROIDS_X, SIZE_BITMAP_ASTEROIDS_Y, WHITE);
             break;
         case 2:
-            view_render.drawBitmap(myAsteroid[i].x, myAsteroid[i].y, bitmap_asteroid_2,
+            view_render.drawBitmap(myAsteroid[i].x, myAsteroid[i].y, sst_bitmap_asteroid_2,
                                    SIZE_BITMAP_ASTEROIDS_X, SIZE_BITMAP_ASTEROIDS_Y, WHITE);
             break;
         case 3:
-            view_render.drawBitmap(myAsteroid[i].x, myAsteroid[i].y, bitmap_asteroid_3,
+            view_render.drawBitmap(myAsteroid[i].x, myAsteroid[i].y, sst_bitmap_asteroid_3,
                                    SIZE_BITMAP_ASTEROIDS_X, SIZE_BITMAP_ASTEROIDS_Y, WHITE);
+            break;
+        default:
             break;
         }
     }
@@ -78,32 +76,22 @@ void explosion_draw()
     {
         return;
     }
-    if (myExplosion.action_image == 1)
+    switch (myExplosion.action_image)
     {
-        view_render.drawBitmap(myExplosion.x,
-                               myExplosion.y,
-                               bitmap_explosion_1,
-                               SIZE_BITMAP_EXPLOSION_1_X,
-                               SIZE_BITMAP_EXPLOSION_1_Y,
-                               WHITE);
-    }
-    if (myExplosion.action_image == 2)
-    {
-        view_render.drawBitmap(myExplosion.x,
-                               myExplosion.y,
-                               bitmap_explosion_2,
-                               SIZE_BITMAP_EXPLOSION_2_X,
-                               SIZE_BITMAP_EXPLOSION_2_Y,
-                               WHITE);
-    }
-    if (myExplosion.action_image == 3)
-    {
-        view_render.drawBitmap(myExplosion.x,
-                               myExplosion.y,
-                               bitmap_explosion_3,
-                               SIZE_BITMAP_EXPLOSION_2_X,
-                               SIZE_BITMAP_EXPLOSION_2_Y,
-                               WHITE);
+    case 1:
+        view_render.drawBitmap(myExplosion.x, myExplosion.y, sst_bitmap_explosion_1,
+                               SIZE_BITMAP_EXPLOSION_1_X, SIZE_BITMAP_EXPLOSION_1_Y, WHITE);
+        break;
+    case 2:
+        view_render.drawBitmap(myExplosion.x, myExplosion.y, sst_bitmap_explosion_2,
+                               SIZE_BITMAP_EXPLOSION_2_X, SIZE_BITMAP_EXPLOSION_2_Y, WHITE);
+        break;
+    case 3:
+        view_render.drawBitmap(myExplosion.x, myExplosion.y, sst_bitmap_explosion_3,
+                               SIZE_BITMAP_EXPLOSION_2_X, SIZE_BITMAP_EXPLOSION_2_Y, WHITE);
+        break;
+    default:
+        break;
     }
 }
 
@@ -121,16 +109,18 @@ void player_ship_draw()
     switch (myShip.ship.action_image)
     {
     case 1:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, bitmap_space_ship_1,
+        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_1,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
         break;
     case 2:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, bitmap_space_ship_2,
+        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_2,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
         break;
     case 3:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, bitmap_space_ship_3,
+        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_3,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
+        break;
+    default:
         break;
     }
 }
@@ -146,7 +136,7 @@ void player_missile_draw()
     }
     view_render.drawBitmap(myMissile.x,
                            myMissile.y,
-                           bitmap_missile,
+                           sst_bitmap_missile,
                            SIZE_MISSILE_BITMAP_X,
                            SIZE_MISSILE_BITMAP_Y,
                            WHITE);
@@ -169,16 +159,18 @@ void enemy_ship_draw()
     switch (myEnemyShip.ship.action_image)
     {
     case 1:
-        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, bitmap_space_ship_1,
+        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, sst_bitmap_space_ship_1,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
         break;
     case 2:
-        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, bitmap_space_ship_2,
+        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, sst_bitmap_space_ship_2,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
         break;
     case 3:
-        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, bitmap_space_ship_3,
+        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, sst_bitmap_space_ship_3,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
+        break;
+    default:
         break;
     }
 }
@@ -199,7 +191,7 @@ void enemy_missile_draw()
         }
         view_render.drawBitmap(v_myEnemyMissiles[i].x,
                                v_myEnemyMissiles[i].y,
-                               bitmap_missile_enemy,
+                               sst_bitmap_missile_enemy,
                                SIZE_MISSILE_BITMAP_X,
                                SIZE_MISSILE_BITMAP_Y,
                                WHITE);
@@ -237,7 +229,7 @@ view_screen_t sst_game_screen = {
 
 void space_shooting_gameplay_render()
 {
-    if (game_state == GAME_PLAY)
+    if (sst_game_state == GAME_PLAY)
     {
         asteroid_draw();
         explosion_draw();
@@ -250,7 +242,7 @@ void space_shooting_gameplay_render()
         enemy_missile_draw();
         view_render.update();
     }
-    else if (game_state == GAME_OVER)
+    else if (sst_game_state == GAME_OVER)
     {
         view_render.clear();
         view_render.setTextSize(2);
@@ -263,7 +255,7 @@ void space_shooting_gameplay_render()
         view_render.print("YOUR SCORE: ");
 
         view_render.setCursor(97, 44);
-        view_render.print(game_score.current_score);
+        view_render.print(sst_game_score.current_score);
     }
 }
 /*****************************************************************************/
@@ -289,8 +281,8 @@ void sst_game_play_handler(ak_msg_t *msg)
 
         task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_INIT_SIG);
         task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_INIT_SIG);
-        game_stage = GAME_STAGE_TERRAIN;
-        game_state = GAME_PLAY;
+        sst_game_stage = GAME_STAGE_TERRAIN;
+        sst_game_state = GAME_PLAY;
         game_time_tick_setup();
         break;
     case GAMEPLAY_TIME_TICK:
@@ -301,7 +293,7 @@ void sst_game_play_handler(ak_msg_t *msg)
         break;
     case GAME_EXIT:
         APP_DBG_SIG("SCREEN_GAME_EXIT\n");
-        game_score.current_score = myShip.score;
+        sst_game_score.current_score = myShip.score;
         task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_RESET_SIG);
         task_post_pure_msg(SST_EXPLOSION_TASK_ID, SST_EXPLOSION_RESET_SIG);
         task_post_pure_msg(SST_TERRAIN_TASK_ID, SST_TERRAIN_RESET_SIG);
@@ -311,12 +303,12 @@ void sst_game_play_handler(ak_msg_t *msg)
         task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_RESET_SIG);
 
         timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_GAME_HIGHSCORE, GAMEPLAY_TIME_EXIT_INTERVAL, TIMER_ONE_SHOT);
-        game_state = GAME_OVER;
+        sst_game_state = GAME_OVER;
         break;
 
     case AC_DISPLAY_SHOW_GAME_HIGHSCORE:
         SCREEN_TRAN(game_highscore_handler, &sst_game_highscore);
-        game_score.current_score = 0;
+        sst_game_score.current_score = 0;
         break;
 
     default:

@@ -39,16 +39,18 @@ void player_ship_idle_draw()
     switch (myShip.ship.action_image)
     {
     case 1:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, bitmap_space_ship_1,
+        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_1,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
         break;
     case 2:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, bitmap_space_ship_2,
+        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_2,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
         break;
     case 3:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, bitmap_space_ship_3,
+        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_3,
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
+        break;
+    default:
         break;
     }
 }

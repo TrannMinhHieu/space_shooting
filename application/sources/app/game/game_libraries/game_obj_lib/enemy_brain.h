@@ -16,7 +16,7 @@
 #include "task_display.h"
 
 extern uint8_t ship_action;
-enum Actions
+enum Actions_e
 {
     MOVE_UP,
     MOVE_DOWN,

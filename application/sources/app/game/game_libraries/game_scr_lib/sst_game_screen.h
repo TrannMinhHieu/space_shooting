@@ -37,15 +37,15 @@
 // #define GAME_STAGE_SHIP_FIGHT		(0)
 // #define GAME_STAGE_ASTEROID_FEILD	(1)
 
-enum Stages{
+enum Stages_e{
     GAME_STAGE_SHIP_FIGHT,
     GAME_STAGE_ASTEROID_FEILD,
     GAME_STAGE_TERRAIN,
 };
 
 // global game state
-extern uint8_t game_state;
-extern uint8_t game_stage;
+extern uint8_t sst_game_state;
+extern uint8_t sst_game_stage;
 
 extern view_dynamic_t dyn_view_sst_game_screen;
 extern view_screen_t sst_game_screen;

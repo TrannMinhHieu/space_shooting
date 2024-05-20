@@ -23,9 +23,8 @@
 #define PLAYER_MISSILE_SPEED            (5)
 #define SIZE_MISSILE_BITMAP_X           (10)
 #define SIZE_MISSILE_BITMAP_Y           (5)
-#define SAFE_DISTANCE_TO_FIRE_MISSILE   (80)
 
-#define MAX_NUM_OF_ENEMY_MISSILE        (5)
+//#define MAX_NUM_OF_ENEMY_MISSILE        (5)
 
 // Local missile-related constants
 const uint8_t SHIP_Y_OFFSET_FOR_MISSILES = 5;
@@ -35,10 +34,10 @@ typedef struct
     bool visible;
     uint32_t x, y;
     uint8_t action_image;
-} Missile;
+} Missile_t;
 
-//extern Missile myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
-extern Missile myMissile;
-extern std::vector<Missile> v_myEnemyMissiles;
+//extern Missile_t myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
+extern Missile_t myMissile;
+extern std::vector<Missile_t> v_myEnemyMissiles;
 
 #endif /* __MISSILE_H__ */

@@ -1,7 +1,7 @@
 #include "sst_ship.h"
 #include "enemy_brain.h"
 
-EnemyShip myEnemyShip;
+EnemyShip_t myEnemyShip;
 
 /**
  * @brief Initializes the enemy ship.
@@ -135,7 +135,7 @@ void enemy_ship_health_control()
 
         // Change the game stage to GAME_STAGE_TERRAIN
         task_post_pure_msg(SST_TERRAIN_TASK_ID, SST_TERRAIN_INIT_SIG);
-        game_stage = GAME_STAGE_TERRAIN;
+        sst_game_stage = GAME_STAGE_TERRAIN;
 
         // Return from the function
         return;

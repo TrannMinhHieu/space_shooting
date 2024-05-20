@@ -1,7 +1,7 @@
 #include "sst_missile.h"
 
-Missile myEnemyMissile;
-std::vector<Missile> v_myEnemyMissiles;
+Missile_t myEnemyMissile;
+std::vector<Missile_t> v_myEnemyMissiles;
 
 bool is_enemy_missile_out_of_screen(uint8_t enemy_missile_index);
 bool enemy_missile_player_missile_collision(uint8_t enemy_missile_index);

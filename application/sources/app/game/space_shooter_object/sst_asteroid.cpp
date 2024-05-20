@@ -1,6 +1,6 @@
 #include "sst_asteroid.h"
 
-Asteroid myAsteroid[NUM_ASTEROIDS];
+Asteroid_t myAsteroid[NUM_ASTEROIDS];
 uint16_t asteroid_count = 0;
 
 bool is_asteroid_out_of_screen(uint8_t asteroid_index);
@@ -194,7 +194,7 @@ void asteroid_field_control()
             APP_DBG_SIG("Asteroid count = %d\n", asteroid_count);
 
             // Set the game stage to "SHIP_FIGHT"
-            game_stage = GAME_STAGE_SHIP_FIGHT;
+            sst_game_stage = GAME_STAGE_SHIP_FIGHT;
 
             // Re-arm the enemy ship
             task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_INIT_SIG);

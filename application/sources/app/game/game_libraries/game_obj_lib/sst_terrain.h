@@ -33,6 +33,5 @@ public:
 };
 
 extern std::vector<TerrainCoordinates> v_terrain;
-extern void sst_terrain_handler(ak_msg_t *msg);
 
 #endif // TERRAIN_H

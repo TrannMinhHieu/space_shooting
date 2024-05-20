@@ -14,7 +14,9 @@ void terrain_collision(uint8_t terrain_index);
  * @todo Add perlin noise
  */
 std::vector<TerrainCoordinates> v_terrain;
+
 const int TerrainCoordinates::terrain_score = 5;
+
 /**
  * @brief Initialize the terrain coordinates.
  */
@@ -180,6 +182,12 @@ void terrain_collision(uint8_t terrain_index)
 
             // Reset the missile's position
             myMissile.x = 0;
+
+            // Terrain interaction with missile
+            if (v_terrain[terrain_index].y < 50)
+            {
+                v_terrain[terrain_index].y += 10;
+            }
         }
     }
 }
@@ -223,14 +231,16 @@ void terrain_end()
         // Round the ship's y position to the nearest tens of integer
         myShip.ship.y = round_to_tens_of_integer(myShip.ship.y);
 
-        // Post a message to reset the terrain
-        task_post_pure_msg(SST_TERRAIN_TASK_ID, SST_TERRAIN_RESET_SIG);
+        // Soft terrain reset
+        v_terrain.clear();
+        generated = 0;
+        terrainLength = terrainLength * 2;
 
         // Post a message to spawn asteroids
         task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_SPAWN_SIG);
 
         // Set the game stage to the asteroid field
-        game_stage = GAME_STAGE_ASTEROID_FEILD;
+        sst_game_stage = GAME_STAGE_ASTEROID_FEILD;
     }
 
     // Iterate over the terrain vector
@@ -277,8 +287,8 @@ void terrain_reset()
     // Set the generated variable to 0
     generated = 0;
 
-    // Double the terrainLength variable
-    terrainLength = terrainLength * 2;
+    // Reset the terrainLength variable
+    terrainLength = 20;
 }
 
 /**

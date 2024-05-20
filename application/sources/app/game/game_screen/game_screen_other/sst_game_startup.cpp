@@ -26,7 +26,7 @@ void startup_render()
     view_render.setCursor(5, 27);
     view_render.print("SHOOTING");
 
-    view_render.drawBitmap(105, 27, bitmap_space_ship_1, SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
+    view_render.drawBitmap(105, 27, sst_bitmap_space_ship_1, SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
 
     view_render.setCursor(5, 50);
     view_render.setTextSize(1);

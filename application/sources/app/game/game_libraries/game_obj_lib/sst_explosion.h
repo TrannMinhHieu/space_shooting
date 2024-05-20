@@ -25,8 +25,8 @@ typedef struct
     bool visible;
     uint8_t x, y;
     uint8_t action_image;
-} Explosion;
+} Explosion_t;
 
-extern Explosion myExplosion;
+extern Explosion_t myExplosion;
 
 #endif /* __EXPLOSION_H__ */

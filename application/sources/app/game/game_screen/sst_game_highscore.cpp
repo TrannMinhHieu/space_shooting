@@ -1,6 +1,6 @@
 #include "sst_game_highscore.h"
 
-game_score_t game_score;
+game_score_t sst_game_score;
 
 static void highscore_render();
 
@@ -30,35 +30,35 @@ void highscore_render()
     view_render.setCursor(5, 25);
     view_render.print("1. ");
     view_render.setCursor(35, 25);
-    view_render.print(game_score.first_place);
+    view_render.print(sst_game_score.first_place);
 
     view_render.setCursor(5, 35);
     view_render.print("2. ");
     view_render.setCursor(35, 35);
-    view_render.print(game_score.second_place);
+    view_render.print(sst_game_score.second_place);
 
     view_render.setCursor(5, 45);
     view_render.print("3. ");
     view_render.setCursor(35, 45);
-    view_render.print(game_score.third_place);
+    view_render.print(sst_game_score.third_place);
 }
 
 void score_sort()
 {
-    if (game_score.current_score > game_score.first_place)
+    if (sst_game_score.current_score > sst_game_score.first_place)
     {
-        game_score.third_place = game_score.second_place;
-        game_score.second_place = game_score.first_place;
-        game_score.first_place = game_score.current_score;
+        sst_game_score.third_place = sst_game_score.second_place;
+        sst_game_score.second_place = sst_game_score.first_place;
+        sst_game_score.first_place = sst_game_score.current_score;
     }
-    else if (game_score.current_score > game_score.second_place)
+    else if (sst_game_score.current_score > sst_game_score.second_place)
     {
-        game_score.third_place = game_score.second_place;
-        game_score.second_place = game_score.current_score;
+        sst_game_score.third_place = sst_game_score.second_place;
+        sst_game_score.second_place = sst_game_score.current_score;
     }
-    else if (game_score.current_score > game_score.third_place)
+    else if (sst_game_score.current_score > sst_game_score.third_place)
     {
-        game_score.third_place = game_score.current_score;
+        sst_game_score.third_place = sst_game_score.current_score;
     }
 }
 
@@ -81,9 +81,9 @@ void game_highscore_handler(ak_msg_t* msg)
     case AC_DISPLAY_BUTTON_UP_LONG_PRESSED:
     {
         APP_DBG_SIG("HIGH_SCORE_RESET\n");
-        game_score.first_place = 0;
-        game_score.second_place = 0;
-        game_score.third_place = 0;
+        sst_game_score.first_place = 0;
+        sst_game_score.second_place = 0;
+        sst_game_score.third_place = 0;
     }
     break;
 

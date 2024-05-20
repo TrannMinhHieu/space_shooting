@@ -31,7 +31,7 @@ typedef struct
     uint32_t third_place;
 } game_score_t;
 
-extern game_score_t game_score;
+extern game_score_t sst_game_score;
 
 extern void game_highscore_handler(ak_msg_t* msg);
 
