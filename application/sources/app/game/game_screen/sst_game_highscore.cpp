@@ -1,6 +1,6 @@
 #include "sst_game_highscore.h"
 
-game_score_t sst_game_score;
+sst_game_score_t sst_game_score;
 
 static void sst_highscore_render();
 

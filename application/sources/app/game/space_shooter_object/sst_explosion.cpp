@@ -1,6 +1,6 @@
 #include "sst_explosion.h"
 
-Explosion_t myExplosion;
+sst_Explosion_t myExplosion;
 
 /**
  * @brief Initialize the explosion with default values.

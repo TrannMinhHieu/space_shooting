@@ -4,8 +4,6 @@
 /**
  * Made with Marlin Bitmap Converter
  * https://marlinfw.org/tools/u8glib/converter.html
- *
- * This bitmap from the file 'missile-enemy.png'
  */
 // bitmap of space ship 1, 15x15px
 const unsigned char PROGMEM sst_bitmap_space_ship_1[] = {

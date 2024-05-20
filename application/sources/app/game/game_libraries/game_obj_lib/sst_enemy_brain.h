@@ -15,8 +15,8 @@
 #include "task_list.h"
 #include "task_display.h"
 
-extern uint8_t ship_action;
-enum Actions_e
+extern uint8_t sst_ship_action;
+enum sst_Actions_e
 {
     MOVE_UP,
     MOVE_DOWN,
@@ -24,9 +24,9 @@ enum Actions_e
     DO_NOTHING
 };
 
-extern uint8_t simple_randomize_enemy_control();
-extern uint8_t strategy_based_enemy_control();
-extern uint8_t better_randomize_enemy_control();
-extern uint8_t better_strategy_based_enemy_control();
+extern uint8_t sst_simple_randomize_enemy_control();
+extern uint8_t sst_strategy_based_enemy_control();
+extern uint8_t sst_better_randomize_enemy_control();
+extern uint8_t sst_better_strategy_based_enemy_control();
 
 #endif // ENEMY_BRAIN_H

@@ -1,11 +1,11 @@
 #include "sst_missile.h"
 
-Missile_t myEnemyMissile;
-std::vector<Missile_t> v_myEnemyMissiles;
+sst_Missile_t myEnemyMissile;
+std::vector<sst_Missile_t> v_myEnemyMissiles;
 
 bool is_enemy_missile_out_of_screen(uint8_t enemy_missile_index);
-bool enemy_missile_player_missile_collision(uint8_t enemy_missile_index);
-bool enemy_missile_player_ship_collision(uint8_t enemy_missile_index);
+bool is_enemy_missile_player_missile_collided(uint8_t enemy_missile_index);
+bool is_enemy_missile_player_ship_collided(uint8_t enemy_missile_index);
 
 // TODO: Missile fire bug
 /**
@@ -49,7 +49,7 @@ void sst_enemy_missile_hit()
     for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
     {
         // Check if there is a collision between the enemy missile and the player's missile
-        if (enemy_missile_player_missile_collision(i))
+        if (is_enemy_missile_player_missile_collided(i))
         {
             APP_DBG_SIG("Enemy missile hit missile\n");
 
@@ -68,7 +68,7 @@ void sst_enemy_missile_hit()
         }
 
         // Check if there is a collision between the enemy missile and the player's ship
-        if (enemy_missile_player_ship_collision(i))
+        if (is_enemy_missile_player_ship_collided(i))
         {
             APP_DBG_SIG("Enemy missile hit ship\n");
             APP_DBG_SIG("Ship hited by enemy missile no %d\n", i);
@@ -194,7 +194,7 @@ void sst_enemy_missile_handler(ak_msg_t *msg)
     }
 }
 
-// Non-void functions implementation ----------------------------------------------------------
+// NON-VOID FUNCTIONS IMPLEMENTATION ----------------------------------------------------------
 /**
  * @brief if the enemy missile at the given index is out of the screen.
  *
@@ -218,7 +218,7 @@ bool is_enemy_missile_out_of_screen(uint8_t enemy_missile_index)
  *
  * @throws None
  */
-bool enemy_missile_player_missile_collision(uint8_t enemy_missile_index)
+bool is_enemy_missile_player_missile_collided(uint8_t enemy_missile_index)
 {
     // Check if myMissile and myEnemyMissile are both visible and at the same y position
     if (myMissile.visible != WHITE || v_myEnemyMissiles[enemy_missile_index].visible != WHITE)
@@ -240,7 +240,7 @@ bool enemy_missile_player_missile_collision(uint8_t enemy_missile_index)
     // If all conditions are met, return true
     return true;
 }
-bool enemy_missile_player_ship_collision(uint8_t enemy_missile_index)
+bool is_enemy_missile_player_ship_collided(uint8_t enemy_missile_index)
 {
     // Check if the ship and the enemy missile are both visible
     if (myShip.ship.visible != WHITE || v_myEnemyMissiles[enemy_missile_index].visible != WHITE)

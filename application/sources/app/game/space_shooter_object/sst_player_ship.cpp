@@ -1,6 +1,6 @@
 #include "sst_ship.h"
 
-PlayerShip_t myShip;
+sst_PlayerShip_t myShip;
 
 /**
  * @brief Initialize the ship with default values.

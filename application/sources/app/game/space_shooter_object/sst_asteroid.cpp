@@ -1,11 +1,11 @@
 #include "sst_asteroid.h"
 
-Asteroid_t myAsteroid[NUM_ASTEROIDS];
+sst_Asteroid_t myAsteroid[NUM_ASTEROIDS];
 uint16_t asteroid_count = 0;
 
 bool is_asteroid_out_of_screen(uint8_t asteroid_index);
-bool asteroid_missile_collision(uint8_t asteroid_index);
-bool asteroid_ship_collision(uint8_t asteroid_index);
+bool is_asteroid_missile_collided(uint8_t asteroid_index);
+bool is_asteroid_ship_collided(uint8_t asteroid_index);
 
 /**
  * @brief Initialize the asteroids with random x-coordinates, predefined y-coordinates, and default values.
@@ -110,7 +110,7 @@ void sst_asteroid_hit_handler()
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
         // Check if asteroid is visible and hit by missile
-        if (asteroid_missile_collision(i))
+        if (is_asteroid_missile_collided(i))
         {
             APP_DBG_SIG("Missile hit asteroid\n");
             APP_DBG_SIG("Asteroid no %d hit by missile\n", i);
@@ -132,7 +132,7 @@ void sst_asteroid_hit_handler()
         }
 
         // Check if asteroid is visible and hit by ship
-        if (asteroid_ship_collision(i))
+        if (is_asteroid_ship_collided(i))
         {
             APP_DBG_SIG("Ship hit asteroid\n");
             APP_DBG_SIG("Asteroid no %d hit by ship\n", i);
@@ -175,7 +175,7 @@ void sst_asteroid_field_control()
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
         // Check if the asteroid has been destroyed by a missile collision
-        if (asteroid_missile_collision(i))
+        if (is_asteroid_missile_collided(i))
         {
             // Increment the asteroid_count variable and print the number of asteroids destroyed
             asteroid_count++;
@@ -268,7 +268,7 @@ void sst_asteroid_handler(ak_msg_t* msg)
     }
 }
 
-// Non-void functions implementation ----------------------------------------------------------
+// NON-VOID FUNCTIONS IMPLEMENTATION ----------------------------------------------------------
 /**
  * Checks if any of the asteroids in the `myAsteroid` array have moved off the screen by checking their x-coordinates.
  *
@@ -292,7 +292,7 @@ bool is_asteroid_out_of_screen(uint8_t asteroid_index)
  * @param asteroid_index The index of the asteroid in the `myAsteroid` array.
  * @return True if a collision has occurred, False otherwise.
  */
-bool asteroid_missile_collision(uint8_t asteroid_index)
+bool is_asteroid_missile_collided(uint8_t asteroid_index)
 {
     // Check if the missile or the asteroid is not visible
     if (myMissile.visible != WHITE || myAsteroid[asteroid_index].visible != WHITE)
@@ -322,7 +322,7 @@ bool asteroid_missile_collision(uint8_t asteroid_index)
  * @param asteroid_index The index of the asteroid in the myAsteroid array.
  * @return true if a collision between the ship and the asteroid has occurred, false otherwise.
  */
-bool asteroid_ship_collision(uint8_t asteroid_index)
+bool is_asteroid_ship_collided(uint8_t asteroid_index)
 {
     // Check if the ship or the asteroid is not visible
     if (myShip.ship.visible != WHITE || myAsteroid[asteroid_index].visible != WHITE)

@@ -1,7 +1,7 @@
 #include "sst_ship.h"
 #include "sst_enemy_brain.h"
 
-EnemyShip_t myEnemyShip;
+sst_EnemyShip_t myEnemyShip;
 
 /**
  * @brief Initializes the enemy ship.
@@ -9,8 +9,8 @@ EnemyShip_t myEnemyShip;
  * @details This function sets the initial values for the enemy ship's position, visibility, action image,
  * health, and number of missiles.
  *
- * @param: None
- * @return: None
+ * @param None
+ * @return None
  */
 void sst_enemy_ship_init()
 {
@@ -29,8 +29,9 @@ void sst_enemy_ship_init()
  * @brief Initializes the enemy ship for takeoff.
  *
  * @details This function sets the initial values for the enemy ship's health, number of missiles, position, visibility, action image, and action.
- * @param: None
- * @return: None
+ * 
+ * @param None
+ * @return None
  */
 void sst_enemy_ship_takeoff()
 {
@@ -49,24 +50,6 @@ void sst_enemy_ship_takeoff()
     // Set enemy ship visibility and action image
     myEnemyShip.ship.visible = WHITE;
     myEnemyShip.ship.action_image = 1;
-}
-
-// TODO: add this function: @brief Retreats the enemy ship when "x" time have passed
-void enemy_ship_retreat()
-{
-    APP_DBG_SIG("Enemy ship retreat\n");
-
-    // Check if enemy ship is within the screen boundaries
-    if (myEnemyShip.ship.x + SIZE_BITMAP_SHIP_X < LCD_WIDTH)
-    {
-        // Move enemy ship towards the right side of the screen
-        myEnemyShip.ship.x++;
-    }
-    else
-    {
-        // Make enemy ship invisible
-        myEnemyShip.ship.visible = BLACK;
-    }
 }
 
 /**
@@ -98,11 +81,11 @@ void sst_enemy_ship_flight()
         // Call the randomize_enemy_ship_control function to determine the ship's next action
         if (myShip.score > 800)
         {
-            ship_action = better_strategy_based_enemy_control();
+            sst_ship_action = sst_better_strategy_based_enemy_control();
         }
         else
         {
-            ship_action = better_randomize_enemy_control();
+            sst_ship_action = sst_better_randomize_enemy_control();
         }
     }
 
@@ -154,8 +137,8 @@ void sst_enemy_ship_health_control()
  */
 void sst_enemy_ship_move()
 {
-    // Move the ship up if it is visible and the ship_action is MOVE_UP
-    if (myEnemyShip.ship.y > 0 && ship_action == MOVE_UP)
+    // Move the ship up if it is visible and the sst_ship_action is MOVE_UP
+    if (myEnemyShip.ship.y > 0 && sst_ship_action == MOVE_UP)
     {
         // Print debug message
         APP_DBG_SIG("Enemy ship move up\n");
@@ -164,8 +147,8 @@ void sst_enemy_ship_move()
         myEnemyShip.ship.y -= SHIP_Y_STEP;
     }
 
-    // Move the ship down if it is visible and the ship_action is MOVE_DOWN
-    if (myEnemyShip.ship.y < LCD_HEIGHT - SHIP_Y_STEP && ship_action == MOVE_DOWN)
+    // Move the ship down if it is visible and the sst_ship_action is MOVE_DOWN
+    if (myEnemyShip.ship.y < LCD_HEIGHT - SHIP_Y_STEP && sst_ship_action == MOVE_DOWN)
     {
         // Print debug message
         APP_DBG_SIG("Enemy ship move down\n");
@@ -174,7 +157,7 @@ void sst_enemy_ship_move()
         myEnemyShip.ship.y += SHIP_Y_STEP;
     }
 
-    // if (myEnemyShip.ship.y < 40 && ship_action == MOVE_DOWN)
+    // if (myEnemyShip.ship.y < 40 && sst_ship_action == MOVE_DOWN)
     // {
     //     // Print debug message
     //     APP_DBG_SIG("Enemy ship move down\n");
@@ -196,7 +179,7 @@ void sst_enemy_ship_move()
 void sst_enemy_ship_fire()
 {
     // Check if the ship action is set to FIRE and if the enemy ship has any missiles remaining
-    if (ship_action == FIRE)
+    if (sst_ship_action == FIRE)
     {
         // Send a message to fire a missile
         APP_DBG_SIG("Enemy ship fire missile\n");
@@ -250,5 +233,25 @@ void sst_enemy_ship_handler(ak_msg_t *msg)
         break;
     default:
         break;
+    }
+}
+// NON-VOID FUNCTIONS IMPLEMENTATION ----------------------------------------------------------
+// NON-PREFIXED FUNCTIONS IMPLEMENTATION ------------------------------------------------------
+
+// TODO: add this function: @brief Retreats the enemy ship when "x" time have passed
+void enemy_ship_retreat()
+{
+    APP_DBG_SIG("Enemy ship retreat\n");
+
+    // Check if enemy ship is within the screen boundaries
+    if (myEnemyShip.ship.x + SIZE_BITMAP_SHIP_X < LCD_WIDTH)
+    {
+        // Move enemy ship towards the right side of the screen
+        myEnemyShip.ship.x++;
+    }
+    else
+    {
+        // Make enemy ship invisible
+        myEnemyShip.ship.visible = BLACK;
     }
 }

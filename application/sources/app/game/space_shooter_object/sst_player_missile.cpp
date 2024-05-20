@@ -1,9 +1,9 @@
 #include "sst_missile.h"
 
-Missile_t myMissile;
+sst_Missile_t myMissile;
 
 bool is_armed();
-bool player_missile_enemy_ship_collision();
+bool is_player_missile_enemy_ship_collided();
 
 /**
  * @brief Initialize the missile with default values.
@@ -70,7 +70,7 @@ void sst_player_missile_flight()
 void sst_player_missile_hit()
 {
     // Check if there is a collision between the player's missile and the enemy ship
-    if (player_missile_enemy_ship_collision())
+    if (is_player_missile_enemy_ship_collided())
     {
         APP_DBG_SIG("Missile hit enemy ship\n");
         
@@ -134,7 +134,7 @@ void sst_player_missile_handler(ak_msg_t *msg)
     }
 }
 
-// Non-void functions implementation ----------------------------------------------------------
+// NON-VOID FUNCTIONS IMPLEMENTATION ----------------------------------------------------------
 /**
  * Checks if the missile is armed.
  *
@@ -156,7 +156,7 @@ bool is_armed()
  *
  * @return True if there is a collision, False otherwise.
  */
-bool player_missile_enemy_ship_collision()
+bool is_player_missile_enemy_ship_collided()
 {
     // Check if the enemy ship and the player's missile are both visible.
     if (myEnemyShip.ship.visible != WHITE || myMissile.visible != WHITE)

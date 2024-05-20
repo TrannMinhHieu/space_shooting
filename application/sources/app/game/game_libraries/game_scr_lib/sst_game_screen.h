@@ -37,7 +37,7 @@
 // #define GAME_STAGE_SHIP_FIGHT		(0)
 // #define GAME_STAGE_ASTEROID_FEILD	(1)
 
-enum Stages_e{
+enum sst_Stages_e{
     GAME_STAGE_SHIP_FIGHT,
     GAME_STAGE_ASTEROID_FEILD,
     GAME_STAGE_TERRAIN,
@@ -49,6 +49,6 @@ extern uint8_t sst_game_stage;
 
 extern view_dynamic_t dyn_view_sst_game_screen;
 extern view_screen_t sst_game_screen;
-extern void game_screen_handler(ak_msg_t* msg);
+extern void sst_game_screen_handler(ak_msg_t* msg);
 
 #endif // GAME_SCREEN

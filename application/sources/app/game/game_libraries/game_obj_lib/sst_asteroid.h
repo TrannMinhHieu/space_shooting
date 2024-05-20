@@ -48,8 +48,8 @@ typedef struct
     int32_t x, y;
     uint8_t action_image;
     const uint8_t asteroid_score = 10;
-} Asteroid_t;
+} sst_Asteroid_t;
 
-extern Asteroid_t myAsteroid[NUM_ASTEROIDS];
+extern sst_Asteroid_t myAsteroid[NUM_ASTEROIDS];
 
 #endif /* __ASTEROID_H__ */

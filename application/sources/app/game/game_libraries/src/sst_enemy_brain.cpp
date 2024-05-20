@@ -13,7 +13,7 @@
  */
 
 // Implementaion -----------------------------------
-uint8_t ship_action;
+uint8_t sst_ship_action;
 /**
  * @brief Randomizes the action for the enemy ship.
  *
@@ -21,7 +21,7 @@ uint8_t ship_action;
  * @param: None
  * @return: The action for the enemy ship. Possible values are MOVE_UP, MOVE_DOWN, FIRE, or DO_NOTHING.
  */
-uint8_t simple_randomize_enemy_control()
+uint8_t sst_simple_randomize_enemy_control()
 {
     // TODO: use better randomize function
     // TODO: enemy ship not fire bug
@@ -60,7 +60,7 @@ uint8_t simple_randomize_enemy_control()
  *
  * @return The action for the enemy ship: MOVE_UP, MOVE_DOWN, FIRE, or DO_NOTHING.
  */
-uint8_t strategy_based_enemy_control()
+uint8_t sst_strategy_based_enemy_control()
 {
     static uint8_t decision_interval = 0;
     int random_factor = rand() % 100; // Random number between 0 and 99
@@ -126,7 +126,7 @@ uint8_t strategy_based_enemy_control()
  *
  * @return Enemy action: MOVE_UP, MOVE_DOWN, FIRE, or DO_NOTHING.
  */
-uint8_t better_randomize_enemy_control()
+uint8_t sst_better_randomize_enemy_control()
 {
     static uint8_t decision_interval = 0;
     int8_t relative_player_enemy_position = myShip.ship.y - myEnemyShip.ship.y; // Pre-calculate relative player-enemy position
@@ -167,23 +167,23 @@ uint8_t better_randomize_enemy_control()
         if (random_factor < move_up_probability)
         {
             task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
-            ship_action = MOVE_UP;
+            sst_ship_action = MOVE_UP;
         }
         else if (random_factor < move_up_probability + move_down_probability)
         {
             task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_MOVE_SIG);
-            ship_action = MOVE_DOWN;
+            sst_ship_action = MOVE_DOWN;
         }
         else if (random_factor < move_up_probability + move_down_probability + fire_probability)
         {
             timer_set(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG, 300, TIMER_ONE_SHOT);
             // task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
             //  std::this_thread::sleep_for(std::chrono::milliseconds(800));
-            ship_action = FIRE;
+            sst_ship_action = FIRE;
         }
         else
         {
-            ship_action = DO_NOTHING;
+            sst_ship_action = DO_NOTHING;
         }
         // Reset decision interval and update previous player position
         decision_interval = (rand() % 5 + 15) - (myShip.fly_speed - 1); // Random base interval between 15 and 19 frames, depending on player speed
@@ -195,16 +195,16 @@ uint8_t better_randomize_enemy_control()
         APP_DBG_SIG("Decision interval: %d\n", decision_interval);
     }
 
-    return ship_action;
+    return sst_ship_action;
 }
 
-void attack_pattern_1();
-void attack_pattern_2();
-void attack_pattern_3();
+void sst_attack_pattern_1();
+void sst_attack_pattern_2();
+void sst_attack_pattern_3();
 
-void enemy_ship_positioning();
+void sst_enemy_ship_positioning();
 
-uint8_t better_strategy_based_enemy_control()
+uint8_t sst_better_strategy_based_enemy_control()
 {
     static uint8_t actions_performed_counter = 12;
     static uint8_t decision_interval = 0;
@@ -219,7 +219,7 @@ uint8_t better_strategy_based_enemy_control()
     if (decision_interval == 0)
     {
         // TODO: randomize attack pattern
-        attack_pattern_1();
+        sst_attack_pattern_1();
         actions_performed_counter--;
         APP_DBG_SIG("Actions performed: %d\n", actions_performed_counter);
         decision_interval = 15;
@@ -231,36 +231,36 @@ uint8_t better_strategy_based_enemy_control()
         APP_DBG_SIG("Decision interval: %d\n", decision_interval);
     }
 
-    return ship_action;
+    return sst_ship_action;
 }
 // Bug: task can only be posted aftet the function is exited
-void attack_pattern_1()
+void sst_attack_pattern_1()
 {
-    enemy_ship_positioning();
+    sst_enemy_ship_positioning();
     if (uint8_t missile_count = 0; missile_count < 1)
     {
         // Bug: missile y position is not updated correctly
         task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
-        ship_action = FIRE;
+        sst_ship_action = FIRE;
         missile_count++;
     }
 }
-void attack_pattern_2()
+void sst_attack_pattern_2()
 {
     // TODO: Implement attack pattern 2
-    enemy_ship_positioning();
+    sst_enemy_ship_positioning();
 
     // draw an energy bar
     view_render.drawRoundRect(myEnemyShip.ship.x - 100, myEnemyShip.ship.y - 2, 4, 4, 1, WHITE);
 }
-void attack_pattern_3()
+void sst_attack_pattern_3()
 {
     // TODO: Implement attack pattern 3
     // @brief enemy slam into player
 
     uint32_t player_prev_position = myShip.ship.y;
 }
-void enemy_ship_positioning()
+void sst_enemy_ship_positioning()
 {
     // Define the y-coordinates the ship will move through
     uint8_t y_positions[] = {0, 10, 20, 30, 40, 50};

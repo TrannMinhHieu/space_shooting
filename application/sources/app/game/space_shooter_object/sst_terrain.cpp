@@ -4,9 +4,10 @@
 using namespace std;
 
 bool is_terrain_out_of_screen(int terrain_index);
+void terrain_generate();
 uint32_t round_to_tens_of_integer(uint32_t shipYCoordinate);
+void terrain_collision_handler(uint8_t terrain_index);
 void terrain_end();
-void terrain_collision(uint8_t terrain_index);
 
 /**
  * @brief Define the terrain vector.
@@ -59,15 +60,6 @@ void sst_terrain_init()
     v_terrain.push_back(TerrainCoordinates(160, 50));
 }
 
-/**
- * @brief Generate a new terrain.
- */
-void terrain_generate()
-{
-    v_terrain.push_back(TerrainCoordinates());
-    APP_DBG_SIG("Terrain size %d\n", v_terrain.size());
-}
-
 static int generated = 0;
 static int terrainLength = 20;
 /**
@@ -97,7 +89,7 @@ void sst_terrain_update()
         x_coord_tracker = v_terrain.back().x;
 
         // Check for terrain collisions
-        terrain_collision(i);
+        terrain_collision_handler(i);
 
         // End terrain generation if generated terrains is equal to terrainLength
         if (generated == terrainLength)
@@ -126,6 +118,124 @@ void sst_terrain_update()
 }
 
 /**
+ * @brief Reset the terrain.
+ *
+ * @details This function clears the terrain vector, sets the generated variable to 0, and resets the terrainLength variable.
+ *
+ * @param None
+ * @return None
+ */
+void sst_terrain_reset()
+{
+    // Print debug message
+    APP_DBG_SIG("Terrain reset\n");
+
+    // Clear the terrain vector
+    v_terrain.clear();
+
+    // Set the generated variable to 0
+    generated = 0;
+
+    // Reset the terrainLength variable
+    terrainLength = 20;
+}
+
+/**
+ * @brief Handle the terrain messages.
+ *
+ * @details This function handles the terrain messages based on the message signature.
+ * It initializes the terrain, updates the terrain, and resets the terrain.
+ *
+ * @param msg Pointer to the message
+ * @return None
+ */
+void sst_terrain_handler(ak_msg_t *msg)
+{
+    // Check the message signature
+    switch (msg->sig)
+    {
+    // Initialize the terrain
+    case SST_TERRAIN_INIT_SIG:
+        sst_terrain_init();
+        APP_DBG_SIG("Terrain length: %d\n", terrainLength);
+        break;
+
+    // Update the terrain
+    case SST_TERRAIN_UPDATE_SIG:
+        sst_terrain_update();
+        break;
+
+    // Reset the terrain
+    case SST_TERRAIN_RESET_SIG:
+        sst_terrain_reset();
+        break;
+
+    // Do nothing for other message signatures
+    default:
+        break;
+    }
+}
+// NON-VOID FUNCTIONS IMPLEMENTATION ----------------------------------------------------------
+/**
+ * @brief Terrain ship collision.
+ *
+ * @param terrain_index
+ * @return true if the ship and the terrain are colliding, false otherwise
+ */
+bool is_terrain_ship_collided(int terrain_index)
+{
+    if (v_terrain[terrain_index].y < (int)myShip.ship.y)
+    {
+        return true;
+    }
+
+    return false;
+}
+/**
+ * @brief Check if the terrain is out of the screen.
+ *
+ * @param terrain_index
+ * @return true if the terrain is out of the screen, false otherwise
+ */
+bool is_terrain_out_of_screen(int terrain_index)
+{
+    if (v_terrain[terrain_index].x < -15)
+    {
+        return true;
+    }
+    return false;
+}
+
+// NON-PREFIXED FUNCTIONS IMPLEMENTATION ------------------------------------------------------
+/**
+ * @brief Generate a new terrain.
+ */
+void terrain_generate()
+{
+    v_terrain.push_back(TerrainCoordinates());
+    APP_DBG_SIG("Terrain size %d\n", v_terrain.size());
+}
+
+/**
+ * @brief Round to the nearest tens of integer
+ *
+ * @param shipYCoordinate
+ * @return uint32_t the nearest tens of integer
+ */
+uint32_t round_to_tens_of_integer(uint32_t shipYCoordinate)
+{
+    uint32_t shipYRound = shipYCoordinate % 10;
+    if (shipYRound > 5)
+    {
+        return shipYCoordinate - shipYRound + 10;
+    }
+    else
+    {
+        return shipYCoordinate - shipYRound;
+    }
+}
+
+/**
  * @brief Check if the terrain is colliding with the ship or the missile.
  *
  * @details This function first checks if the terrain is within a certain range
@@ -141,7 +251,7 @@ void sst_terrain_update()
  * @param terrain_index The index of the terrain coordinate in the vector.
  * @return None
  */
-void terrain_collision(uint8_t terrain_index)
+void terrain_collision_handler(uint8_t terrain_index)
 {
     // Check if the terrain is within a certain range of the ship
     if (v_terrain[terrain_index].x < 10)
@@ -250,7 +360,7 @@ void terrain_end()
         v_terrain[i].terrainMover();
 
         // Check if there is a collision between the terrain and the ship or the missile
-        terrain_collision(i);
+        terrain_collision_handler(i);
 
         // Check if the terrain is out of the screen
         if (is_terrain_out_of_screen(i))
@@ -265,112 +375,5 @@ void terrain_end()
             APP_DBG_SIG("Score %d\n", myShip.score);
             APP_DBG_SIG("Terrain size %d\n", v_terrain.size());
         }
-    }
-}
-
-/**
- * @brief Reset the terrain.
- *
- * @details This function clears the terrain vector, sets the generated variable to 0, and resets the terrainLength variable.
- *
- * @param None
- * @return None
- */
-void sst_terrain_reset()
-{
-    // Print debug message
-    APP_DBG_SIG("Terrain reset\n");
-
-    // Clear the terrain vector
-    v_terrain.clear();
-
-    // Set the generated variable to 0
-    generated = 0;
-
-    // Reset the terrainLength variable
-    terrainLength = 20;
-}
-
-/**
- * @brief Handle the terrain messages.
- *
- * @details This function handles the terrain messages based on the message signature.
- * It initializes the terrain, updates the terrain, and resets the terrain.
- *
- * @param msg Pointer to the message
- * @return None
- */
-void sst_terrain_handler(ak_msg_t *msg)
-{
-    // Check the message signature
-    switch (msg->sig)
-    {
-    // Initialize the terrain
-    case SST_TERRAIN_INIT_SIG:
-        sst_terrain_init();
-        APP_DBG_SIG("Terrain length: %d\n", terrainLength);
-        break;
-
-    // Update the terrain
-    case SST_TERRAIN_UPDATE_SIG:
-        sst_terrain_update();
-        break;
-
-    // Reset the terrain
-    case SST_TERRAIN_RESET_SIG:
-        sst_terrain_reset();
-        break;
-
-    // Do nothing for other message signatures
-    default:
-        break;
-    }
-}
-// Non-void functions implementation ----------------------------------------------------------
-/**
- * @brief Terrain ship collision.
- *
- * @param terrain_index
- * @return true if the ship and the terrain are colliding, false otherwise
- */
-bool terrain_ship_collision(int terrain_index)
-{
-    if (v_terrain[terrain_index].y < (int)myShip.ship.y)
-    {
-        return true;
-    }
-
-    return false;
-}
-/**
- * @brief Check if the terrain is out of the screen.
- *
- * @param terrain_index
- * @return true if the terrain is out of the screen, false otherwise
- */
-bool is_terrain_out_of_screen(int terrain_index)
-{
-    if (v_terrain[terrain_index].x < -15)
-    {
-        return true;
-    }
-    return false;
-}
-/**
- * @brief Round to the nearest tens of integer
- *
- * @param shipYCoordinate
- * @return uint32_t the nearest tens of integer
- */
-uint32_t round_to_tens_of_integer(uint32_t shipYCoordinate)
-{
-    uint32_t shipYRound = shipYCoordinate % 10;
-    if (shipYRound > 5)
-    {
-        return shipYCoordinate - shipYRound + 10;
-    }
-    else
-    {
-        return shipYCoordinate - shipYRound;
     }
 }

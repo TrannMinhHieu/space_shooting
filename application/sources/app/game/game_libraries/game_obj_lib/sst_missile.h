@@ -34,10 +34,10 @@ typedef struct
     bool visible;
     uint32_t x, y;
     uint8_t action_image;
-} Missile_t;
+} sst_Missile_t;
 
-//extern Missile_t myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
-extern Missile_t myMissile;
-extern std::vector<Missile_t> v_myEnemyMissiles;
+//extern sst_Missile_t myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
+extern sst_Missile_t myMissile;
+extern std::vector<sst_Missile_t> v_myEnemyMissiles;
 
 #endif /* __MISSILE_H__ */

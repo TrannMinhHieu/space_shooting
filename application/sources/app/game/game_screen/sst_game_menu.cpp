@@ -5,21 +5,21 @@
 #define NUM_OF_ITEMS_ON_SCREEN (3)
 #define MENU_SCREEN_VISIBLE_HEIGHT (60)
 
-struct menu_items
+struct sst_menu_items
 {
     unsigned int item_1 : 1;
     unsigned int item_2 : 1;
     unsigned int item_3 : 1;
 };
 
-static char menu_items_name[NUM_OF_ITEMS][15] =
+static char sst_menu_items_name[NUM_OF_ITEMS][15] =
     {
         "START",      // item_1
         "HIGH SCORE", // item_2
         "EXIT",       // item_3
 };
 
-enum switchToItems {
+enum sst_switchToItems_e {
     START,
     HIGH_SCORE,
     EXIT,
@@ -29,21 +29,13 @@ typedef struct
 {
     int screen;
     int location;
-} screen_display;
+} sst_screen_display_t;
 
-union menu_screen
+union sst_menu_screen
 {
     uint32_t _id = 1;
-    menu_items menu_items_id;
+    sst_menu_items menu_items_id;
 };
-
-typedef struct
-{
-    uint8_t axis_x = 0;
-    uint8_t axis_y = 0;
-    uint8_t size_w = 2;
-    uint8_t size_h = MENU_SCREEN_VISIBLE_HEIGHT / NUM_OF_ITEMS;
-} menu_scroll_bar;
 
 typedef struct
 {
@@ -52,12 +44,11 @@ typedef struct
     uint8_t size_w = 123;
     uint8_t size_h = 20;
     uint8_t size_r = 3;
-} menu_display_frame;
+} sst_menu_display_frame_t;
 
-screen_display screen_menu;
-menu_scroll_bar scroll_bar;
-menu_display_frame display_frame;
-menu_display_frame frame[3];
+sst_screen_display_t screen_menu;
+sst_menu_display_frame_t display_frame;
+sst_menu_display_frame_t frame[3];
 
 static void sst_menu_render();
 
@@ -87,7 +78,7 @@ void sst_menu_render()
         view_render.drawFastVLine(display_frame.axis_x + 2, display_frame.axis_y + 4, 10, WHITE);
 
         view_render.setCursor(GAME_MENU_TEXT_SPACING_X_AXIS, i * ITEM_SPACING + 6);
-        view_render.print(menu_items_name[screen_menu.screen + i]);
+        view_render.print(sst_menu_items_name[screen_menu.screen + i]);
     }
 }
 
@@ -97,8 +88,6 @@ void sst_menu_cursor()
     frame[0].axis_y = 0;
     frame[1].axis_y = 20;
     frame[2].axis_y = 40;
-
-    //scroll_bar.axis_y = MENU_SCREEN_VISIBLE_HEIGHT * screen_menu.location / NUM_OF_ITEMS;
 }
 
 void sst_menu_cursor_focus()

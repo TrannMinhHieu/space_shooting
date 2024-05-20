@@ -30,24 +30,24 @@ typedef struct
     bool visible;
     uint32_t x, y;
     uint8_t action_image;
-} Ship_t;
+} sst_Ship_t;
 
 typedef struct
 {
-    Ship_t ship;
+    sst_Ship_t ship;
     uint8_t fly_speed;
     uint32_t score;
-} PlayerShip_t;
+} sst_PlayerShip_t;
 
 typedef struct
 {
-    Ship_t ship;
+    sst_Ship_t ship;
     uint8_t health;
     uint8_t num_missiles;
     const uint8_t enemy_ship_score = 100;
-} EnemyShip_t;
+} sst_EnemyShip_t;
 
-extern PlayerShip_t myShip;
-extern EnemyShip_t myEnemyShip;
+extern sst_PlayerShip_t myShip;
+extern sst_EnemyShip_t myEnemyShip;
 
 #endif /* __SST_SHIP_H__ */

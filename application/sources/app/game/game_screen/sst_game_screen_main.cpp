@@ -3,6 +3,130 @@
 uint8_t sst_game_state;
 uint8_t sst_game_stage;
 
+void sst_asteroid_draw();
+void sst_player_ship_draw();
+void sst_player_missile_draw();
+void sst_enemy_ship_draw();
+void sst_enemy_missile_draw();
+void sst_terrain_draw();
+void sst_explosion_draw();
+
+void sst_game_stage_control();
+
+static void sst_space_shooting_gameplay_render();
+
+view_dynamic_t dyn_view_sst_game_screen = {
+    {
+        .item_type = ITEM_TYPE_DYNAMIC,
+    },
+    sst_space_shooting_gameplay_render};
+
+view_screen_t sst_game_screen = {
+    &dyn_view_sst_game_screen,
+    ITEM_NULL,
+    ITEM_NULL,
+
+    .focus_item = 0,
+};
+
+void sst_space_shooting_gameplay_render()
+{
+#define TEXT_TITLE_X    (17)
+#define TEXT_TITLE_Y_1  (24)
+#define TEXT_TITLE_Y_2  (TEXT_TITLE_Y_1 + 20)
+
+#define TEXT_SCORE_X    (97)
+#define TEXT_SCORE_Y    (TEXT_TITLE_Y_2)
+
+    if (sst_game_state == GAME_PLAY)
+    {
+        sst_asteroid_draw();
+        sst_explosion_draw();
+        sst_terrain_draw();
+
+        sst_player_ship_draw();
+        sst_player_missile_draw();
+
+        sst_enemy_ship_draw();
+        sst_enemy_missile_draw();
+        view_render.update();
+    }
+    else if (sst_game_state == GAME_OVER)
+    {
+        view_render.clear();
+        view_render.setTextSize(2);
+        view_render.setTextColor(WHITE);
+        view_render.setCursor(TEXT_TITLE_X, TEXT_TITLE_Y_1);
+        view_render.print("YOU LOSE");
+
+        view_render.setTextSize(1);
+        view_render.setCursor(TEXT_TITLE_X, TEXT_TITLE_Y_2);
+        view_render.print("YOUR SCORE: ");
+
+        view_render.setCursor(TEXT_SCORE_X, TEXT_SCORE_Y);
+        view_render.print(sst_game_score.current_score);
+    }
+}
+/*****************************************************************************/
+/* GAME HANDLER */
+/*****************************************************************************/
+void sst_game_time_tick_setup()
+{
+    timer_set(AC_TASK_DISPLAY_ID, GAMEPLAY_TIME_TICK, GAMEPLAY_TIME_TICK_INTERVAL, TIMER_PERIODIC);
+}
+
+void sst_game_play_handler(ak_msg_t *msg)
+{
+    switch (msg->sig)
+    {
+    case SCREEN_ENTRY:
+        APP_DBG_SIG("SCREEN_GAME_PLAY_ENTRY\n");
+        task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_INIT_SIG);
+        task_post_pure_msg(SST_EXPLOSION_TASK_ID, SST_EXPLOSION_INIT_SIG);
+        task_post_pure_msg(SST_TERRAIN_TASK_ID, SST_TERRAIN_INIT_SIG);
+
+        task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_INIT_SIG);
+        task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, SST_MISSILE_INIT_SIG);
+
+        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_INIT_SIG);
+        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_INIT_SIG);
+        sst_game_stage = GAME_STAGE_TERRAIN;
+        sst_game_state = GAME_PLAY;
+        sst_game_time_tick_setup();
+        break;
+    case GAMEPLAY_TIME_TICK:
+        task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_FLIGHT_SIG);
+        task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, SST_MISSILE_FLIGHT_SIG);
+        task_post_pure_msg(SST_EXPLOSION_TASK_ID, SST_EXPLPOSION_EXPLODE_SIG);
+        sst_game_stage_control();
+        break;
+    case GAME_EXIT:
+        APP_DBG_SIG("SCREEN_GAME_EXIT\n");
+        sst_game_score.current_score = myShip.score;
+        task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_RESET_SIG);
+        task_post_pure_msg(SST_EXPLOSION_TASK_ID, SST_EXPLOSION_RESET_SIG);
+        task_post_pure_msg(SST_TERRAIN_TASK_ID, SST_TERRAIN_RESET_SIG);
+        task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_RESET_SIG);
+        task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, SST_MISSILE_RESET_SIG);
+        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_RESET_SIG);
+        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_RESET_SIG);
+
+        timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_GAME_HIGHSCORE, GAMEPLAY_TIME_EXIT_INTERVAL, TIMER_ONE_SHOT);
+        sst_game_state = GAME_OVER;
+        break;
+
+    case AC_DISPLAY_SHOW_GAME_HIGHSCORE:
+        SCREEN_TRAN(sst_game_highscore_handler, &sst_game_highscore);
+        sst_game_score.current_score = 0;
+        break;
+
+    default:
+        break;
+    }
+}
+
+// FUNCTION DEFINITION
+
 /**
  * Controls the game stage and posts messages based on the current game stage.
  *
@@ -167,117 +291,5 @@ void sst_terrain_draw()
     for (uint8_t i = 1; i < v_terrain.size(); i++)
     {
         view_render.drawLine(v_terrain[i - 1].x, v_terrain[i - 1].y, v_terrain[i].x, v_terrain[i].y, WHITE);
-    }
-}
-
-static void sst_space_shooting_gameplay_render();
-
-view_dynamic_t dyn_view_sst_game_screen = {
-    {
-        .item_type = ITEM_TYPE_DYNAMIC,
-    },
-    sst_space_shooting_gameplay_render};
-
-view_screen_t sst_game_screen = {
-    &dyn_view_sst_game_screen,
-    ITEM_NULL,
-    ITEM_NULL,
-
-    .focus_item = 0,
-};
-
-void sst_space_shooting_gameplay_render()
-{
-#define TEXT_TITLE_X    (17)
-#define TEXT_TITLE_Y_1  (24)
-#define TEXT_TITLE_Y_2  (TEXT_TITLE_Y_1 + 20)
-
-#define TEXT_SCORE_X    (97)
-#define TEXT_SCORE_Y    (TEXT_TITLE_Y_2)
-
-    if (sst_game_state == GAME_PLAY)
-    {
-        sst_asteroid_draw();
-        sst_explosion_draw();
-        sst_terrain_draw();
-
-        sst_player_ship_draw();
-        sst_player_missile_draw();
-
-        sst_enemy_ship_draw();
-        sst_enemy_missile_draw();
-        view_render.update();
-    }
-    else if (sst_game_state == GAME_OVER)
-    {
-        view_render.clear();
-        view_render.setTextSize(2);
-        view_render.setTextColor(WHITE);
-        view_render.setCursor(TEXT_TITLE_X, TEXT_TITLE_Y_1);
-        view_render.print("YOU LOSE");
-
-        view_render.setTextSize(1);
-        view_render.setCursor(TEXT_TITLE_X, TEXT_TITLE_Y_2);
-        view_render.print("YOUR SCORE: ");
-
-        view_render.setCursor(TEXT_SCORE_X, TEXT_SCORE_Y);
-        view_render.print(sst_game_score.current_score);
-    }
-}
-/*****************************************************************************/
-/* GAME HANDLER */
-/*****************************************************************************/
-void sst_game_time_tick_setup()
-{
-    timer_set(AC_TASK_DISPLAY_ID, GAMEPLAY_TIME_TICK, GAMEPLAY_TIME_TICK_INTERVAL, TIMER_PERIODIC);
-}
-
-void sst_game_play_handler(ak_msg_t *msg)
-{
-    switch (msg->sig)
-    {
-    case SCREEN_ENTRY:
-        APP_DBG_SIG("SCREEN_GAME_PLAY_ENTRY\n");
-        task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_INIT_SIG);
-        task_post_pure_msg(SST_EXPLOSION_TASK_ID, SST_EXPLOSION_INIT_SIG);
-        task_post_pure_msg(SST_TERRAIN_TASK_ID, SST_TERRAIN_INIT_SIG);
-
-        task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_INIT_SIG);
-        task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, SST_MISSILE_INIT_SIG);
-
-        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_INIT_SIG);
-        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_INIT_SIG);
-        sst_game_stage = GAME_STAGE_TERRAIN;
-        sst_game_state = GAME_PLAY;
-        sst_game_time_tick_setup();
-        break;
-    case GAMEPLAY_TIME_TICK:
-        task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_FLIGHT_SIG);
-        task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, SST_MISSILE_FLIGHT_SIG);
-        task_post_pure_msg(SST_EXPLOSION_TASK_ID, SST_EXPLPOSION_EXPLODE_SIG);
-        sst_game_stage_control();
-        break;
-    case GAME_EXIT:
-        APP_DBG_SIG("SCREEN_GAME_EXIT\n");
-        sst_game_score.current_score = myShip.score;
-        task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_RESET_SIG);
-        task_post_pure_msg(SST_EXPLOSION_TASK_ID, SST_EXPLOSION_RESET_SIG);
-        task_post_pure_msg(SST_TERRAIN_TASK_ID, SST_TERRAIN_RESET_SIG);
-        task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_RESET_SIG);
-        task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, SST_MISSILE_RESET_SIG);
-        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_RESET_SIG);
-        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_RESET_SIG);
-
-        timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_GAME_HIGHSCORE, GAMEPLAY_TIME_EXIT_INTERVAL, TIMER_ONE_SHOT);
-        sst_game_state = GAME_OVER;
-        break;
-
-    case AC_DISPLAY_SHOW_GAME_HIGHSCORE:
-        SCREEN_TRAN(sst_game_highscore_handler, &sst_game_highscore);
-        sst_game_score.current_score = 0;
-        break;
-
-    default:
-        break;
     }
 }

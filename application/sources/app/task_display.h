@@ -2,9 +2,6 @@
 #define __TASK_DISPLAY_H__
 
 #include "screen_manager.h"
-#include "scr_idle.h"
-#include "scr_info.h"
-#include "scr_startup.h"
 #include "sst_game_startup.h"
 #include "sst_game_idle.h"
 
