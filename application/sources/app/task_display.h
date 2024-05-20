@@ -22,7 +22,7 @@
 extern scr_mng_t scr_mng_app;
 
 extern void scr_startup_handle(ak_msg_t* msg);
-extern void game_startup_handler(ak_msg_t* msg);
-extern void game_idle_handler(ak_msg_t* msg);
+extern void sst_game_startup_handler(ak_msg_t* msg);
+extern void sst_game_idle_handler(ak_msg_t* msg);
 
 #endif // __TASK_DISPLAY_H__

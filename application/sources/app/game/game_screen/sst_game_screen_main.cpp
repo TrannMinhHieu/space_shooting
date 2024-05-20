@@ -8,7 +8,7 @@ uint8_t sst_game_stage;
  *
  * @throws None
  */
-void game_stage_control()
+void sst_game_stage_control()
 {
     // Post messages based on the current game stage
     if (sst_game_stage == GAME_STAGE_SHIP_FIGHT)
@@ -37,7 +37,7 @@ void game_stage_control()
  * @brief Draw asteroids on the screen
  *
  */
-void asteroid_draw()
+void sst_asteroid_draw()
 {
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
@@ -46,22 +46,12 @@ void asteroid_draw()
         {
             return;
         }
-        switch (myAsteroid[i].action_image)
+        const uint8_t *asteroidBitmaps[] = {nullptr, sst_bitmap_asteroid_1, sst_bitmap_asteroid_2, sst_bitmap_asteroid_3};
+
+        if (myAsteroid[i].action_image >= 1 && myAsteroid[i].action_image <= 3)
         {
-        case 1:
-            view_render.drawBitmap(myAsteroid[i].x, myAsteroid[i].y, sst_bitmap_asteroid_1,
+            view_render.drawBitmap(myAsteroid[i].x, myAsteroid[i].y, asteroidBitmaps[myAsteroid[i].action_image],
                                    SIZE_BITMAP_ASTEROIDS_X, SIZE_BITMAP_ASTEROIDS_Y, WHITE);
-            break;
-        case 2:
-            view_render.drawBitmap(myAsteroid[i].x, myAsteroid[i].y, sst_bitmap_asteroid_2,
-                                   SIZE_BITMAP_ASTEROIDS_X, SIZE_BITMAP_ASTEROIDS_Y, WHITE);
-            break;
-        case 3:
-            view_render.drawBitmap(myAsteroid[i].x, myAsteroid[i].y, sst_bitmap_asteroid_3,
-                                   SIZE_BITMAP_ASTEROIDS_X, SIZE_BITMAP_ASTEROIDS_Y, WHITE);
-            break;
-        default:
-            break;
         }
     }
 }
@@ -70,28 +60,18 @@ void asteroid_draw()
  * @brief Draw explosion on the screen
  *
  */
-void explosion_draw()
+void sst_explosion_draw()
 {
     if (myExplosion.visible != WHITE)
     {
         return;
     }
-    switch (myExplosion.action_image)
+    const uint8_t *explosionBitmaps[] = {nullptr, sst_bitmap_explosion_1, sst_bitmap_explosion_2, sst_bitmap_explosion_3};
+
+    if (myExplosion.action_image >= 1 && myExplosion.action_image <= 3)
     {
-    case 1:
-        view_render.drawBitmap(myExplosion.x, myExplosion.y, sst_bitmap_explosion_1,
-                               SIZE_BITMAP_EXPLOSION_1_X, SIZE_BITMAP_EXPLOSION_1_Y, WHITE);
-        break;
-    case 2:
-        view_render.drawBitmap(myExplosion.x, myExplosion.y, sst_bitmap_explosion_2,
+        view_render.drawBitmap(myExplosion.x, myExplosion.y, explosionBitmaps[myExplosion.action_image],
                                SIZE_BITMAP_EXPLOSION_2_X, SIZE_BITMAP_EXPLOSION_2_Y, WHITE);
-        break;
-    case 3:
-        view_render.drawBitmap(myExplosion.x, myExplosion.y, sst_bitmap_explosion_3,
-                               SIZE_BITMAP_EXPLOSION_2_X, SIZE_BITMAP_EXPLOSION_2_Y, WHITE);
-        break;
-    default:
-        break;
     }
 }
 
@@ -99,36 +79,26 @@ void explosion_draw()
  * @brief Draw ship on the screen
  *
  */
-void player_ship_draw()
+void sst_player_ship_draw()
 {
     // If ship is not visible, do nothing and return
     if (myShip.ship.visible != WHITE)
     {
         return;
     }
-    switch (myShip.ship.action_image)
+    const uint8_t *playerShipBitmaps[] = {nullptr, sst_bitmap_space_ship_1, sst_bitmap_space_ship_2, sst_bitmap_space_ship_3};
+
+    if (myShip.ship.action_image >= 1 && myShip.ship.action_image <= 3)
     {
-    case 1:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_1,
+        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, playerShipBitmaps[myShip.ship.action_image],
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
-        break;
-    case 2:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_2,
-                               SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
-        break;
-    case 3:
-        view_render.drawBitmap(myShip.ship.x, myShip.ship.y, sst_bitmap_space_ship_3,
-                               SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
-        break;
-    default:
-        break;
     }
 }
 /**
  * @brief Draw the missile on the screen if it is visible.
  *
  */
-void player_missile_draw()
+void sst_player_missile_draw()
 {
     if (myMissile.visible != WHITE)
     {
@@ -149,29 +119,18 @@ void player_missile_draw()
  *
  * @throws None
  */
-void enemy_ship_draw()
+void sst_enemy_ship_draw()
 {
     if (myEnemyShip.ship.visible != WHITE)
     {
         return;
     }
+    const uint8_t *enemyShipBitmaps[] = {nullptr, sst_bitmap_space_ship_1, sst_bitmap_space_ship_2, sst_bitmap_space_ship_3};
 
-    switch (myEnemyShip.ship.action_image)
+    if (myEnemyShip.ship.action_image >= 1 && myEnemyShip.ship.action_image <= 3)
     {
-    case 1:
-        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, sst_bitmap_space_ship_1,
+        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, enemyShipBitmaps[myEnemyShip.ship.action_image],
                                SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
-        break;
-    case 2:
-        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, sst_bitmap_space_ship_2,
-                               SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
-        break;
-    case 3:
-        view_render.drawBitmap(myEnemyShip.ship.x, myEnemyShip.ship.y, sst_bitmap_space_ship_3,
-                               SIZE_BITMAP_SHIP_X, SIZE_BITMAP_SHIP_Y, WHITE);
-        break;
-    default:
-        break;
     }
 }
 /**
@@ -181,7 +140,7 @@ void enemy_ship_draw()
  *
  * @throws None
  */
-void enemy_missile_draw()
+void sst_enemy_missile_draw()
 {
     for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
     {
@@ -198,7 +157,7 @@ void enemy_missile_draw()
     }
 }
 
-void terrain_draw()
+void sst_terrain_draw()
 {
     if (v_terrain.size() < 1)
     {
@@ -211,13 +170,13 @@ void terrain_draw()
     }
 }
 
-static void space_shooting_gameplay_render();
+static void sst_space_shooting_gameplay_render();
 
 view_dynamic_t dyn_view_sst_game_screen = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
     },
-    space_shooting_gameplay_render};
+    sst_space_shooting_gameplay_render};
 
 view_screen_t sst_game_screen = {
     &dyn_view_sst_game_screen,
@@ -227,19 +186,26 @@ view_screen_t sst_game_screen = {
     .focus_item = 0,
 };
 
-void space_shooting_gameplay_render()
+void sst_space_shooting_gameplay_render()
 {
+#define TEXT_TITLE_X    (17)
+#define TEXT_TITLE_Y_1  (24)
+#define TEXT_TITLE_Y_2  (TEXT_TITLE_Y_1 + 20)
+
+#define TEXT_SCORE_X    (97)
+#define TEXT_SCORE_Y    (TEXT_TITLE_Y_2)
+
     if (sst_game_state == GAME_PLAY)
     {
-        asteroid_draw();
-        explosion_draw();
-        terrain_draw();
+        sst_asteroid_draw();
+        sst_explosion_draw();
+        sst_terrain_draw();
 
-        player_ship_draw();
-        player_missile_draw();
+        sst_player_ship_draw();
+        sst_player_missile_draw();
 
-        enemy_ship_draw();
-        enemy_missile_draw();
+        sst_enemy_ship_draw();
+        sst_enemy_missile_draw();
         view_render.update();
     }
     else if (sst_game_state == GAME_OVER)
@@ -247,21 +213,21 @@ void space_shooting_gameplay_render()
         view_render.clear();
         view_render.setTextSize(2);
         view_render.setTextColor(WHITE);
-        view_render.setCursor(17, 24);
+        view_render.setCursor(TEXT_TITLE_X, TEXT_TITLE_Y_1);
         view_render.print("YOU LOSE");
 
         view_render.setTextSize(1);
-        view_render.setCursor(17, 44);
+        view_render.setCursor(TEXT_TITLE_X, TEXT_TITLE_Y_2);
         view_render.print("YOUR SCORE: ");
 
-        view_render.setCursor(97, 44);
+        view_render.setCursor(TEXT_SCORE_X, TEXT_SCORE_Y);
         view_render.print(sst_game_score.current_score);
     }
 }
 /*****************************************************************************/
 /* GAME HANDLER */
 /*****************************************************************************/
-void game_time_tick_setup()
+void sst_game_time_tick_setup()
 {
     timer_set(AC_TASK_DISPLAY_ID, GAMEPLAY_TIME_TICK, GAMEPLAY_TIME_TICK_INTERVAL, TIMER_PERIODIC);
 }
@@ -283,13 +249,13 @@ void sst_game_play_handler(ak_msg_t *msg)
         task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_INIT_SIG);
         sst_game_stage = GAME_STAGE_TERRAIN;
         sst_game_state = GAME_PLAY;
-        game_time_tick_setup();
+        sst_game_time_tick_setup();
         break;
     case GAMEPLAY_TIME_TICK:
         task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_FLIGHT_SIG);
         task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, SST_MISSILE_FLIGHT_SIG);
         task_post_pure_msg(SST_EXPLOSION_TASK_ID, SST_EXPLPOSION_EXPLODE_SIG);
-        game_stage_control();
+        sst_game_stage_control();
         break;
     case GAME_EXIT:
         APP_DBG_SIG("SCREEN_GAME_EXIT\n");
@@ -307,7 +273,7 @@ void sst_game_play_handler(ak_msg_t *msg)
         break;
 
     case AC_DISPLAY_SHOW_GAME_HIGHSCORE:
-        SCREEN_TRAN(game_highscore_handler, &sst_game_highscore);
+        SCREEN_TRAN(sst_game_highscore_handler, &sst_game_highscore);
         sst_game_score.current_score = 0;
         break;
 

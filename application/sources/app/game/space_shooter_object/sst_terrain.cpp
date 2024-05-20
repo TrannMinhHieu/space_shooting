@@ -271,7 +271,7 @@ void terrain_end()
 /**
  * @brief Reset the terrain.
  *
- * @details This function clears the terrain vector, sets the generated variable to 0, and doubles the terrainLength variable.
+ * @details This function clears the terrain vector, sets the generated variable to 0, and resets the terrainLength variable.
  *
  * @param None
  * @return None

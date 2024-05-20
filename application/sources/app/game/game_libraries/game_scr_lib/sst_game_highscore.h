@@ -33,6 +33,6 @@ typedef struct
 
 extern game_score_t sst_game_score;
 
-extern void game_highscore_handler(ak_msg_t* msg);
+extern void sst_game_highscore_handler(ak_msg_t* msg);
 
 #endif /* __GAME_HIGHSCORE_H__ */

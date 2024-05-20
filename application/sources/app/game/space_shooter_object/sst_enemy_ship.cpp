@@ -1,5 +1,5 @@
 #include "sst_ship.h"
-#include "enemy_brain.h"
+#include "sst_enemy_brain.h"
 
 EnemyShip_t myEnemyShip;
 

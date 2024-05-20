@@ -2,13 +2,13 @@
 
 game_score_t sst_game_score;
 
-static void highscore_render();
+static void sst_highscore_render();
 
 view_dynamic_t dyn_view_sst_game_highscore = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
     },
-    highscore_render};
+    sst_highscore_render};
 
 view_screen_t sst_game_highscore = {
     &dyn_view_sst_game_highscore,
@@ -18,32 +18,46 @@ view_screen_t sst_game_highscore = {
     .focus_item = 0,
 };
 
-void highscore_render()
+void sst_highscore_render()
 {
+#define TEXT_TITLE_X		(5)
+#define TEXT_TITLE_Y		(5)
+
+#define TEXT_SCORE_X		(35)
+
+#define TEXT_FIRST_X		(TEXT_TITLE_X)
+#define TEXT_FIRST_Y		(TEXT_TITLE_Y + 20)
+
+#define TEXT_SECOND_X		(TEXT_TITLE_X)
+#define TEXT_SECOND_Y		(TEXT_TITLE_Y + 30)
+
+#define TEXT_THIRD_X		(TEXT_TITLE_X)
+#define TEXT_THIRD_Y		(TEXT_TITLE_Y + 40)
+
     view_render.clear();
 
     view_render.setTextSize(1);
     view_render.setTextColor(WHITE);
-    view_render.setCursor(5, 5);
+    view_render.setCursor(TEXT_TITLE_X, TEXT_TITLE_Y);
     view_render.print("Highscore");
 
-    view_render.setCursor(5, 25);
+    view_render.setCursor(TEXT_FIRST_X, TEXT_FIRST_Y);
     view_render.print("1. ");
-    view_render.setCursor(35, 25);
+    view_render.setCursor(TEXT_SCORE_X, TEXT_FIRST_Y);
     view_render.print(sst_game_score.first_place);
 
-    view_render.setCursor(5, 35);
+    view_render.setCursor(TEXT_SECOND_X, TEXT_SECOND_Y);
     view_render.print("2. ");
-    view_render.setCursor(35, 35);
+    view_render.setCursor(TEXT_SCORE_X, TEXT_SECOND_Y);
     view_render.print(sst_game_score.second_place);
 
-    view_render.setCursor(5, 45);
+    view_render.setCursor(TEXT_THIRD_X, TEXT_THIRD_Y);
     view_render.print("3. ");
-    view_render.setCursor(35, 45);
+    view_render.setCursor(TEXT_SCORE_X, TEXT_THIRD_Y);
     view_render.print(sst_game_score.third_place);
 }
 
-void score_sort()
+void sst_score_sort()
 {
     if (sst_game_score.current_score > sst_game_score.first_place)
     {
@@ -62,7 +76,7 @@ void score_sort()
     }
 }
 
-void game_highscore_handler(ak_msg_t* msg)
+void sst_game_highscore_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
@@ -72,7 +86,7 @@ void game_highscore_handler(ak_msg_t* msg)
         view_render.initialize();
         view_render_display_on();
 
-        score_sort();
+        sst_score_sort();
 
         timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE, AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
     }
@@ -90,13 +104,13 @@ void game_highscore_handler(ak_msg_t* msg)
     case AC_DISPLAY_BUTTON_MODE_RELEASED:
     {
         APP_DBG_SIG("OUT_HIGH_SCORE\n");
-        SCREEN_TRAN(game_menu_handler, &sst_game_menu);
+        SCREEN_TRAN(sst_game_menu_handler, &sst_game_menu);
     }
     break;
 
     case AC_DISPLAY_SHOW_IDLE:
     {
-        SCREEN_TRAN(game_idle_handler, &sst_game_idle);
+        SCREEN_TRAN(sst_game_idle_handler, &sst_game_idle);
     }
     default:
         break;

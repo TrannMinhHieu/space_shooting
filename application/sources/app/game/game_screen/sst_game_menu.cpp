@@ -59,13 +59,13 @@ menu_scroll_bar scroll_bar;
 menu_display_frame display_frame;
 menu_display_frame frame[3];
 
-static void menu_render();
+static void sst_menu_render();
 
 view_dynamic_t dyn_view_game_menu = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
     },
-    menu_render};
+    sst_menu_render};
 
 view_screen_t sst_game_menu = {
     &dyn_view_game_menu,
@@ -76,7 +76,7 @@ view_screen_t sst_game_menu = {
 };
 
 
-void menu_render()
+void sst_menu_render()
 {
 #define GAME_MENU_TEXT_SPACING_X_AXIS (10)
 
@@ -91,7 +91,7 @@ void menu_render()
     }
 }
 
-void menu_cursor()
+void sst_menu_cursor()
 {
     display_frame.axis_y = frame[screen_menu.location - screen_menu.screen].axis_y;
     frame[0].axis_y = 0;
@@ -101,7 +101,7 @@ void menu_cursor()
     //scroll_bar.axis_y = MENU_SCREEN_VISIBLE_HEIGHT * screen_menu.location / NUM_OF_ITEMS;
 }
 
-void menu_cursor_focus()
+void sst_menu_cursor_focus()
 {
     switch (screen_menu.location)
     {
@@ -109,17 +109,17 @@ void menu_cursor_focus()
         SCREEN_TRAN(sst_game_play_handler, &sst_game_screen);
         break;
     case HIGH_SCORE:
-        SCREEN_TRAN(game_highscore_handler, &sst_game_highscore);
+        SCREEN_TRAN(sst_game_highscore_handler, &sst_game_highscore);
         break;
     case EXIT:
-        SCREEN_TRAN(game_idle_handler, &sst_game_idle);
+        SCREEN_TRAN(sst_game_idle_handler, &sst_game_idle);
         break;
     default:
         break;
     }
 }
 
-void game_menu_handler(ak_msg_t* msg)
+void sst_game_menu_handler(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
@@ -128,20 +128,20 @@ void game_menu_handler(ak_msg_t* msg)
         APP_DBG_SIG("SCREEN_MENU_ENTRY\n");
         view_render.initialize();
         view_render_display_on();
-        menu_cursor();
+        sst_menu_cursor();
         timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE, AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
     }
     break;
 
     case AC_DISPLAY_SHOW_IDLE:
     {
-        SCREEN_TRAN(game_idle_handler, &sst_game_idle);
+        SCREEN_TRAN(sst_game_idle_handler, &sst_game_idle);
     }
     break;
 
     case AC_DISPLAY_BUTTON_MODE_RELEASED:
     {
-        menu_cursor_focus();
+        sst_menu_cursor_focus();
     }
     break;
 
@@ -166,7 +166,7 @@ void game_menu_handler(ak_msg_t* msg)
         {
             display_frame.axis_y = frame[1].axis_y;
         }
-        menu_cursor();
+        sst_menu_cursor();
 
         timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE, AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
     }
@@ -193,7 +193,7 @@ void game_menu_handler(ak_msg_t* msg)
                 screen_menu.screen++;
             }
         }
-        menu_cursor();
+        sst_menu_cursor();
 
         timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE, AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
     }

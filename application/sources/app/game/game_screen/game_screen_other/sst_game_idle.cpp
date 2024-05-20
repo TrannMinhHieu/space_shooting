@@ -81,13 +81,13 @@ public:
     }
 };
 
-static void idle_render();
+static void sst_idle_render();
 
 view_dynamic_t dyn_view_sst_game_idle = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
     },
-    idle_render};
+    sst_idle_render};
 
 view_screen_t sst_game_idle = {
     &dyn_view_sst_game_idle,
@@ -100,7 +100,7 @@ view_screen_t sst_game_idle = {
 std::vector<ball> v_idle_ball;
 int ball::total;
 
-void idle_render()
+void sst_idle_render()
 {
     for (ball _ball : v_idle_ball)
     {
@@ -108,7 +108,7 @@ void idle_render()
     }
 }
 
-void game_idle_handler(ak_msg_t *msg)
+void sst_game_idle_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {
@@ -142,7 +142,7 @@ void game_idle_handler(ak_msg_t *msg)
     {
         APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_RELEASED\n");
         timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE);
-        SCREEN_TRAN(game_menu_handler, &sst_game_menu);
+        SCREEN_TRAN(sst_game_menu_handler, &sst_game_menu);
     }
     break;
 
@@ -186,7 +186,7 @@ void game_idle_handler(ak_msg_t *msg)
         }
         if (v_idle_ball.empty()) {
         	timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE_BALL_MOVING_UPDATE);
-        	SCREEN_TRAN(game_menu_handler, &sst_game_menu);
+        	SCREEN_TRAN(sst_game_menu_handler, &sst_game_menu);
         }
     }
     break;

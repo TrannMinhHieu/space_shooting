@@ -24,6 +24,6 @@
 
 extern view_dynamic_t dyn_view_game_menu;
 extern view_screen_t sst_game_menu;
-extern void game_menu_handler(ak_msg_t* msg);
+extern void sst_game_menu_handler(ak_msg_t* msg);
 
 #endif /* __GAME_MENU_H__ */
