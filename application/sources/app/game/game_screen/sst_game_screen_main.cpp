@@ -137,15 +137,12 @@ void sst_game_stage_control()
     // Post messages based on the current game stage
     if (sst_game_stage == GAME_STAGE_SHIP_FIGHT)
     {
-        task_post_pure_msg(SST_PLAYER_MISSILE_TASK_ID, SST_MISSILE_HIT_SIG);
         task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_FLIGHT_SIG);
-        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_HIT_SIG);
         task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FLIGHT_SIG);
     }
     if (sst_game_stage == GAME_STAGE_ASTEROID_FEILD)
     {
         task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_FLIGHT_SIG);
-        task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_HIT_SIG);
     }
     if (sst_game_stage == GAME_STAGE_TERRAIN)
     {

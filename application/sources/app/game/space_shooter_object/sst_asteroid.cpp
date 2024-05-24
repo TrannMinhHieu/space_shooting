@@ -1,11 +1,12 @@
 #include "sst_asteroid.h"
 
 sst_Asteroid_t myAsteroid[NUM_ASTEROIDS];
-uint16_t asteroid_count = 0;
 
 bool is_asteroid_out_of_screen(uint8_t asteroid_index);
 bool is_asteroid_missile_collided(uint8_t asteroid_index);
 bool is_asteroid_ship_collided(uint8_t asteroid_index);
+
+void sst_asteroid_field_control(uint8_t *asteroid_count);
 
 /**
  * @brief Initialize the asteroids with random x-coordinates, predefined y-coordinates, and default values.
@@ -49,7 +50,7 @@ void sst_asteroid_init()
 void sst_asteroid_spawn()
 {
     APP_DBG_SIG("Asteroid spawn\n");
-    for (uint8_t i = 0; i < NUM_ASTEROIDS; i++) 
+    for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
         myAsteroid[i].visible = WHITE;
     }
@@ -106,6 +107,8 @@ void sst_asteroid_flight()
  */
 void sst_asteroid_hit_handler()
 {
+    static uint8_t asteroid_count = 0;
+
     // Iterate through each asteroid in the myAsteroid array
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
@@ -125,8 +128,12 @@ void sst_asteroid_hit_handler()
             myMissile.x = 0;
 
             // Send message with points value data for player ship
-            task_post_common_msg(SST_PLAYER_SHIP_TASK_ID, SST_SCORE_UPDATE_SIG, (uint8_t *) &myAsteroid[i].asteroid_score, sizeof(myAsteroid[i].asteroid_score));
+            task_post_common_msg(SST_PLAYER_SHIP_TASK_ID, SST_SCORE_UPDATE_SIG, (uint8_t *)&myAsteroid[i].asteroid_score, sizeof(myAsteroid[i].asteroid_score));
+            // Increase asteroid count
+            asteroid_count++;
+            APP_DBG_SIG("Asteroid count = %d\n", asteroid_count);
 
+            sst_asteroid_field_control(&asteroid_count);
             // Move the asteroid to a new random position
             myAsteroid[i].x = (rand() % 39) + 130;
         }
@@ -144,65 +151,7 @@ void sst_asteroid_hit_handler()
             // Hide the ship
             myShip.ship.visible = BLACK;
 
-            // If ship is hidden, exit the game
-            if (myShip.ship.visible == BLACK)
-            {
-                task_post_pure_msg(SST_GAMEPLAY_TASK_ID, GAME_EXIT);
-            }
-            else
-            {
-                // Send messages to handle ship being hit and explode the asteroid
-                task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_HIT_SIG);
-                task_post_pure_msg(SST_EXPLOSION_TASK_ID, SST_EXPLPOSION_EXPLODE_SIG);
-            }
-        }
-    }
-}
-
-/**
- * @brief Control the asteroid field.
- *
- * This function controls the asteroid field by checking for missile collisions with asteroids.
- * It keeps track of the number of asteroids destroyed and resets the asteroids when a certain threshold is reached.
- * It also updates the game stage and sends a message to the player ship task to initiate enemy takeoff.
- *
- * @param None
- * @return None
- */
-void sst_asteroid_field_control()
-{
-    // Iterate through each asteroid in the myAsteroid array
-    for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
-    {
-        // Check if the asteroid has been destroyed by a missile collision
-        if (is_asteroid_missile_collided(i))
-        {
-            // Increment the asteroid_count variable and print the number of asteroids destroyed
-            asteroid_count++;
-            APP_DBG_SIG("Number of asteroids destroyed: %d\n", asteroid_count);
-        }
-
-        // Check if the asteroid_count is equal to or greater than 15 (base), increased by 4 for each speed level
-        if (asteroid_count >= 15 + ((myShip.fly_speed - 1) * 4))
-        {
-            // Reset all the asteroids
-            APP_DBG_SIG("Reset asteroids\n");
-            task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_RESET_SIG);
-
-            // Reset the asteroid_count
-            asteroid_count = 0;
-            APP_DBG_SIG("Asteroid count = %d\n", asteroid_count);
-
-            // Set the game stage to "SHIP_FIGHT"
-            sst_game_stage = GAME_STAGE_SHIP_FIGHT;
-
-            // Re-arm the enemy ship
-            task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_INIT_SIG);
-            // Trigger the enemy ship to take off
-            task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_TAKEOFF_SIG);
-
-            // Break out of the loop
-            break;
+            task_post_pure_msg(SST_GAMEPLAY_TASK_ID, GAME_EXIT);
         }
     }
 }
@@ -241,7 +190,7 @@ void sst_asteroid_reset()
  * @param msg The message to handle.
  * @return None
  */
-void sst_asteroid_handler(ak_msg_t* msg)
+void sst_asteroid_handler(ak_msg_t *msg)
 {
     switch (msg->sig)
     {
@@ -253,10 +202,6 @@ void sst_asteroid_handler(ak_msg_t* msg)
         break;
     case SST_ASTEROID_FLIGHT_SIG:
         sst_asteroid_flight();
-        sst_asteroid_field_control();
-        break;
-    case SST_SHIP_HIT_SIG:
-    case SST_MISSILE_HIT_SIG:
         sst_asteroid_hit_handler();
         break;
     case SST_ASTEROID_RESET_SIG:
@@ -344,4 +289,41 @@ bool is_asteroid_ship_collided(uint8_t asteroid_index)
 
     // Collision occurred
     return true;
+}
+
+// VOID FUNCTIONS IMPLEMENTATION ----------------------------------------------------------
+
+/**
+ * @brief Control the asteroid field.
+ *
+ * This function controls the asteroid field by checking for missile collisions with asteroids.
+ * It keeps track of the number of asteroids destroyed and resets the asteroids when a certain threshold is reached.
+ * It also updates the game stage and sends a message to the player ship task to initiate enemy takeoff.
+ *
+ * @param asteroid_count
+ * @return None
+ */
+void sst_asteroid_field_control(uint8_t *asteroid_count)
+{
+    // Check if the asteroid_count is equal to or greater than 15 (base), increased by 4 for each speed level
+    if (*asteroid_count >= 15 + ((myShip.fly_speed - 1) * 4))
+    {
+        // Reset all the asteroids
+        APP_DBG_SIG("Reset asteroids\n");
+        task_post_pure_msg(SST_ASTEROID_TASK_ID, SST_ASTEROID_RESET_SIG);
+
+        // Reset the asteroid_count
+        *asteroid_count = 0;
+        APP_DBG_SIG("Asteroid count = %d\n", &asteroid_count);
+
+        // Set the game stage to "SHIP_FIGHT"
+        sst_game_stage = GAME_STAGE_SHIP_FIGHT;
+
+        // Re-arm the enemy ship
+        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_INIT_SIG);
+        // Trigger the enemy ship to take off
+        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_TAKEOFF_SIG);
+
+        return;
+    }
 }

@@ -182,8 +182,6 @@ void sst_enemy_missile_handler(ak_msg_t *msg)
         break;
     case SST_ENEMY_MISSILE_FLIGHT_SIG:
         sst_enemy_missile_flight();
-        break;
-    case SST_ENEMY_MISSILE_HIT_SIG:
         sst_enemy_missile_hit();
         break;
     case SST_ENEMY_MISSILE_RESET_SIG:
