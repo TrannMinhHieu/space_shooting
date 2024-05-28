@@ -40,7 +40,7 @@ void sst_player_ship_flight()
 
     // Score counter to increase ship speed
     static uint8_t scoreCounter = 0;
-    static uint8_t prevScore = 0;
+    static uint32_t prevScore = 0;
     if (scoreCounter >= 200)
     {
         scoreCounter = 0;
@@ -50,7 +50,12 @@ void sst_player_ship_flight()
     }
     else
     {
+        if ( prevScore > myShip.score)
+        {
+            prevScore = 0;
+        }
         scoreCounter = myShip.score - prevScore;
+        APP_DBG_SIG("Score counter %d\n", scoreCounter);
     }
 }
 

@@ -222,7 +222,7 @@ uint8_t sst_better_strategy_based_enemy_control()
         sst_attack_pattern_1();
         actions_performed_counter--;
         APP_DBG_SIG("Actions performed: %d\n", actions_performed_counter);
-        decision_interval = 15;
+        decision_interval = 15 - myShip.fly_speed;
         APP_DBG_SIG("Decision interval: %d\n", decision_interval);
     }
     else

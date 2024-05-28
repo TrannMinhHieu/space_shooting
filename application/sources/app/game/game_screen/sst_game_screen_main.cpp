@@ -116,6 +116,7 @@ void sst_game_play_handler(ak_msg_t *msg)
         break;
 
     case AC_DISPLAY_SHOW_GAME_HIGHSCORE:
+        timer_remove_attr(AC_TASK_DISPLAY_ID, GAMEPLAY_TIME_TICK);
         SCREEN_TRAN(sst_game_highscore_handler, &sst_game_highscore);
         sst_game_score.current_score = 0;
         break;
