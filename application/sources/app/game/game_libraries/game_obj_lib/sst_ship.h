@@ -47,6 +47,7 @@ typedef struct
     const uint8_t enemy_ship_score = 100;
 } sst_EnemyShip_t;
 
+extern uint8_t total_health;
 extern sst_PlayerShip_t myShip;
 extern sst_EnemyShip_t myEnemyShip;
 

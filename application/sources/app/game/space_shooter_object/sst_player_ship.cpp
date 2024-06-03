@@ -82,7 +82,11 @@ void sst_player_ship_move_up()
 {
     // Bug, ship stuck at y <= 0
     APP_DBG_SIG("Ship move up\n");
-    if (myShip.ship.y >= SHIP_Y_STEP)
+    if (myShip.ship.y > 0 && myShip.ship.y < SHIP_Y_STEP)
+    {
+        myShip.ship.y -= myShip.ship.y;
+    }
+    else if (myShip.ship.y >= SHIP_Y_STEP)
     {
         myShip.ship.y -= SHIP_Y_STEP;
         APP_DBG_SIG("Ship y %d\n", myShip.ship.y);
@@ -98,16 +102,16 @@ void sst_player_ship_move_up()
 void sst_player_ship_move_down()
 {
     APP_DBG_SIG("Ship move down\n");
-    if (myShip.ship.y <= LCD_HEIGHT - SHIP_Y_STEP - 5)
-    {
-        myShip.ship.y += SHIP_Y_STEP;
-        APP_DBG_SIG("Ship y %d\n", myShip.ship.y);
-    }
-    // myShip.ship.y += SHIP_Y_STEP;
-    // if (myShip.ship.y > 40)
+    // if (myShip.ship.y <= LCD_HEIGHT - SHIP_Y_STEP - 5)
     // {
-    //     myShip.ship.y = 40;
+    //     myShip.ship.y += SHIP_Y_STEP;
+    //     APP_DBG_SIG("Ship y %d\n", myShip.ship.y);
     // }
+    myShip.ship.y += SHIP_Y_STEP;
+    if (myShip.ship.y > 40)
+    {
+        myShip.ship.y = 40;
+    }
 }
 
 /**

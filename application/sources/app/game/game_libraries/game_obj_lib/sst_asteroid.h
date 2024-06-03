@@ -17,7 +17,7 @@
 
 #include "buzzer.h"
 
-#define NUM_ASTEROIDS                       (6)
+#define NUM_ASTEROIDS                       (5)
 #define SIZE_BITMAP_ASTEROIDS_X             (20)
 #define SIZE_BITMAP_ASTEROIDS_Y             (10)
 
@@ -27,7 +27,7 @@
 #define ASTEROID_2_Y_COORDINATE             (23)
 #define ASTEROID_3_Y_COORDINATE             (33)
 #define ASTEROID_4_Y_COORDINATE             (43)
-#define ASTEROID_5_Y_COORDINATE             (53)
+// #define ASTEROID_5_Y_COORDINATE             (53)
 
 // Local values
 // Define offsets
@@ -39,8 +39,7 @@ const int asteroidYCoordinates[NUM_ASTEROIDS] = {ASTEROID_0_Y_COORDINATE,
                                                  ASTEROID_1_Y_COORDINATE,
                                                  ASTEROID_2_Y_COORDINATE,
                                                  ASTEROID_3_Y_COORDINATE,
-                                                 ASTEROID_4_Y_COORDINATE,
-                                                 ASTEROID_5_Y_COORDINATE};
+                                                 ASTEROID_4_Y_COORDINATE};
 
 typedef struct
 {

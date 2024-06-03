@@ -39,6 +39,7 @@ void sst_enemy_ship_takeoff()
 
     // Set enemy ship health and number of missiles
     myEnemyShip.health = SHIP_LIFE + myShip.fly_speed;
+    total_health = myEnemyShip.health;
     myEnemyShip.num_missiles = BASE_NUM_OF_ENEMY_MISSILE;
     APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
     APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
@@ -148,16 +149,7 @@ void sst_enemy_ship_move()
     }
 
     // Move the ship down if it is visible and the sst_ship_action is MOVE_DOWN
-    if (myEnemyShip.ship.y < LCD_HEIGHT - SHIP_Y_STEP && sst_ship_action == MOVE_DOWN)
-    {
-        // Print debug message
-        APP_DBG_SIG("Enemy ship move down\n");
-
-        // Update the ship's y position
-        myEnemyShip.ship.y += SHIP_Y_STEP;
-    }
-
-    // if (myEnemyShip.ship.y < 40 && sst_ship_action == MOVE_DOWN)
+    // if (myEnemyShip.ship.y < LCD_HEIGHT - SHIP_Y_STEP && sst_ship_action == MOVE_DOWN)
     // {
     //     // Print debug message
     //     APP_DBG_SIG("Enemy ship move down\n");
@@ -165,6 +157,15 @@ void sst_enemy_ship_move()
     //     // Update the ship's y position
     //     myEnemyShip.ship.y += SHIP_Y_STEP;
     // }
+
+    if (myEnemyShip.ship.y < 40 && sst_ship_action == MOVE_DOWN)
+    {
+        // Print debug message
+        APP_DBG_SIG("Enemy ship move down\n");
+
+        // Update the ship's y position
+        myEnemyShip.ship.y += SHIP_Y_STEP;
+    }
 }
 
 /**

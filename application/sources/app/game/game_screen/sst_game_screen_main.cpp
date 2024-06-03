@@ -2,6 +2,7 @@
 
 uint8_t sst_game_state;
 uint8_t sst_game_stage;
+uint8_t total_health;
 
 void sst_asteroid_draw();
 void sst_player_ship_draw();
@@ -31,17 +32,33 @@ view_screen_t sst_game_screen = {
 
 void sst_space_shooting_gameplay_render()
 {
-#define TEXT_TITLE_X    (17)
-#define TEXT_TITLE_Y_1  (24)
-#define TEXT_TITLE_Y_2  (TEXT_TITLE_Y_1 + 20)
+#define TEXT_TITLE_X (17)
+#define TEXT_TITLE_Y_1 (24)
+#define TEXT_TITLE_Y_2 (TEXT_TITLE_Y_1 + 20)
 
-#define TEXT_SCORE_X    (97)
-#define TEXT_SCORE_Y    (TEXT_TITLE_Y_2)
-
+#define TEXT_SCORE_X (97)
+#define TEXT_SCORE_Y (TEXT_TITLE_Y_2)
+    static uint8_t x_missile_display = 2;
     if (sst_game_state == GAME_PLAY)
     {
         sst_asteroid_draw();
         sst_explosion_draw();
+        if (myExplosion.visible == WHITE)
+        {
+            view_render.setCursor(myExplosion.x - 20, myExplosion.y);
+            if (sst_game_stage == GAME_STAGE_ASTEROID_FEILD)
+            {
+                view_render.print("+10");
+            }
+            else if (sst_game_stage == GAME_STAGE_SHIP_FIGHT)
+            {
+                if (myEnemyShip.ship.visible != WHITE)
+                {
+
+                    view_render.print("+100");
+                }
+            }
+        }
         sst_terrain_draw();
 
         sst_player_ship_draw();
@@ -49,6 +66,39 @@ void sst_space_shooting_gameplay_render()
 
         sst_enemy_ship_draw();
         sst_enemy_missile_draw();
+        if (sst_game_stage == GAME_STAGE_SHIP_FIGHT)
+        {
+            APP_DBG_SIG("total health %d\n", total_health);
+            view_render.drawRoundRect(10, 55, 110, 5, 2, WHITE);
+            view_render.fillRoundRect(10, 55, myEnemyShip.health * (110 / total_health), 5, 2, WHITE);
+        }
+        else
+        {
+            view_render.setTextSize(1);
+            view_render.setTextColor(WHITE);
+            // view_render.setCursor(2,55);
+            view_render.setCursor(65, 55);
+            view_render.print("Score:");
+            view_render.print(myShip.score);
+            view_render.drawLine(0, LCD_HEIGHT + 5, LCD_WIDTH, LCD_HEIGHT + 5, WHITE);
+            // view_render.drawLine(0, LCD_HEIGHT-10, 	LCD_WIDTH, LCD_HEIGHT-10,	WHITE);
+
+            // Display enemy health
+            view_render.drawRoundRect(0, 54, SIZE_BITMAP_MISSILE_Y + 20, SIZE_BITMAP_MISSILE_Y + 2, 2, WHITE);
+            view_render.drawBitmap(x_missile_display, 55, sst_bitmap_missile, SIZE_BITMAP_MISSILE_X, SIZE_BITMAP_MISSILE_Y, WHITE);
+            if (myMissile.visible == WHITE)
+            {
+                x_missile_display++;
+                if (x_missile_display == 15)
+                {
+                    x_missile_display = 2;
+                }
+            }
+            else
+            {
+                x_missile_display = 2;
+            }
+        }
         view_render.update();
     }
     else if (sst_game_state == GAME_OVER)
@@ -90,7 +140,7 @@ void sst_game_play_handler(ak_msg_t *msg)
 
         task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_INIT_SIG);
         task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_INIT_SIG);
-        sst_game_stage = GAME_STAGE_TERRAIN;
+        sst_game_stage = GAME_STAGE_ASTEROID_FEILD;
         sst_game_state = GAME_PLAY;
         sst_game_time_tick_setup();
         break;
@@ -147,7 +197,7 @@ void sst_game_stage_control()
     }
     if (sst_game_stage == GAME_STAGE_TERRAIN)
     {
-        if (myShip.ship.y < LCD_HEIGHT - SHIP_Y_STEP)
+        if (myShip.ship.y < 40)
         {
             myShip.ship.y++;
         }
