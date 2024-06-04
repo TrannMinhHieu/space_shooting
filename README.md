@@ -1,4 +1,25 @@
-## AK Embedded Base Kit - STM32L151 - Lập trình nhúng vi điều khiển
+# “SPACE SHOOTING” GAME ON AK EMBEDDED BASE KIT
+
+#### Table of Contents
+
+- [**Introduction**](#introduction)
+- [**Hardware**](#hardware)
+    - [**Memory Map**](#memory-map)
+- [**How “Space Shooting” is played**](#how-space-shooting-is-played)
+    - [**Game active objects**](#game-active-objects)
+    - [**Inputs**](#inputs)
+    - [**Points calculation**](#points-calculation)
+- [**“Space Shooting” game design**](#space-shooting-game-design)
+    - [**UML sequence**](#uml-sequence)
+    - [**Asteroid**](#asteroid)
+    - [**Terrain**](#terrain)
+    - [**Player ship and enemy ship**](#player-ship-and-enemy-ship)
+    - [**Player missile and enemy missile**](#player-missile-and-enemy-missile)
+- [**Display in “Space Shooting” Game**](#display-in-space-shooting-game)
+- [**Reference**](#reference)
+
+
+### Introduction
 
 [<img src="hardware/images/ak-embedded-software-logo.jpg" width="240"/>](https://github.com/epcbtech)
 
@@ -7,341 +28,358 @@ AK Embedded Base Kit is an evaluation kit for advanced embedded software learner
 - The KIT also integrates RS485, NRF24L01+, and Flash up to 32MB, suitable for prototyping practical applications in embedded systems such as: wired communication, wireless wireless, data logger storage applications,...
 
 [<img src="hardware/images/ak-embedded-base-kit-stm32l151-lap-trinh-nhung-vi-dieu-khien.jpg" width="480"/>](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu)
+*Figure 1: AK Embedded Base Kit*<br>  
+**“Space Shooting”** is an AK Embedded Base Kit using state machine and event-driven programming to operate. The report will document the game play, active objects, and how each active object function.
 
-### Memory map
+### Hardware
+[<img src="hardware/images/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-stm32l151-non-lcd.jpg" width="480"/>](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu)  
+*Figure 2.1: In front of main board*
+
+[<img src="hardware/images/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-stm32l151-non-lcd-bottom.jpg" width="480"/>](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu)  
+*Figure 2.2: Back of main board*
+
+#### Memory map
+    
 - [ 0x08000000 ] : **Boot** [[ak-base-kit-stm32l151-boot.bin]](https://github.com/epcbtech/ak-base-kit-stm32l151/blob/main/hardware/bin/ak-base-kit-stm32l151-boot.bin)
 - [ 0x08002000 ] : **BSF** [ Memory for data sharing between Boot and Application ]
 - [ 0x08003000 ] : **Application** [[ak-base-kit-stm32l151-application.bin]](https://github.com/epcbtech/ak-base-kit-stm32l151/blob/main/hardware/bin/ak-base-kit-stm32l151-application.bin)
 
-**Note:** After loading boot & application firmware, you can use [AK - Flash](https://github.com/epcbtech/ak-flash) to load the application directly through the **USB** port on the KIT
+>:memo: **Note:** After loading boot & application firmware, you can use [AK - Flash](https://github.com/epcbtech/ak-flash) to load the application directly through the **USB** port on the KIT
+
 ```sh
 ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
 ```
 
-### Hardware
-[<img src="hardware/images/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-stm32l151-non-lcd.jpg" width="480"/>](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu)
+### How “Space Shooting” is played
+The player objective is to navigate a spaceship through an endless void space with asteroids, enemy space ship and occasionally the player have to avoid terrain as their space ship is fly near a planet. The basic input for the space ship is ***Up*** and ***Down*** button to control the ***Up*** and ***Down*** flight path of the ship. The Mode button is to fire a missile from the ship. The score is calculated for the number of asteroids destroyed, enemy ships destroyed and the terrain avoided.<br>  
+The **“Space Shooting”** start with 3 options: **“START”**, **“HIGH SCORE”**, and **“EXIT”**. **“START”** option is to start the main game sequence. **“HIGH SCORE”** is to view top 3 highest score achieved, but the score is automatically erased when the game is reset. **“EXIT”** option is to exit the game, display a screen saver. The screen saver is also display after a period of time when there are no inputs.<br>
+#### Game active objects
 
-[<img src="hardware/images/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-stm32l151-non-lcd-bottom.jpg" width="480"/>](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu)
+***Listing 1: All active object in game***
 
-### Reference
-| Topic | Link |
-| ------ | ------ |
-| Blog & Tutorial | https://epcb.vn/blogs/ak-embedded-software |
-| Where to buy KIT? | https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu |
+| Active Object |	Name | Description |
+|---------------|--------|-------------|
+|Player Ship	|`myShip`| Main object, move with inputs, fire a missile one at a time
+|Enemy Ship	    |`myEnemyShip`|	Automated ship actions, from move to fire
+|Asteroids      |`myAsteroid`|   Fly toward player ship, able to destroy player ship
+|Terrain        |`v_terrain`|	Auto-generated to resemble mountains and valleys
+|Explosion      |`myExplosion`|	Animation when a missile collided with an active object
+|Missiles       |`myMissile`<br>`myEnemyMissile`|Player missile fly with a fixed speed<br>Enemy missile depends on player ship fly speed
 
----
+#### Inputs  
+Player ship can be control with **“UP”** button to move up. **“DOWN”** button to move down, and **“MODE”** button to fire a missile. There can be only 3 player missiles in flight at a time, therefore, pressing **“MODE”** button when there are 3 missiles is already in flight has no effect.<br>  
+In the terrain stage, player ship is automated descend with 1 pixel per tick, stop at the bottom of the playable screen.
 
-# “SPACE SHOOTING” GAME ON AK EMBEDDED BASE KIT
+#### Points calculation  
+Each time an asteroid is destroyed, it will send 10 points via a message to player’s ship. Destroy an enemy ship will gain 100 points. Each node of the terrain the player ship passed through gain 5 points.<br>  
+Every time player gained 200 points, player’s ship will increase it fly speed by one, making the game harder, and the fly speed maxed out at 8.<br>  
+The game is over when player’s ship is collided with an asteroid, enemy’s missile, or a terrain node. All active objects will be reset and points accumulated will be store in high-score board.
 
-1.	### Introduction
+### “Space Shooting” game design
 
-    **“Space Shooting”** is an AK Embedded Base Kit using state machine and event-driven programming to operate. The report will document the game play, active objects, and how each active object function.
+***Event-driven*** architecture in software is driven by external events, such as user actions or system triggers. Each event comprises an event header, specifying the destination, and an event body, detailing the required actions. Task handlers in this architecture receive messages, which can be either pure signals or signals with data, to perform tasks. The **"Space Shooting"** system exemplifies this setup, incorporating a timer service that dispatches signals periodically `PERIODIC` or just once `ONE_SHOT` to task handlers.<br>  
+A state machine is an algorithm that operates in one of several defined states. It consists of state variables, which represent its current state, and commands, which change its state. A state is a condition resulting from a specific relationship between inputs and outputs, while a command is an input that transitions the state machine from one state to another.
+#### UML sequence  
+![](/img/UML.png)
+*Figure 3: UML design for **"Space Shooting** game*  
 
-2.	### Hardware
-    AK Embedded Base Kit integrated with 1.3” LCD display screen, 1 Buzzer speaker, 1 power and data transfer USB-C port, and 4 switch buttons.
-    The Kit also integrated with RS485, NRF24L01+, and Flash up to 32MB.
+`TIME_TICK` is the most importance event in game. This event generated by the timer from the system timer at the rate of 10 times per second, or 100ms per generation, which is needed to smooth the animation of the display. With every `TIME_TICK`, the screen call for all active objects in the game.<br>  
+The sequence diagram for the **"Space Shooting"** game illustrates the interactions among key components such as the player ship, missiles, enemy ship, screen, asteroid, explosion, and terrain. The game begins with an initialization phase **(INIT)**, where `SCREEN_ENTRY` sets up the game parameters (`GAME_STAGE`, `GAME_STATE`, `TIME_TICK`) and initialize all active objects. These parameters are essential for managing the game's progress and ensuring that all subsequent actions are synchronized.<br>  
+Following initialization, various game elements are continuously updated by the `TIME_TICK` signal, which acts as the game's synchronization mechanism. Terrain **(TERRAIN)**, asteroids **(ASTEROID)**, and enemy ships **(ENEMY)** all have their positions updated regularly to reflect dynamic changes in the game environment. Player actions such as moving the ship **(PLAYER_MOVE_SHIP)** and firing missiles **(PLAYER_FIRE_MISSILE)** are processed in real-time, updating the respective positions and interactions with other game objects.<br>  
+Scoring mechanisms are highlighted through `SCORE_SIG` signals, which are generated when specific events occur, like hitting an enemy or asteroid. The overall flow of events ensures a coordinated gameplay experience, with synchronization achieved through `TIME_TICK` signals. This approach maintains the game's dynamic nature and responsiveness, ensuring that state transitions and actions are processed smoothly to create an engaging and challenging game.<br>  
+In event-driven programming, ***a task handler*** is an independent unit assigned a set of tasks. When the scheduler receives a signal to perform a task from a waiting list, it calls the relevant task handler to process the message. Task handlers can be linked to specific events and execute one or multiple tasks when those events occur. They provide synchronization by ensuring that related functions are processed sequentially, with other tasks waiting until the current task is completed. This orderly processing prevents conflicts.<br>  
 
-3.	### How “Space Shooting” is played
-    The player objective is to navigate a spaceship through an endless void space with asteroids, enemy space ship and occasionally the player have to avoid terrain as their space ship is fly near a planet. The basic input for the space ship is ***Up*** and ***Down*** button to control the ***Up*** and ***Down*** flight path of the ship. The Mode button is to fire a missile from the ship. The score is calculated for the number of asteroids destroyed, enemy ships destroyed and the terrain avoided.<br>  
-    The **“Space Shooting”** start with 3 options: **“START”**, **“HIGH SCORE”**, and **“EXIT”**. **“START”** option is to start the main game sequence. **“HIGH SCORE”** is to view top 3 highest score achieved, but the score is automatically erased when the game is reset. **“EXIT”** option is to exit the game, display a screen saver. The screen saver is also display after a period of time when there are no inputs.<br>
-
-    1.  ##### Game active objects
-
-    | Active Object |	Name | Description |
-    |---------------|--------|-------------|
-    |Player Ship	|`myShip`| Main object, move with inputs, fire a missile one at a time
-    |Enemy Ship	    |`myEnemyShip`|	Automated ship actions, from move to fire
-    |Asteroids      |`myAsteroid`|   Fly toward player ship, able to destroy player ship
-    |Terrain        |`v_terrain`|	Auto-generated to resemble mountains and valleys
-    |Explosion      |`myExplosion`|	Animation when a missile collided with an active object
-    |Missiles       |`myMissile`<br>`myEnemyMissile`|Player missile fly with a fixed speed<br>Enemy missile depends on player ship fly speed
-
-    2.	##### Inputs  
-    Player ship can be control with **“UP”** button to move up. **“DOWN”** button to move down, and **“MODE”** button to fire a missile. There can be only 3 player missiles in flight at a time, therefore, pressing **“MODE”** button when there are 3 missiles is already in flight has no effect.<br>  
-    In the terrain stage, player ship is automated descend with 1 pixel per tick, stop at the bottom of the playable screen.
-
-    3.	##### Points calculation  
-    Each time an asteroid is destroyed, it will send 10 points via a message to player’s ship. Destroy an enemy ship will gain 100 points. Each node of the terrain the player ship passed through gain 5 points.<br>  
-    Every time player gained 200 points, player’s ship will increase it fly speed by one, making the game harder, and the fly speed maxed out at 8.<br>  
-    The game is over when player’s ship is collided with an asteroid, enemy’s missile, or a terrain node. All active objects will be reset and points accumulated will be store in high-score board.
-
-4.	### “Space Shooting” game design
-
-    ***Event-driven*** architecture in software is driven by external events, such as user actions or system triggers. Each event comprises an event header, specifying the destination, and an event body, detailing the required actions. Task handlers in this architecture receive messages, which can be either pure signals or signals with data, to perform tasks. The **"Space Shooting"** system exemplifies this setup, incorporating a timer service that dispatches signals periodically `PERIODIC` or just once `ONE_SHOT` to task handlers.<br>  
-    A state machine is an algorithm that operates in one of several defined states. It consists of state variables, which represent its current state, and commands, which change its state. A state is a condition resulting from a specific relationship between inputs and outputs, while a command is an input that transitions the state machine from one state to another.
-    1. ##### UML sequence  
-    ![](/img/UML.png)
-    *Figure 1: UML design for **"Space Shooting** game*  
-
-    `TIME_TICK` is the most importance event in game. This event generated by the timer from the system timer at the rate of 10 times per second, or 100ms per generation, which is needed to smooth the animation of the display. With every `TIME_TICK`, the screen call for all active objects in the game.<br>  
-    The sequence diagram for the **"Space Shooting"** game illustrates the interactions among key components such as the player ship, missiles, enemy ship, screen, asteroid, explosion, and terrain. The game begins with an initialization phase **(INIT)**, where `SCREEN_ENTRY` sets up the game parameters (`GAME_STAGE`, `GAME_STATE`, `TIME_TICK`) and initialize all active objects. These parameters are essential for managing the game's progress and ensuring that all subsequent actions are synchronized.<br>  
-    Following initialization, various game elements are continuously updated by the `TIME_TICK` signal, which acts as the game's synchronization mechanism. Terrain **(TERRAIN)**, asteroids **(ASTEROID)**, and enemy ships **(ENEMY)** all have their positions updated regularly to reflect dynamic changes in the game environment. Player actions such as moving the ship **(PLAYER_MOVE_SHIP)** and firing missiles **(PLAYER_FIRE_MISSILE)** are processed in real-time, updating the respective positions and interactions with other game objects.<br>  
-    Scoring mechanisms are highlighted through `SCORE_SIG` signals, which are generated when specific events occur, like hitting an enemy or asteroid. The overall flow of events ensures a coordinated gameplay experience, with synchronization achieved through `TIME_TICK` signals. This approach maintains the game's dynamic nature and responsiveness, ensuring that state transitions and actions are processed smoothly to create an engaging and challenging game.<br>  
-    In event-driven programming, ***a task handler*** is an independent unit assigned a set of tasks. When the scheduler receives a signal to perform a task from a waiting list, it calls the relevant task handler to process the message. Task handlers can be linked to specific events and execute one or multiple tasks when those events occur. They provide synchronization by ensuring that related functions are processed sequentially, with other tasks waiting until the current task is completed. This orderly processing prevents conflicts.<br>  
-    The Listing 1 list all the task handler in the application.
+***Listing 2: Task handlers in the application***
     
-    |Task ID|Task Level|Handler|
-    |-|-|-|
-    |`SST_ASTEROID_TASK_ID`         |`TASK_PRI_LEVEL_4`  |	`sst_asteroid_handler`|
-    |`SST_EXPLOSION_TASK_ID`        |`TASK_PRI_LEVEL_4`  |	`sst_explosion_handler`|
-    |`SST_TERRAIN_TASK_ID`          |`TASK_PRI_LEVEL_4`  |   `sst_terrain_handler`|
-    |`SST_PLAYER_SHIP_TASK_ID`      |`TASK_PRI_LEVEL_4`  |	`sst_player_ship_handler`|
-    |`SST_PLAYER_MISSILE_TASK_ID`   |`TASK_PRI_LEVEL_4`  |	`sst_player_missile_handler`|
-    |`SST_ENEMY_SHIP_TASK_ID`       |`TASK_PRI_LEVEL_4`  |	`sst_enemy_ship_handler`|
-    |`SST_ENEMY_MISSILE_TASK_ID`    |`TASK_PRI_LEVEL_4`  |   `sst_enemy_missile_handler`|
-    |`SST_GAMEPLAY_TASK_ID`         |`TASK_PRI_LEVEL_4`  |	`sst_game_play_handler`|
+|Task ID|Task Level|Handler|
+|-|-|-|
+|`SST_ASTEROID_TASK_ID`         |`TASK_PRI_LEVEL_4`  |	`sst_asteroid_handler`|
+|`SST_EXPLOSION_TASK_ID`        |`TASK_PRI_LEVEL_4`  |	`sst_explosion_handler`|
+|`SST_TERRAIN_TASK_ID`          |`TASK_PRI_LEVEL_4`  |   `sst_terrain_handler`|
+|`SST_PLAYER_SHIP_TASK_ID`      |`TASK_PRI_LEVEL_4`  |	`sst_player_ship_handler`|
+|`SST_PLAYER_MISSILE_TASK_ID`   |`TASK_PRI_LEVEL_4`  |	`sst_player_missile_handler`|
+|`SST_ENEMY_SHIP_TASK_ID`       |`TASK_PRI_LEVEL_4`  |	`sst_enemy_ship_handler`|
+|`SST_ENEMY_MISSILE_TASK_ID`    |`TASK_PRI_LEVEL_4`  |   `sst_enemy_missile_handler`|
+|`SST_GAMEPLAY_TASK_ID`         |`TASK_PRI_LEVEL_4`  |	`sst_game_play_handler`|
     
-    The task level enables prioritizing the processing of task messages in the system’s queue. In the game, the task level of the game is 4, so all task will be processed in ***First-in-First-out*** order, whichever task come first will be handled first.<br>  
-    The listing 2 list all the signals that are linked to a specific task handler.
+The task level enables prioritizing the processing of task messages in the system’s queue. In the game, the task level of the game is 4, so all task will be processed in ***First-in-First-out*** order, whichever task come first will be handled first.<br>  
 
-    |Object|Task ID	|Signal|
-    |-|-|-|
-    |Asteroid|`SST_ASTEROID_TASK_ID`|`SST_ASTEROID_INIT_SIG`,<br>`SST_ASTEROID_SPAWN_SIG`,<br>`SST_ASTEROID_FLIGHT_SIG`,<br>`SST_ASTEROID_RESET_SIG`|
-    |Explosion|`SST_EXPLOSION_TASK_ID`|`SST_EXPLOSION_INIT_SIG`,<br>`SST_EXPLPOSION_EXPLODE_SIG`,<br>`SST_EXPLOSION_RESET_SIG`|
-    |Terrain|`SST_TERRAIN_TASK_ID`|`SST_TERRAIN_INIT_SIG`,<br>`SST_TERRAIN_GENERATE_SIG`,<br>`SST_TERRAIN_UPDATE_SIG`,<br>`SST_TERRAIN_RESET_SIG`|
-    |Player Ship|`SST_PLAYER_SHIP_TASK_ID`|`SST_SHIP_INIT_SIG`,<br>`SST_SHIP_FLIGHT_SIG`,<br>`SST_SHIP_FIRE_SIG`,<br>`SST_SHIP_MOVE_UP_SIG`,<br>`SST_SHIP_MOVE_DOWN_SIG`,<br>`SST_SHIP_RESET_SIG`,<br>`SST_SCORE_UPDATE_SIG`|
-    |Player Missile	|`SST_ENEMY_SHIP_TASK_ID`|`SST_MISSILE_INIT_SIG`,<br>`SST_MISSILE_FIRE_SIG`,<br>`SST_MISSILE_FLIGHT_SIG`,<br>`SST_MISSILE_RESET_SIG`|
-    |Enemy Ship	|`SST_ENEMY_SHIP_TASK_ID`|`SST_ENEMY_SHIP_INIT_SIG`,<br>`SST_ENEMY_SHIP_TAKEOFF_SIG`,<br>`SST_ENEMY_SHIP_MOVE_SIG`,<br>`SST_ENEMY_SHIP_FLIGHT_SIG`,<br>`SST_ENEMY_SHIP_FIRE_SIG`,<br>`SST_ENEMY_SHIP_RESET_SIG`|
-    |Enemy Missile	|`SST_ENEMY_MISSILE_TASK_ID`|`SST_ENEMY_MISSILE_INIT_SIG`,<br>`SST_ENEMY_MISSILE_FIRE_SIG`,<br>`SST_ENEMY_MISSILE_FLIGHT_SIG`,<br>`SST_ENEMY_MISSILE_RESET_SIG`|
-    |Main Screen|`SST_GAMEPLAY_TASK_ID`|`GAMEPLAY_TIME_TICK`,<br>`GAME_EXIT`|
+***Listing 3: All the signals that are linked to a specific task handler***
 
-    2.	##### Asteroid
-    ![](/img/Asteroid_state_machine.png)  
-    *Figure 2 Asteroid state machine*  
+|Object|Task ID	|Signal|
+|-|-|-|
+|Asteroid|`SST_ASTEROID_TASK_ID`|`SST_ASTEROID_INIT_SIG`,<br>`SST_ASTEROID_SPAWN_SIG`,<br>`SST_ASTEROID_FLIGHT_SIG`,<br>`SST_ASTEROID_RESET_SIG`|
+|Explosion|`SST_EXPLOSION_TASK_ID`|`SST_EXPLOSION_INIT_SIG`,<br>`SST_EXPLPOSION_EXPLODE_SIG`,<br>`SST_EXPLOSION_RESET_SIG`|
+|Terrain|`SST_TERRAIN_TASK_ID`|`SST_TERRAIN_INIT_SIG`,<br>`SST_TERRAIN_GENERATE_SIG`,<br>`SST_TERRAIN_UPDATE_SIG`,<br>`SST_TERRAIN_RESET_SIG`|
+|Player Ship|`SST_PLAYER_SHIP_TASK_ID`|`SST_SHIP_INIT_SIG`,<br>`SST_SHIP_FLIGHT_SIG`,<br>`SST_SHIP_FIRE_SIG`,<br>`SST_SHIP_MOVE_UP_SIG`,<br>`SST_SHIP_MOVE_DOWN_SIG`,<br>`SST_SHIP_RESET_SIG`,<br>`SST_SCORE_UPDATE_SIG`|
+|Player Missile	|`SST_ENEMY_SHIP_TASK_ID`|`SST_MISSILE_INIT_SIG`,<br>`SST_MISSILE_FIRE_SIG`,<br>`SST_MISSILE_FLIGHT_SIG`,<br>`SST_MISSILE_RESET_SIG`|
+|Enemy Ship	|`SST_ENEMY_SHIP_TASK_ID`|`SST_ENEMY_SHIP_INIT_SIG`,<br>`SST_ENEMY_SHIP_TAKEOFF_SIG`,<br>`SST_ENEMY_SHIP_MOVE_SIG`,<br>`SST_ENEMY_SHIP_FLIGHT_SIG`,<br>`SST_ENEMY_SHIP_FIRE_SIG`,<br>`SST_ENEMY_SHIP_RESET_SIG`|
+|Enemy Missile	|`SST_ENEMY_MISSILE_TASK_ID`|`SST_ENEMY_MISSILE_INIT_SIG`,<br>`SST_ENEMY_MISSILE_FIRE_SIG`,<br>`SST_ENEMY_MISSILE_FLIGHT_SIG`,<br>`SST_ENEMY_MISSILE_RESET_SIG`|
+|Main Screen|`SST_GAMEPLAY_TASK_ID`|`GAMEPLAY_TIME_TICK`,<br>`GAME_EXIT`|
 
-    Upon enter the initialization state, the Asteroid state machine transit to `FLIGHT` state. Its transit to itself with each `TIME_TICK`. The Asteroid transit to `HIT HANDLER` state when a hit occurred. If it is a ship hit, transit to `EXPLODE` and then to end state, else the state machine repositions an asteroid and transit back to `FLIGHT` state. If the Asteroid count traverse a threshold, it transits to `FIELD CONTROL` and reset the asteroid object.<br>  
-    Asteroid task handler to handle all event sent to asteroid active object. 
-    ```
-    void sst_asteroid_handler(ak_msg_t *msg)
+#### Asteroid
+![](/img/Asteroid_state_machine.png)  
+*Figure 4: Asteroid state machine*  
+
+Upon enter the initialization state, the Asteroid state machine transit to `FLIGHT` state. Its transit to itself with each `TIME_TICK`. The Asteroid transit to `HIT HANDLER` state when a hit occurred. If it is a ship hit, transit to `EXPLODE` and then to end state, else the state machine repositions an asteroid and transit back to `FLIGHT` state. If the Asteroid count traverse a threshold, it transits to `FIELD CONTROL` and reset the asteroid object.<br>  
+**Asteroid task handler** to handle all event sent to asteroid active object. 
+
+```
+void sst_asteroid_handler(ak_msg_t *msg)
+{
+    switch (msg->sig)
     {
-        switch (msg->sig)
-        {
-        case SST_ASTEROID_INIT_SIG:
-            sst_asteroid_init();
-            break;
-        case SST_ASTEROID_SPAWN_SIG:
-            sst_asteroid_spawn();
-            break;
-        case SST_ASTEROID_FLIGHT_SIG:
-            sst_asteroid_flight();
-            sst_asteroid_hit_handler();
-            break;
-        case SST_ASTEROID_RESET_SIG:
-            sst_asteroid_reset();
-            break;
-        default:
-            // Do nothing for unknown signals
-            break;
-        }
+    case SST_ASTEROID_INIT_SIG:
+        sst_asteroid_init();
+        break;
+    case SST_ASTEROID_SPAWN_SIG:
+        sst_asteroid_spawn();
+        break;
+    case SST_ASTEROID_FLIGHT_SIG:
+        sst_asteroid_flight();
+        sst_asteroid_hit_handler();
+        break;
+    case SST_ASTEROID_RESET_SIG:
+        sst_asteroid_reset();
+        break;
+    default:
+        // Do nothing for unknown signals
+        break;
     }
-    ```
-  
-    Define active object **"Asteroid"**
-    ```
-    typedef struct
-    {
-        bool visible;
-        int32_t x, y;
-        uint8_t action_image;
-        const uint8_t asteroid_score = 10;
-    } sst_Asteroid_t;
-    ```
+}
+```
 
-    3.	##### Terrain
-    ![](/img/Terrain_state_machine.png)  
-    *Figure 3 Terrain state machine*  
+Define active object **"Asteroid"**
 
-    Similar to asteroid, after the initialization state, the Terrain state machine remain in `TERRAIN UPDATE` state. The *Terrain generate* signal transit the state machine to `TERRAIN GENERATE` state. When the terrain crosses a terrain max length, it transits in to terrain end state and then to end state.<br>  
-    Terrain task handler to handle all event sent to terrain active object.
-    ```
-    void sst_terrain_handler(ak_msg_t *msg)
-    {
-        switch (msg->sig)
-        {
-        case SST_TERRAIN_INIT_SIG:
-            sst_terrain_init();
-            break;
-        case SST_TERRAIN_UPDATE_SIG:
-            sst_terrain_update();
-            break;
-        case SST_TERRAIN_RESET_SIG:
-            sst_terrain_reset();
-            break;
-        default:
-            break;
-        }
-    }
-    ```
-    Define terrain coordinate
-    ```
-    class TerrainCoordinates
-    {
-    public:
-        int x;
-        int y;
-        static const int terrain_score;
+```
+typedef struct
+{
+    bool visible;
+    int32_t x, y;
+    uint8_t action_image;
+    const uint8_t asteroid_score = 10;
+} sst_Asteroid_t;
+```
 
-        TerrainCoordinates();
-        TerrainCoordinates(int x, int y);
-
-        void terrainMover();
-    };
-    ```
-    Define **"Terrain"** active object
-    ```
-    extern std::vector<TerrainCoordinates> v_terrain;
-    ```
-
-    4.	##### Player ship and enemy ship
-    ![](/img/Player_state_machine.png)  
-    *Figure 4.1	Player State Machine*  
-    <br>
-    ![](/img/Enemy_state_machine.png)  
-    *Figure 4.2	Enemy State Machine*  
-
-    While the player and enemy state machines in the game share similarities, they have distinct characteristics. The player state machine typically remains in the `FLIGHT` state, processing player inputs to perform various actions. If the player is hit by an enemy missile, an asteroid, or crashes into terrain, the state machine transitions to the `EXPLODE` state and then to the end state, resetting all other active objects.<br>  
-    Define base ship type
-    ```
-    typedef struct 
-    {
-        bool visible;
-        uint32_t x, y;
-        uint8_t action_image;
-    } sst_Ship_t;
-    ```
-    **Player** ship and **Enemy** ship inherit the `sst_Ship_t` type 
-    ```
-    typedef struct
-    {
-        sst_Ship_t ship;
-        uint8_t fly_speed;
-        uint32_t score;
-    } sst_PlayerShip_t;
-    ```
-    ```
-    typedef struct
-    {
-        sst_Ship_t ship;
-        uint8_t health;
-        uint8_t num_missiles;
-        const uint8_t enemy_ship_score = 100;
-    } sst_EnemyShip_t;
-    ```
-
-    Player ship task hanlder to handle all task sent to player ship
-    ```
-    void sst_player_ship_handler(ak_msg_t* msg)
-    {
-        switch (msg->sig)
-        {
-        case SST_SHIP_INIT_SIG:
-            sst_player_ship_init();
-            break;
-        case SST_SHIP_FLIGHT_SIG:
-            sst_player_ship_flight();
-            break;
-        case SST_SHIP_FIRE_SIG:
-            sst_player_ship_fire();
-            break;
-        case SST_SHIP_MOVE_UP_SIG:
-            sst_player_ship_move_up();
-            break;
-        case SST_SHIP_MOVE_DOWN_SIG:
-            sst_player_ship_move_down();
-            break;
-        case SST_SCORE_UPDATE_SIG:
-        {
-            // Handle point values data sent by asteroid, enemy ship, and terrain
-            uint8_t* inData = get_data_common_msg(msg);
-            uint32_t scoreData = *(uint32_t *)inData;
-            myShip.score += scoreData;  
-            APP_DBG_SIG("Ship score %d\n", myShip.score);
-            break;
-        }
-        case SST_SHIP_RESET_SIG:
-            sst_player_ship_reset();
-            break;
-        default:
-            break;
-        }
-    }
-    ```
-    > :memo: **Note:** To simplify the function to update accumulated score, the score update method will be implemented directly in the task handler, in `SST_SCORE_UPDATE_SIG`, thus will take advantage of the message delivering system
-
-    In contrast, the enemy state machine only becomes active when the game reaches the **ENEMY** stage. Like the player, the enemy spends most of its time in the `FLIGHT` state, performing actions automatically. When hit by a player's missile, it transitions to the `EXPLODE` state and then to the `HEALTH CONTROL` state. If the enemy's health is greater than 0, it returns to the `FLIGHT` state; otherwise, it resets the enemy active object and ends.   
-    Enemy ship task handler
-    ```
-    void sst_enemy_ship_handler(ak_msg_t *msg)
-    {
-        switch (msg->sig)
-        {
-        case SST_ENEMY_SHIP_INIT_SIG:
-            sst_enemy_ship_init();
-            break;
-        case SST_ENEMY_SHIP_TAKEOFF_SIG:
-            sst_enemy_ship_takeoff();
-            break;
-        case SST_ENEMY_SHIP_FLIGHT_SIG:
-            sst_enemy_ship_flight();
-            sst_enemy_ship_health_control();
-            break;
-        case SST_ENEMY_SHIP_MOVE_SIG:
-            sst_enemy_ship_move();
-            break;
-        case SST_ENEMY_SHIP_FIRE_SIG:
-            sst_enemy_ship_fire();
-            break;
-        case SST_ENEMY_SHIP_RESET_SIG:
-            sst_enemy_ship_reset();
-            break;
-        default:
-            break;
-        }
-    }
-    ```
-
-    5.	##### Player missile and enemy missile
-    Given the high similarity between the player missile and enemy missile state machines, detailing both would be redundant. The player missile state machine sufficiently illustrates the core functionality and behavior that apply to both entities. By focusing on one, the report remains concise and clear, while still effectively conveying the essential mechanics that govern missile behavior in the game.<br>  
-    ![](/img/Missile_state_machine.png)  
-    *Figure 5 Missile State Machine*  
-
-    >:memo: **Note:** The Missile state machine does not have and end state due to the dependence nature of it in player ship object.  
+#### Terrain
     
-    Player missile task handler
-    ```
-    void sst_player_missile_handler(ak_msg_t *msg)
+![](/img/Terrain_state_machine.png)  
+*Figure 5: Terrain state machine*  
+
+Similar to asteroid, after the initialization state, the Terrain state machine remain in `TERRAIN UPDATE` state. The *Terrain generate* signal transit the state machine to `TERRAIN GENERATE` state. When the terrain crosses a terrain max length, it transits in to terrain end state and then to end state.<br>  
+**Terrain task handler** to handle all event sent to terrain active object.
+
+```
+void sst_terrain_handler(ak_msg_t *msg)
+{
+    switch (msg->sig)
     {
-        switch (msg->sig)
-        {
-        case SST_MISSILE_INIT_SIG:
-            sst_player_missile_inint();
-            break;
-        case SST_MISSILE_FIRE_SIG:
-            sst_player_missile_fired();
-            break;
-        case SST_MISSILE_FLIGHT_SIG:
-            sst_player_missile_flight();
-            sst_player_missile_hit();
-            break;
-        case SST_MISSILE_RESET_SIG:
-            sst_player_missile_reset();
-            break;
-        default:
-            break;
-        }
+    case SST_TERRAIN_INIT_SIG:
+        sst_terrain_init();
+        break;
+    case SST_TERRAIN_UPDATE_SIG:
+        sst_terrain_update();
+        break;
+    case SST_TERRAIN_RESET_SIG:
+        sst_terrain_reset();
+        break;
+    default:
+        break;
     }
-    ```
+}
+```
 
-    >:memo: **Note:** the `sst_enemy_missile_handler` is the same as the  `sst_player_missile_handler`
+Define **terrain coordinate**
 
-    When player ship is crash or destroyed, the whole game reset, both player missile and enemy missile is reset alongside its.
+```
+class TerrainCoordinates
+{
+public:
+    int x;
+    int y;
+    static const int terrain_score;
+    TerrainCoordinates();
+    TerrainCoordinates(int x, int y);
+    void terrainMover();
+};
+```
 
-5.	##### Display in “Space Shooting” Game
+Define **"Terrain"** active object
 
-    The **"Space Shooting"** game is designed for a 128x64 pixel black and white LCD screen, focusing on clarity and functionality. The main gameplay area features simplified, pixelated graphics for the player ship, enemies, asteroids, and terrain, balancing frame rates with clear visuals.  
-    The game uses bitmaps—grid-based images defining each pixel's color and position—to precisely control graphics, ensuring detailed and recognizable shapes despite the small screen resolution. Animation is achieved by sequencing multiple images stored in a variable called `action_image`, creating smooth animations for player and enemy movements, explosions, and other actions. This method enhances visual engagement and overall gameplay.<br>  
-    **Listings 4 to 7 show how each object is displayed on the screen.**<br>   
-**Listing 4 Asteroid display**   
+```
+extern std::vector<TerrainCoordinates> v_terrain;
+```
+
+#### Player ship and enemy ship
+![](/img/Player_state_machine.png)  
+*Figure 6.1: Player State Machine*  
+<br>
+![](/img/Enemy_state_machine.png)  
+*Figure 6.2: Enemy State Machine*  
+While the player and enemy state machines in the game share similarities, they have distinct characteristics. The player state machine typically remains in the `FLIGHT` state, processing player inputs to perform various actions. If the player is hit by an enemy missile, an asteroid, or crashes into terrain, the state machine transitions to the `EXPLODE` state and then to the end state, resetting all other active objects.<br>  
+Define base **ship** type
+
+```
+typedef struct 
+{
+    bool visible;
+    uint32_t x, y;
+    uint8_t action_image;
+} sst_Ship_t;
+```
+
+**Player** ship and **Enemy** ship inherit the `sst_Ship_t` type  
+
+```
+typedef struct
+{
+    sst_Ship_t ship;
+    uint8_t fly_speed;
+    uint32_t score;
+} sst_PlayerShip_t;
+```
+
+```
+typedef struct
+{
+    sst_Ship_t ship;
+    uint8_t health;
+    uint8_t num_missiles;
+    const uint8_t enemy_ship_score = 100;
+} sst_EnemyShip_t;
+```
+
+**Player ship task hanlder** to handle all task sent to player ship
+
+```
+void sst_player_ship_handler(ak_msg_t* msg)
+{
+    switch (msg->sig)
+    {
+    case SST_SHIP_INIT_SIG:
+        sst_player_ship_init();
+        break;
+    case SST_SHIP_FLIGHT_SIG:
+        sst_player_ship_flight();
+        break;
+    case SST_SHIP_FIRE_SIG:
+        sst_player_ship_fire();
+        break;
+    case SST_SHIP_MOVE_UP_SIG:
+        sst_player_ship_move_up();
+        break;
+    case SST_SHIP_MOVE_DOWN_SIG:
+        sst_player_ship_move_down();
+        break;
+    case SST_SCORE_UPDATE_SIG:
+    {
+        // Handle point values data sent by asteroid, enemy ship, and terrain
+        uint8_t* inData = get_data_common_msg(msg);
+        uint32_t scoreData = *(uint32_t *)inData;
+        myShip.score += scoreData;  
+        APP_DBG_SIG("Ship score %d\n", myShip.score);
+        break;
+    }
+    case SST_SHIP_RESET_SIG:
+        sst_player_ship_reset();
+        break;
+    default:
+        break;
+    }
+}
+```
+
+> :memo: **Note:** To simplify the function to update accumulated score, the score update method will be implemented directly in the task handler, in `SST_SCORE_UPDATE_SIG`, thus will take advantage of the message delivering system  
+
+In contrast, the enemy state machine only becomes active when the game reaches the **ENEMY** stage. Like the player, the enemy spends most of its time in the `FLIGHT` state, performing actions automatically. When hit by a player's missile, it transitions to the `EXPLODE` state and then to the `HEALTH CONTROL` state. If the enemy's health is greater than 0, it returns to the `FLIGHT` state; otherwise, it resets the enemy active object and ends.<br>   
+**Enemy ship task handler**
+
+```
+void sst_enemy_ship_handler(ak_msg_t *msg)
+{
+    switch (msg->sig)
+    {
+    case SST_ENEMY_SHIP_INIT_SIG:
+        sst_enemy_ship_init();
+        break;
+    case SST_ENEMY_SHIP_TAKEOFF_SIG:
+        sst_enemy_ship_takeoff();
+        break;
+    case SST_ENEMY_SHIP_FLIGHT_SIG:
+        sst_enemy_ship_flight();
+        sst_enemy_ship_health_control();
+        break;
+    case SST_ENEMY_SHIP_MOVE_SIG:
+        sst_enemy_ship_move();
+        break;
+    case SST_ENEMY_SHIP_FIRE_SIG:
+        sst_enemy_ship_fire();
+        break;
+    case SST_ENEMY_SHIP_RESET_SIG:
+        sst_enemy_ship_reset();
+        break;
+    default:
+        break;
+    }
+}
+```
+
+#### Player missile and enemy missile
+Given the high similarity between the player missile and enemy missile state machines, detailing both would be redundant. The player missile state machine sufficiently illustrates the core functionality and behavior that apply to both entities. By focusing on one, the report remains concise and clear, while still effectively conveying the essential mechanics that govern missile behavior in the game.<br>  
+![](/img/Missile_state_machine.png)  
+*Figure 7: Missile State Machine*  
+
+>:memo: **Note:** The Missile state machine does not have and end state due to the dependence nature of it in player ship object.  
+    
+**Player missile task handler**
+
+```
+void sst_player_missile_handler(ak_msg_t *msg)
+{
+    switch (msg->sig)
+    {
+    case SST_MISSILE_INIT_SIG:
+        sst_player_missile_inint();
+        break;
+    case SST_MISSILE_FIRE_SIG:
+        sst_player_missile_fired();
+        break;
+    case SST_MISSILE_FLIGHT_SIG:
+        sst_player_missile_flight();
+        sst_player_missile_hit();
+        break;
+    case SST_MISSILE_RESET_SIG:
+        sst_player_missile_reset();
+        break;
+    default:
+        break;
+    }
+}
+```
+
+>:memo: **Note:** the `sst_enemy_missile_handler` is the same as the  `sst_player_missile_handler`
+
+When player ship is crash or destroyed, the whole game reset, both player missile and enemy missile is reset alongside its.
+
+### Display in “Space Shooting” Game
+
+The **"Space Shooting"** game is designed for a 128x64 pixel black and white LCD screen, focusing on clarity and functionality. The main gameplay area features simplified, pixelated graphics for the player ship, enemies, asteroids, and terrain, balancing frame rates with clear visuals.  
+The game uses bitmaps—grid-based images defining each pixel's color and position—to precisely control graphics, ensuring detailed and recognizable shapes despite the small screen resolution. Animation is achieved by sequencing multiple images stored in a variable called `action_image`, creating smooth animations for player and enemy movements, explosions, and other actions. This method enhances visual engagement and overall gameplay.  
+
+The bitmap of active objects is design in [pixilart](https://www.pixilart.com/) and convert to hex code [here](https://marlinfw.org/tools/u8glib/converter.html)  
+
+***Listing 4:***
+
+|lorem|Image|Name in source|
+|-|:-:|-|
+|Asteroid|![]()|`sst_bitmap_asteroid_1`,<br>`sst_bitmap_asteroid_2`,<br>`sst_bitmap_asteroid_3`|
+|Explosion|![]()|`sst_bitmap_explosion_1`,<br>`sst_bitmap_explosion_2`,<br>`sst_bitmap_explosion_3`|
+|Missile|![Player Missile](/img/active_obj_image/missile.png)<br>![Enemy Missile](/img/active_obj_image/missile-enemy.png)|`sst_bitmap_missile`,<br>`sst_bitmap_missile_enemy`|
+|Ship|![Ship](/img/active_obj_image/ship1-frame1.png)<br>![Ship](/img/active_obj_image/ship1-frame2.png)<br>![Ship](/img/active_obj_image/ship1-frame3.png)|`sst_bitmap_space_ship_1`,<br>`sst_bitmap_space_ship_2`,<br>`sst_bitmap_space_ship_3`|
+
+**Listings 5 to 8** show how each object is displayed on the screen.<br>   
+***Listing 5: Asteroid display***   
+
 ```
 void sst_asteroid_draw()
 {
@@ -367,7 +405,7 @@ void sst_asteroid_draw()
 }
 ```
 
-Listing 5	Explosion display
+***Listing 6: Explosion display***
 
 ```
 void sst_explosion_draw()
@@ -395,7 +433,7 @@ void sst_explosion_draw()
 
 The player ship display code adequately demonstrates the rendering techniques and principles that apply to both types of ships. By focusing on the player ship, the report remains concise and avoids unnecessary repetition, while still providing a comprehensive understanding of the display mechanics used for both ship types in the game.
 
-Listing 6	Player Ship
+***Listing 7: Player Ship***
 
 ```
 void sst_player_ship_draw()
@@ -419,7 +457,7 @@ void sst_player_ship_draw()
 }
 ```
 
-Listing 7	Player Missile
+***Listing 8 Player Missile***
 
 ```
 void sst_player_missile_draw()
@@ -441,7 +479,10 @@ The pointer is used to store all the bitmap for an object and only pass their ad
 
 The other infomation such as missile reload time, missile shootable, and enemy health bar will be display accordingly to the stage that player currently in.   
 
-**Asteroid effect:**
+**Asteroid effect**
+
+Scoring effec
+ : `+10` when an Asteroid is destroyed
 ```
 if (myExplosion.visible == WHITE)
     {
@@ -455,6 +496,7 @@ if (myExplosion.visible == WHITE)
 ```
 
 **Missile effects**
+
 ```
 // Missile info bar
 view_render.drawRoundRect(0, 54, SIZE_BITMAP_MISSILE_Y + 20, SIZE_BITMAP_MISSILE_Y + 2 2, WHITE);
@@ -469,7 +511,7 @@ if(v_myPlayerMissiles.size() < 3)
     }
 ```
 
-Display **Enemy info:** 
+Display **Enemy info** 
 
 Health bar
  : Sreduce when hit
@@ -478,7 +520,7 @@ view_render.drawRoundRect(10, 55, 110, 5, 2, WHITE);
 view_render.fillRoundRect(10, 55, myEnemyShip.health * (110 / total_health), 5, 2, WHITE);
 ```
 
-Score effect
+Scoring effect
  : `+100` when enemy is destroyed
 
 ```
@@ -494,3 +536,9 @@ if (myExplosion.visible == WHITE)
         }
     }
 ```
+
+### Reference
+| Topic | Link |
+| ------ | ------ |
+| Blog & Tutorial | https://epcb.vn/blogs/ak-embedded-software |
+| Where to buy KIT? | https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu |
