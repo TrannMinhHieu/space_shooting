@@ -110,14 +110,14 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
     Upon enter the initialization state, the Asteroid state machine transit to `FLIGHT` state. Its transit to itself with each `TIME_TICK`. The Asteroid transit to `HIT HANDLER` state when a hit occurred. If it is a ship hit, transit to `EXPLODE` and then to end state, else the state machine repositions an asteroid and transit back to `FLIGHT` state. If the Asteroid count traverse a threshold, it transits to `FIELD CONTROL` and reset the asteroid object.
 
     3.	##### Terrain
-    ![](/img/Terrain_state_machine.png)
-    *Figure 2 Terrain state machine*
+    ![](/img/Terrain_state_machine.png)  
+    *Figure 2 Terrain state machine*  
     Similar to asteroid, after the initialization state, the Terrain state machine remain in Terrain Update state. The Terrain generate transit the state machine to Terrain generate state. When the terrain crosses a terrain max length, it transits in to terrain end state and then to end state.
 
     4.	##### Player ship and enemy ship
-    ![](/img/Player_state_machine.png)
+    ![](/img/Player_state_machine.png)  
     *Figure 3.1	Player State Machine*  
-    ![](/img/Enemy_state_machine.png)
+    ![](/img/Enemy_state_machine.png)  
     *Figure 3.2	Enemy State Machine*  
 
     While the player and enemy state machines in the game share similarities, they have distinct characteristics. The player state machine typically remains in the `FLIGHT` state, processing player inputs to perform various actions. If the player is hit by an enemy missile, an asteroid, or crashes into terrain, the state machine transitions to the `EXPLODE` state and then to the end state, resetting all other active objects.  
