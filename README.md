@@ -33,12 +33,6 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
 
 # “SPACE SHOOTING” GAME ON AK EMBEDDED BASE KIT
 
-<style>
-    body {
-        text-align: justify
-    }
-</style>
-
 1.	##### Introduction
 
     **“Space Shooting”** is an AK Embedded Base Kit using state machine and event-driven programming to operate. The report will document the game play, active objects, and how each active object function.
@@ -48,9 +42,9 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
     The Kit also integrated with RS485, NRF24L01+, and Flash up to 32MB.
 
 3.	##### How “Space Shooting” is played
-    The player objective is to navigate a spaceship through an endless void space with asteroids, enemy space ship and occasionally the player have to avoid terrain as their space ship is fly near a planet. The basic input for the space ship is ***Up*** and ***Down*** button to control the ***Up*** and ***Down*** flight path of the ship. The Mode button is to fire a missile from the ship. The score is calculated for the number of asteroids destroyed, enemy ships destroyed and the terrain avoided.<br>
+    The player objective is to navigate a spaceship through an endless void space with asteroids, enemy space ship and occasionally the player have to avoid terrain as their space ship is fly near a planet. The basic input for the space ship is ***Up*** and ***Down*** button to control the ***Up*** and ***Down*** flight path of the ship. The Mode button is to fire a missile from the ship. The score is calculated for the number of asteroids destroyed, enemy ships destroyed and the terrain avoided.<br>  
     The “Space Shooting” start with 3 options: **“START”**, **“HIGH SCORE”**, and **“EXIT”**. **“START”** option is to start the main game sequence. **“HIGH SCORE”** is to view top 3 highest score achieved, but the score is automatically erased when the game is reset. **“EXIT”** option is to exit the game, display a screen saver. The screen saver is also display after a period of time when there are no inputs.<br>
-    
+
     1.  **Game active objects**
 
     | Active Object |	Name | Description |
@@ -63,20 +57,20 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
     |Missiles       |`myMissile`<br>`myEnemyMissile`|Player missile fly with a fixed speed<br>Enemy missile depends on player ship fly speed
 
     2.	**Inputs**  
-    Player ship can be control with **“UP”** button to move up. **“DOWN”** button to move down, and **“MODE”** button to fire a missile. There can be only one player missile in flight at a time, therefore, pressing **“MODE”** button when a missile is already in flight has no effect.<br>
+    Player ship can be control with **“UP”** button to move up. **“DOWN”** button to move down, and **“MODE”** button to fire a missile. There can be only one player missile in flight at a time, therefore, pressing **“MODE”** button when a missile is already in flight has no effect.<br>  
     In the terrain stage, player ship is automated descend with 1 pixel per tick, stop at the bottom of the screen.
 
     3.	**Points calculation**  
-    Each time an asteroid is destroyed, it will send 10 points via a message to player’s ship. Destroy an enemy ship will gain 100 points. Each node of the terrain the player ship passed through gain 5 points.<br>
-    Every time player gained 200 points, player’s ship will increase it fly speed by one, making the game harder, and the fly speed maxed out at 8.<br>
+    Each time an asteroid is destroyed, it will send 10 points via a message to player’s ship. Destroy an enemy ship will gain 100 points. Each node of the terrain the player ship passed through gain 5 points.<br>  
+    Every time player gained 200 points, player’s ship will increase it fly speed by one, making the game harder, and the fly speed maxed out at 8.<br>  
     The game is over when player’s ship is collided with an asteroid, enemy’s missile, or a terrain node. All active objects will be reset and points accumulated will be store in high-score board.
 
 4.	##### “Space Shooting” game design
 
-    ***Event-driven*** architecture in software is driven by external events, such as user actions or system triggers. Each event comprises an event header, specifying the destination, and an event body, detailing the required actions. Task handlers in this architecture receive messages, which can be either pure signals or signals with data, to perform tasks. The **"Space Shooting"** system exemplifies this setup, incorporating a timer service that dispatches signals periodically **('PERIODIC')** or just once **('ONE_SHOT')** to task handlers.<br>
+    ***Event-driven*** architecture in software is driven by external events, such as user actions or system triggers. Each event comprises an event header, specifying the destination, and an event body, detailing the required actions. Task handlers in this architecture receive messages, which can be either pure signals or signals with data, to perform tasks. The **"Space Shooting"** system exemplifies this setup, incorporating a timer service that dispatches signals periodically **('PERIODIC')** or just once **('ONE_SHOT')** to task handlers.<br>  
     A state machine is an algorithm that operates in one of several defined states. It consists of state variables, which represent its current state, and commands, which change its state. A state is a condition resulting from a specific relationship between inputs and outputs, while a command is an input that transitions the state machine from one state to another.
-    1. **UML sequence**
-    `TIME_TICK` is the most importance event in game. This event generated by the timer from the system timer at the rate of 10 times per second, or 100ms per generation, which is needed to smooth the animation of the display. With every `TIME_TICK`, the screen call for all active objects in the game.<br>
+    1. **UML sequence**  
+    `TIME_TICK` is the most importance event in game. This event generated by the timer from the system timer at the rate of 10 times per second, or 100ms per generation, which is needed to smooth the animation of the display. With every `TIME_TICK`, the screen call for all active objects in the game.<br>  
     The sequence diagram for the **"Space Shooting"** game illustrates the interactions among key components such as the player ship, missiles, enemy ship, screen, asteroid, explosion, and terrain. The game begins with an initialization phase (INIT), where `SCREEN_ENTRY` sets up the game parameters `(GAME_STAGE, GAME_STATE, TIME_TICK)` and initialize all active objects. These parameters are essential for managing the game's progress and ensuring that all subsequent actions are synchronized.<br>
     Following initialization, various game elements are continuously updated by the `TIME_TICK` signal, which acts as the game's synchronization mechanism. Terrain **(TERRAIN)**, asteroids **(ASTEROID)**, and enemy ships **(ENEMY)** all have their positions updated regularly to reflect dynamic changes in the game environment. Player actions such as moving the ship **(PLAYER_MOVE_SHIP)** and firing missiles **(PLAYER_FIRE_MISSILE)** are processed in real-time, updating the respective positions and interactions with other game objects.<br>
     Scoring mechanisms are highlighted through `SCORE_SIG` signals, which are generated when specific events occur, like hitting an enemy or asteroid. The overall flow of events ensures a coordinated gameplay experience, with synchronization achieved through `TIME_TICK` signals. This approach maintains the game's dynamic nature and responsiveness, ensuring that state transitions and actions are processed smoothly to create an engaging and challenging game.<br>
