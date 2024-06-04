@@ -123,7 +123,9 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
 
     Figure 4	Missile State Machine  
 
-    >:memo: **Note:** The Missile state machine does not have and end state due to the dependence nature of it in player ship object. When player ship is crash or destroyed, the whole game reset, both player missile and enemy missile is reset alongside its.
+    >:memo: **Note:** The Missile state machine does not have and end state due to the dependence nature of it in player ship object.  
+    
+    When player ship is crash or destroyed, the whole game reset, both player missile and enemy missile is reset alongside its.
 
 5.	##### Display in “Space Shooting” Game
 
@@ -182,7 +184,9 @@ void sst_explosion_draw()
 }
 ```
 
->:memo: **Note:** Since the display logic for the player ship and the enemy ship is fundamentally similar, presenting both would be redundant. The player ship display code adequately demonstrates the rendering techniques and principles that apply to both types of ships. By focusing on the player ship, the report remains concise and avoids unnecessary repetition, while still providing a comprehensive understanding of the display mechanics used for both ship types in the game.
+>:memo: **Note:** Since the display logic for the player ship and the enemy ship is fundamentally similar, presenting both would be redundant.  
+
+The player ship display code adequately demonstrates the rendering techniques and principles that apply to both types of ships. By focusing on the player ship, the report remains concise and avoids unnecessary repetition, while still providing a comprehensive understanding of the display mechanics used for both ship types in the game.
 
 Listing 6	Player Ship
 
