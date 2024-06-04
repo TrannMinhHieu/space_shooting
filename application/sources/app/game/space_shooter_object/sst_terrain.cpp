@@ -7,6 +7,8 @@ bool is_terrain_out_of_screen(int terrain_index);
 void terrain_generate();
 uint32_t round_to_tens_of_integer(uint32_t shipYCoordinate);
 void terrain_collision_handler(uint8_t terrain_index);
+bool is_terrain_missile_collided(uint8_t terrain_index, uint8_t player_missile_index);
+bool is_terrain_ship_collided(uint8_t terrain_index);
 void terrain_end();
 
 /**
@@ -111,7 +113,7 @@ void sst_terrain_update()
         {
             v_terrain.erase(v_terrain.begin() + i);
             // Send message to update score
-            task_post_common_msg(SST_PLAYER_SHIP_TASK_ID, SST_SCORE_UPDATE_SIG, (uint8_t *) &v_terrain[i].terrain_score, sizeof(v_terrain[i].terrain_score));
+            task_post_common_msg(SST_PLAYER_SHIP_TASK_ID, SST_SCORE_UPDATE_SIG, (uint8_t *)&v_terrain[i].terrain_score, sizeof(v_terrain[i].terrain_score));
             APP_DBG_SIG("Terrain size %d\n", v_terrain.size());
         }
     }
@@ -261,7 +263,7 @@ void terrain_collision_handler(uint8_t terrain_index)
     else
     {
         // Check if the ship and the terrain are colliding
-        if ((int)myShip.ship.y + SIZE_BITMAP_SHIP_Y >= v_terrain[terrain_index].y && (int)myShip.ship.x + SIZE_BITMAP_SHIP_X >= v_terrain[terrain_index].x)
+        if (is_terrain_ship_collided(terrain_index))
         {
             // Make the ship invisible
             myShip.ship.visible = BLACK;
@@ -280,26 +282,54 @@ void terrain_collision_handler(uint8_t terrain_index)
         }
 
         // Check if the missile and the terrain are colliding
-        if ((int)myMissile.y + SIZE_BITMAP_MISSILE_Y >= v_terrain[terrain_index].y && (int)myMissile.x + SIZE_BITMAP_MISSILE_Y - 3 >= v_terrain[terrain_index].x)
+        for (uint8_t i = 0; i < v_myPlayerMissiles.size(); i++)
         {
-            // Make the missile invisible
-            myMissile.visible = BLACK;
-
-            // Spawn an explosion at the missile's position
-            myExplosion.visible = WHITE;
-            myExplosion.x = myMissile.x;
-            myExplosion.y = myMissile.y;
-
-            // Reset the missile's position
-            myMissile.x = 0;
-
-            // Terrain interaction with missile
-            if (v_terrain[terrain_index].y < 50)
+            if (!v_myPlayerMissiles.empty() && is_terrain_missile_collided(terrain_index, i))
             {
-                v_terrain[terrain_index].y += 10;
+                // Spawn an explosion at the missile's position
+                myExplosion.visible = WHITE;
+                myExplosion.x = v_myPlayerMissiles[i].x;
+                myExplosion.y = v_myPlayerMissiles[i].y;
+
+                // Reset the missile's position
+                v_myPlayerMissiles.erase(v_myPlayerMissiles.begin() + i);
+
+                // Terrain interaction with missile
+                if (v_terrain[terrain_index].y < 50)
+                {
+                    v_terrain[terrain_index].y += 10;
+                }
             }
         }
     }
+}
+
+bool is_terrain_missile_collided(uint8_t terrain_index, uint8_t player_missile_index)
+{
+    if ((int)v_myPlayerMissiles[player_missile_index].y + SIZE_BITMAP_MISSILE_Y < v_terrain[terrain_index].y)
+    {
+        return false;
+    }
+
+    if ((int)v_myPlayerMissiles[player_missile_index].x + SIZE_BITMAP_MISSILE_X < v_terrain[terrain_index].x)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool is_terrain_ship_collided(uint8_t terrain_index)
+{
+    if ((int)myShip.ship.y + SIZE_BITMAP_SHIP_Y < v_terrain[terrain_index].y)
+    {
+        return false;
+    }
+
+    if ((int)myShip.ship.x + SIZE_BITMAP_SHIP_X < v_terrain[terrain_index].x)
+    {
+        return false;
+    }
+    return true;
 }
 
 /**

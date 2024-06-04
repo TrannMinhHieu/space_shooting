@@ -68,6 +68,7 @@ void sst_space_shooting_gameplay_render()
         sst_enemy_missile_draw();
         if (sst_game_stage == GAME_STAGE_SHIP_FIGHT)
         {
+            // Display enemy health bar
             APP_DBG_SIG("total health %d\n", total_health);
             view_render.drawRoundRect(10, 55, 110, 5, 2, WHITE);
             view_render.fillRoundRect(10, 55, myEnemyShip.health * (110 / total_health), 5, 2, WHITE);
@@ -82,22 +83,25 @@ void sst_space_shooting_gameplay_render()
             view_render.print(myShip.score);
             view_render.drawLine(0, LCD_HEIGHT + 5, LCD_WIDTH, LCD_HEIGHT + 5, WHITE);
             // view_render.drawLine(0, LCD_HEIGHT-10, 	LCD_WIDTH, LCD_HEIGHT-10,	WHITE);
-
-            // Display enemy health
+            
+            // make missile cooldown effect
             view_render.drawRoundRect(0, 54, SIZE_BITMAP_MISSILE_Y + 20, SIZE_BITMAP_MISSILE_Y + 2, 2, WHITE);
-            view_render.drawBitmap(x_missile_display, 55, sst_bitmap_missile, SIZE_BITMAP_MISSILE_X, SIZE_BITMAP_MISSILE_Y, WHITE);
-            if (myMissile.visible == WHITE)
-            {
-                x_missile_display++;
-                if (x_missile_display == 15)
-                {
-                    x_missile_display = 2;
-                }
-            }
-            else
-            {
-                x_missile_display = 2;
-            }
+            APP_DBG_SIG("arm_missile_interval %d\n", arm_missile_interval);
+            view_render.fillRoundRect(0, 54, (SIZE_BITMAP_MISSILE_Y + 20) / arm_missile_interval, SIZE_BITMAP_MISSILE_Y + 2, 2, WHITE);
+            if(v_myPlayerMissiles.size() < 3){
+            view_render.drawBitmap(x_missile_display, 55, sst_bitmap_missile, SIZE_BITMAP_MISSILE_X, SIZE_BITMAP_MISSILE_Y, WHITE);}
+            // if (myMissile.visible == WHITE)
+            // {
+            //     x_missile_display++;
+            //     if (x_missile_display == 15)
+            //     {
+            //         x_missile_display = 2;
+            //     }
+            // }
+            // else
+            // {
+            //     x_missile_display = 2;
+            // }
         }
         view_render.update();
     }
@@ -272,18 +276,20 @@ void sst_player_ship_draw()
  */
 void sst_player_missile_draw()
 {
-    if (myMissile.visible != WHITE)
+    for (uint8_t i = 0; i < v_myPlayerMissiles.size(); i++)
     {
-        return;
+        if (v_myPlayerMissiles[i].visible != WHITE)
+        {
+            return;
+        }
+        view_render.drawBitmap(v_myPlayerMissiles[i].x,
+                               v_myPlayerMissiles[i].y,
+                               sst_bitmap_missile,
+                               SIZE_BITMAP_MISSILE_X,
+                               SIZE_BITMAP_MISSILE_Y,
+                               WHITE);
     }
-    view_render.drawBitmap(myMissile.x,
-                           myMissile.y,
-                           sst_bitmap_missile,
-                           SIZE_BITMAP_MISSILE_X,
-                           SIZE_BITMAP_MISSILE_Y,
-                           WHITE);
 }
-
 /**
  * Draws the enemy ship on the screen if it is visible.
  *

@@ -22,9 +22,9 @@ void sst_explosion_init()
 
 /**
  * @brief Update the action image of the explosion.
- *
+ * 
  * @param None
- * @return None
+ * @return None 
  */
 void sst_explosion_explode()
 {
@@ -48,7 +48,7 @@ void sst_explosion_explode()
  *
  * @param None
  * @return None
- */
+*/
 void sst_explosion_reset()
 {
     APP_DBG_SIG("Explosion reset\n");
@@ -59,8 +59,8 @@ void sst_explosion_reset()
 
 /**
  * @brief Handler for the explosion task.
- *
- * @param msg
+ * 
+ * @param msg 
  * @return None
  */
 void sst_explosion_handler(ak_msg_t *msg)

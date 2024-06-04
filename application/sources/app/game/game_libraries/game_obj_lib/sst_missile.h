@@ -36,8 +36,10 @@ typedef struct
     uint8_t action_image;
 } sst_Missile_t;
 
+extern uint8_t arm_missile_interval;
+
 //extern sst_Missile_t myEnemyMissile[MAX_NUM_OF_ENEMY_MISSILE];
-extern sst_Missile_t myMissile;
+extern std::vector<sst_Missile_t> v_myPlayerMissiles;
 extern std::vector<sst_Missile_t> v_myEnemyMissiles;
 
 #endif /* __MISSILE_H__ */

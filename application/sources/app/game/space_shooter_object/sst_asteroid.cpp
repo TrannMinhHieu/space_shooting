@@ -3,7 +3,7 @@
 sst_Asteroid_t myAsteroid[NUM_ASTEROIDS];
 
 bool is_asteroid_out_of_screen(uint8_t asteroid_index);
-bool is_asteroid_missile_collided(uint8_t asteroid_index);
+bool is_asteroid_missile_collided(uint8_t asteroid_index, uint8_t missile_index);
 bool is_asteroid_ship_collided(uint8_t asteroid_index);
 
 void sst_asteroid_field_control(uint8_t *asteroid_count);
@@ -112,30 +112,32 @@ void sst_asteroid_hit_handler()
     // Iterate through each asteroid in the myAsteroid array
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
-        // Check if asteroid is visible and hit by missile
-        if (is_asteroid_missile_collided(i))
+        for (uint8_t j = 0; j < v_myPlayerMissiles.size(); j++)
         {
-            APP_DBG_SIG("Missile hit asteroid\n");
-            APP_DBG_SIG("Asteroid no %d hit by missile\n", i);
-            // Update explosion position with asteroid's coordinates
-            myExplosion.visible = WHITE;
-            myExplosion.x = myAsteroid[i].x;
-            myExplosion.y = myAsteroid[i].y;
+            // Check if asteroid is visible and hit by missile
+            if (is_asteroid_missile_collided(i, j))
+            {
+                APP_DBG_SIG("Missile hit asteroid\n");
+                APP_DBG_SIG("Asteroid no %d hit by missile\n", i);
+                // Update explosion position with asteroid's coordinates
+                myExplosion.visible = WHITE;
+                myExplosion.x = myAsteroid[i].x;
+                myExplosion.y = myAsteroid[i].y;
 
-            // Missile visibility is set to black
-            // Reset position of missile
-            myMissile.visible = BLACK;
-            myMissile.x = 0;
+                // Missile visibility is set to black
+                // Reset position of missile
+                v_myPlayerMissiles.erase(v_myPlayerMissiles.begin() + j);
 
-            // Send message with points value data for player ship
-            task_post_common_msg(SST_PLAYER_SHIP_TASK_ID, SST_SCORE_UPDATE_SIG, (uint8_t *)&myAsteroid[i].asteroid_score, sizeof(myAsteroid[i].asteroid_score));
-            // Increase asteroid count
-            asteroid_count++;
-            APP_DBG_SIG("Asteroid count = %d\n", asteroid_count);
+                // Send message with points value data for player ship
+                task_post_common_msg(SST_PLAYER_SHIP_TASK_ID, SST_SCORE_UPDATE_SIG, (uint8_t *)&myAsteroid[i].asteroid_score, sizeof(myAsteroid[i].asteroid_score));
+                // Increase asteroid count
+                asteroid_count++;
+                APP_DBG_SIG("Asteroid count = %d\n", asteroid_count);
 
-            sst_asteroid_field_control(&asteroid_count);
-            // Move the asteroid to a new random position
-            myAsteroid[i].x = (rand() % 39) + 130;
+                sst_asteroid_field_control(&asteroid_count);
+                // Move the asteroid to a new random position
+                myAsteroid[i].x = (rand() % 39) + 130;
+            }
         }
 
         // Check if asteroid is visible and hit by ship
@@ -237,22 +239,22 @@ bool is_asteroid_out_of_screen(uint8_t asteroid_index)
  * @param asteroid_index The index of the asteroid in the `myAsteroid` array.
  * @return True if a collision has occurred, False otherwise.
  */
-bool is_asteroid_missile_collided(uint8_t asteroid_index)
+bool is_asteroid_missile_collided(uint8_t asteroid_index, uint8_t missile_index)
 {
     // Check if the missile or the asteroid is not visible
-    if (myMissile.visible != WHITE || myAsteroid[asteroid_index].visible != WHITE)
+    if (v_myPlayerMissiles[missile_index].visible != WHITE || myAsteroid[asteroid_index].visible != WHITE)
     {
         return false;
     }
 
     // Check if the missile and asteroid have the same y-coordinate
-    if (myMissile.y - MISSILE_Y_OFFSET_FOR_ASTEROID != (uint32_t)myAsteroid[asteroid_index].y)
+    if (v_myPlayerMissiles[missile_index].y - MISSILE_Y_OFFSET_FOR_ASTEROID != (uint32_t)myAsteroid[asteroid_index].y)
     {
         return false;
     }
 
     // Check if the missile and asteroid have the same x-coordinate
-    if (myMissile.x + SIZE_BITMAP_MISSILE_X <= (uint32_t)myAsteroid[asteroid_index].x)
+    if (v_myPlayerMissiles[missile_index].x + SIZE_BITMAP_MISSILE_X <= (uint32_t)myAsteroid[asteroid_index].x)
     {
         return false;
     }

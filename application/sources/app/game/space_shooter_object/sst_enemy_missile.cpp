@@ -4,7 +4,7 @@ sst_Missile_t myEnemyMissile;
 std::vector<sst_Missile_t> v_myEnemyMissiles;
 
 bool is_enemy_missile_out_of_screen(uint8_t enemy_missile_index);
-bool is_enemy_missile_player_missile_collided(uint8_t enemy_missile_index);
+bool is_enemy_missile_player_missile_collided(uint8_t enemy_missile_index, uint8_t player_missile_index);
 bool is_enemy_missile_player_ship_collided(uint8_t enemy_missile_index);
 
 // TODO: Missile fire bug
@@ -19,7 +19,7 @@ bool is_enemy_missile_player_ship_collided(uint8_t enemy_missile_index);
 void sst_enemy_missile_inint()
 {
     // For each element of the v_myEnemyMissiles vector
-    for(uint8_t i = 0; i < myEnemyShip.num_missiles; i++)
+    for (uint8_t i = 0; i < myEnemyShip.num_missiles; i++)
     {
         // Set the properties of the current element
         myEnemyMissile.visible = BLACK;
@@ -48,23 +48,25 @@ void sst_enemy_missile_hit()
     // Iterate over each element of the v_myEnemyMissiles vector
     for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
     {
-        // Check if there is a collision between the enemy missile and the player's missile
-        if (is_enemy_missile_player_missile_collided(i))
+        for (uint8_t j = 0; j < v_myPlayerMissiles.size(); j++)
         {
-            APP_DBG_SIG("Enemy missile hit missile\n");
+            // Check if there is a collision between the enemy missile and the player's missile
+            if (is_enemy_missile_player_missile_collided(i, j))
+            {
+                APP_DBG_SIG("Enemy missile hit missile\n");
 
-            // Set the visibility of the explosion to white and update its position to the enemy missile's position
-            myExplosion.visible = WHITE;
-            myExplosion.x = v_myEnemyMissiles[i].x;
-            myExplosion.y = v_myEnemyMissiles[i].y;
+                // Set the visibility of the explosion to white and update its position to the enemy missile's position
+                myExplosion.visible = WHITE;
+                myExplosion.x = v_myEnemyMissiles[i].x;
+                myExplosion.y = v_myEnemyMissiles[i].y;
 
-            // Set the visibility of the enemy missile and the player's missile to black
-            v_myEnemyMissiles[i].visible = BLACK;
-            myMissile.visible = BLACK;
+                // Set the visibility of the enemy missile and the player's missile to black
+                v_myEnemyMissiles[i].visible = BLACK;
+                v_myPlayerMissiles.erase(v_myPlayerMissiles.begin() + j);
 
-            // Reset the position of the player's missile and update the enemy missile's position to the enemy ship's position
-            myMissile.x = 0;
-            v_myEnemyMissiles[i].x = myEnemyShip.ship.x;
+                // Reset the position of the player's missile and update the enemy missile's position to the enemy ship's position
+                v_myEnemyMissiles[i].x = myEnemyShip.ship.x;
+            }
         }
 
         // Check if there is a collision between the enemy missile and the player's ship
@@ -216,21 +218,21 @@ bool is_enemy_missile_out_of_screen(uint8_t enemy_missile_index)
  *
  * @throws None
  */
-bool is_enemy_missile_player_missile_collided(uint8_t enemy_missile_index)
+bool is_enemy_missile_player_missile_collided(uint8_t enemy_missile_index, uint8_t player_missile_index)
 {
     // Check if myMissile and myEnemyMissile are both visible and at the same y position
-    if (myMissile.visible != WHITE || v_myEnemyMissiles[enemy_missile_index].visible != WHITE)
+    if (v_myPlayerMissiles[player_missile_index].visible != WHITE || v_myEnemyMissiles[enemy_missile_index].visible != WHITE)
     {
         return false;
     };
     // Check if the y positions of the player missile and the enemy missile with offset overlap
-    if (myMissile.y != v_myEnemyMissiles[enemy_missile_index].y)
+    if (v_myPlayerMissiles[player_missile_index].y != v_myEnemyMissiles[enemy_missile_index].y)
     {
         return false;
     };
 
     // Check if the x positions of the missiles overlap
-    if (myMissile.x + SIZE_BITMAP_MISSILE_X <= v_myEnemyMissiles[enemy_missile_index].x)
+    if (v_myPlayerMissiles[player_missile_index].x + SIZE_BITMAP_MISSILE_X <= v_myEnemyMissiles[enemy_missile_index].x)
     {
         return false;
     };

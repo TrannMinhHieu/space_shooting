@@ -55,7 +55,6 @@ void sst_player_ship_flight()
             prevScore = 0;
         }
         scoreCounter = myShip.score - prevScore;
-        APP_DBG_SIG("Score counter %d\n", scoreCounter);
     }
 }
 
