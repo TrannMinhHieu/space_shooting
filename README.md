@@ -109,13 +109,88 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
     ![](/img/Asteroid_state_machine.png)  
     *Figure 2 Asteroid state machine*  
 
-    Upon enter the initialization state, the Asteroid state machine transit to `FLIGHT` state. Its transit to itself with each `TIME_TICK`. The Asteroid transit to `HIT HANDLER` state when a hit occurred. If it is a ship hit, transit to `EXPLODE` and then to end state, else the state machine repositions an asteroid and transit back to `FLIGHT` state. If the Asteroid count traverse a threshold, it transits to `FIELD CONTROL` and reset the asteroid object.
+    Upon enter the initialization state, the Asteroid state machine transit to `FLIGHT` state. Its transit to itself with each `TIME_TICK`. The Asteroid transit to `HIT HANDLER` state when a hit occurred. If it is a ship hit, transit to `EXPLODE` and then to end state, else the state machine repositions an asteroid and transit back to `FLIGHT` state. If the Asteroid count traverse a threshold, it transits to `FIELD CONTROL` and reset the asteroid object.<br>  
+    Asteroid task handler to handle all event sent to asteroid active object. 
+    ```
+    void sst_asteroid_handler(ak_msg_t *msg)
+    {
+        switch (msg->sig)
+        {
+        case SST_ASTEROID_INIT_SIG:
+            sst_asteroid_init();
+            break;
+        case SST_ASTEROID_SPAWN_SIG:
+            sst_asteroid_spawn();
+            break;
+        case SST_ASTEROID_FLIGHT_SIG:
+            sst_asteroid_flight();
+            sst_asteroid_hit_handler();
+            break;
+        case SST_ASTEROID_RESET_SIG:
+            sst_asteroid_reset();
+            break;
+        default:
+            // Do nothing for unknown signals
+            break;
+        }
+    }
+    ```
+  
+    Define active object **"Asteroid"**
+    ```
+    typedef struct
+    {
+        bool visible;
+        int32_t x, y;
+        uint8_t action_image;
+        const uint8_t asteroid_score = 10;
+    } sst_Asteroid_t;
+    ```
 
     3.	##### Terrain
     ![](/img/Terrain_state_machine.png)  
     *Figure 3 Terrain state machine*  
 
-    Similar to asteroid, after the initialization state, the Terrain state machine remain in `TERRAIN UPDATE` state. The *Terrain generate* signal transit the state machine to `TERRAIN GENERATE` state. When the terrain crosses a terrain max length, it transits in to terrain end state and then to end state.
+    Similar to asteroid, after the initialization state, the Terrain state machine remain in `TERRAIN UPDATE` state. The *Terrain generate* signal transit the state machine to `TERRAIN GENERATE` state. When the terrain crosses a terrain max length, it transits in to terrain end state and then to end state.<br>  
+    Terrain task handler to handle all event sent to terrain active object.
+    ```
+    void sst_terrain_handler(ak_msg_t *msg)
+    {
+        switch (msg->sig)
+        {
+        case SST_TERRAIN_INIT_SIG:
+            sst_terrain_init();
+            break;
+        case SST_TERRAIN_UPDATE_SIG:
+            sst_terrain_update();
+            break;
+        case SST_TERRAIN_RESET_SIG:
+            sst_terrain_reset();
+            break;
+        default:
+            break;
+        }
+    }
+    ```
+    Define terrain coordinate
+    ```
+    class TerrainCoordinates
+    {
+    public:
+        int x;
+        int y;
+        static const int terrain_score;
+
+        TerrainCoordinates();
+        TerrainCoordinates(int x, int y);
+
+        void terrainMover();
+    };
+    ```
+    Define **"Terrain"** active object
+    ```
+    extern std::vector<TerrainCoordinates> v_terrain;
+    ```
 
     4.	##### Player ship and enemy ship
     ![](/img/Player_state_machine.png)  
@@ -124,9 +199,106 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
     ![](/img/Enemy_state_machine.png)  
     *Figure 4.2	Enemy State Machine*  
 
-    While the player and enemy state machines in the game share similarities, they have distinct characteristics. The player state machine typically remains in the `FLIGHT` state, processing player inputs to perform various actions. If the player is hit by an enemy missile, an asteroid, or crashes into terrain, the state machine transitions to the `EXPLODE` state and then to the end state, resetting all other active objects.  
+    While the player and enemy state machines in the game share similarities, they have distinct characteristics. The player state machine typically remains in the `FLIGHT` state, processing player inputs to perform various actions. If the player is hit by an enemy missile, an asteroid, or crashes into terrain, the state machine transitions to the `EXPLODE` state and then to the end state, resetting all other active objects.<br>  
+    Define base ship type
+    ```
+    typedef struct 
+    {
+        bool visible;
+        uint32_t x, y;
+        uint8_t action_image;
+    } sst_Ship_t;
+    ```
+    **Player** ship and **Enemy** ship inherit the `sst_Ship_t` type 
+    ```
+    typedef struct
+    {
+        sst_Ship_t ship;
+        uint8_t fly_speed;
+        uint32_t score;
+    } sst_PlayerShip_t;
+    ```
+    ```
+    typedef struct
+    {
+        sst_Ship_t ship;
+        uint8_t health;
+        uint8_t num_missiles;
+        const uint8_t enemy_ship_score = 100;
+    } sst_EnemyShip_t;
+    ```
 
-    In contrast, the enemy state machine only becomes active when the game reaches the `ENEMY` stage. Like the player, the enemy spends most of its time in the `FLIGHT` state, performing actions automatically. When hit by a player's missile, it transitions to the `EXPLODE` state and then to the `HEALTH CONTROL` state. If the enemy's health is greater than 0, it returns to the `FLIGHT` state; otherwise, it resets the enemy active object and ends.
+    Player ship task hanlder to handle all task sent to player ship
+    ```
+    void sst_player_ship_handler(ak_msg_t* msg)
+    {
+        switch (msg->sig)
+        {
+        case SST_SHIP_INIT_SIG:
+            sst_player_ship_init();
+            break;
+        case SST_SHIP_FLIGHT_SIG:
+            sst_player_ship_flight();
+            break;
+        case SST_SHIP_FIRE_SIG:
+            sst_player_ship_fire();
+            break;
+        case SST_SHIP_MOVE_UP_SIG:
+            sst_player_ship_move_up();
+            break;
+        case SST_SHIP_MOVE_DOWN_SIG:
+            sst_player_ship_move_down();
+            break;
+        case SST_SCORE_UPDATE_SIG:
+        {
+            // Handle point values data sent by asteroid, enemy ship, and terrain
+            uint8_t* inData = get_data_common_msg(msg);
+            uint32_t scoreData = *(uint32_t *)inData;
+            myShip.score += scoreData;  
+            APP_DBG_SIG("Ship score %d\n", myShip.score);
+            break;
+        }
+        case SST_SHIP_RESET_SIG:
+            sst_player_ship_reset();
+            break;
+        default:
+            break;
+        }
+    }
+    ```
+    > :memo: **Note:** To simplify the function to update accumulated score, the score update method will be implemented directly in the task handler, in `SST_SCORE_UPDATE_SIG`, thus will take advantage of the message delivering system
+
+    In contrast, the enemy state machine only becomes active when the game reaches the **ENEMY** stage. Like the player, the enemy spends most of its time in the `FLIGHT` state, performing actions automatically. When hit by a player's missile, it transitions to the `EXPLODE` state and then to the `HEALTH CONTROL` state. If the enemy's health is greater than 0, it returns to the `FLIGHT` state; otherwise, it resets the enemy active object and ends.   
+    Enemy ship task handler
+    ```
+    void sst_enemy_ship_handler(ak_msg_t *msg)
+    {
+        switch (msg->sig)
+        {
+        case SST_ENEMY_SHIP_INIT_SIG:
+            sst_enemy_ship_init();
+            break;
+        case SST_ENEMY_SHIP_TAKEOFF_SIG:
+            sst_enemy_ship_takeoff();
+            break;
+        case SST_ENEMY_SHIP_FLIGHT_SIG:
+            sst_enemy_ship_flight();
+            sst_enemy_ship_health_control();
+            break;
+        case SST_ENEMY_SHIP_MOVE_SIG:
+            sst_enemy_ship_move();
+            break;
+        case SST_ENEMY_SHIP_FIRE_SIG:
+            sst_enemy_ship_fire();
+            break;
+        case SST_ENEMY_SHIP_RESET_SIG:
+            sst_enemy_ship_reset();
+            break;
+        default:
+            break;
+        }
+    }
+    ```
 
     5.	##### Player missile and enemy missile
     Given the high similarity between the player missile and enemy missile state machines, detailing both would be redundant. The player missile state machine sufficiently illustrates the core functionality and behavior that apply to both entities. By focusing on one, the report remains concise and clear, while still effectively conveying the essential mechanics that govern missile behavior in the game.<br>  
@@ -135,16 +307,41 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
 
     >:memo: **Note:** The Missile state machine does not have and end state due to the dependence nature of it in player ship object.  
     
+    Player missile task handler
+    ```
+    void sst_player_missile_handler(ak_msg_t *msg)
+    {
+        switch (msg->sig)
+        {
+        case SST_MISSILE_INIT_SIG:
+            sst_player_missile_inint();
+            break;
+        case SST_MISSILE_FIRE_SIG:
+            sst_player_missile_fired();
+            break;
+        case SST_MISSILE_FLIGHT_SIG:
+            sst_player_missile_flight();
+            sst_player_missile_hit();
+            break;
+        case SST_MISSILE_RESET_SIG:
+            sst_player_missile_reset();
+            break;
+        default:
+            break;
+        }
+    }
+    ```
+
+    >:memo: **Note:** the `sst_enemy_missile_handler` is the same as the  `sst_player_missile_handler`
+
     When player ship is crash or destroyed, the whole game reset, both player missile and enemy missile is reset alongside its.
 
 5.	##### Display in “Space Shooting” Game
 
     The **"Space Shooting"** game is designed for a 128x64 pixel black and white LCD screen, focusing on clarity and functionality. The main gameplay area features simplified, pixelated graphics for the player ship, enemies, asteroids, and terrain, balancing frame rates with clear visuals.  
-    The game uses bitmaps—grid-based images defining each pixel's color and position—to precisely control graphics, ensuring detailed and recognizable shapes despite the small screen resolution. Animation is achieved by sequencing multiple images stored in a variable called "action_image," creating smooth animations for player and enemy movements, explosions, and other actions. This method enhances visual engagement and overall gameplay.<br>  
-    **Listings 4 to 7 show how each object is displayed on the screen.**
-    <br>
-**Listing 4 Asteroid display**
-
+    The game uses bitmaps—grid-based images defining each pixel's color and position—to precisely control graphics, ensuring detailed and recognizable shapes despite the small screen resolution. Animation is achieved by sequencing multiple images stored in a variable called `action_image`, creating smooth animations for player and enemy movements, explosions, and other actions. This method enhances visual engagement and overall gameplay.<br>  
+    **Listings 4 to 7 show how each object is displayed on the screen.**<br>   
+**Listing 4 Asteroid display**   
 ```
 void sst_asteroid_draw()
 {
@@ -240,4 +437,60 @@ void sst_player_missile_draw()
 }
 ```
 
-The pointer is used to store all the bitmap for an object and only pass their address as an argument. The view_render.drawBitmap() take objects x and y position, the bitmap of the object, size of the bitmap, and color (BLACK and WHITE) and draw the object on the LCD screen at x and y position.
+The pointer is used to store all the bitmap for an object and only pass their address as an argument. The view_render.drawBitmap() take objects x and y position, the bitmap of the object, size of the bitmap, and color (BLACK and WHITE) and draw the object on the LCD screen at x and y position.   
+
+The other infomation such as missile reload time, missile shootable, and enemy health bar will be display accordingly to the stage that player currently in.   
+
+**Asteroid effect:**
+```
+if (myExplosion.visible == WHITE)
+    {
+        view_render.setCursor(myExplosion.x - 20, myExplosion.y);
+        if (sst_game_stage == GAME_STAGE_ASTEROID_FEILD)
+        {
+            view_render.print("+10");
+        }
+        ...
+    }
+```
+
+**Missile effects**
+```
+// Missile info bar
+view_render.drawRoundRect(0, 54, SIZE_BITMAP_MISSILE_Y + 20, SIZE_BITMAP_MISSILE_Y + 2 2, WHITE);
+
+// Missile cooldown effect
+view_render.fillRoundRect(0, 54, (SIZE_BITMAP_MISSILE_Y + 20) / arm_missile_interval, SIZE_BITMAP_MISSILE_Y + 2, 2, WHITE);
+
+// Display missile image when shootable
+if(v_myPlayerMissiles.size() < 3) 
+    {
+        view_render.drawBitmap(x_missile_display, 55, sst_bitmap_missile, SIZE_BITMAP_MISSILE_X, SIZE_BITMAP_MISSILE_Y, WHITE);
+    }
+```
+
+Display **Enemy info:** 
+
+Health bar
+ : Sreduce when hit
+```
+view_render.drawRoundRect(10, 55, 110, 5, 2, WHITE);
+view_render.fillRoundRect(10, 55, myEnemyShip.health * (110 / total_health), 5, 2, WHITE);
+```
+
+Score effect
+ : `+100` when enemy is destroyed
+
+```
+if (myExplosion.visible == WHITE)
+    {
+        ...
+        else if (sst_game_stage == GAME_STAGE_SHIP_FIGHT)
+        {
+            if (myEnemyShip.ship.visible != WHITE)
+            {
+                view_render.print("+100");
+            }
+        }
+    }
+```
