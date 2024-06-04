@@ -247,7 +247,7 @@ void sst_explosion_draw()
     if (myExplosion.action_image >= 1 && myExplosion.action_image <= 3)
     {
         view_render.drawBitmap(myExplosion.x, myExplosion.y, explosionBitmaps[myExplosion.action_image],
-                               SIZE_BITMAP_EXPLOSION_2_X, SIZE_BITMAP_EXPLOSION_2_Y, WHITE);
+                               SIZE_BITMAP_EXPLOSION_X, SIZE_BITMAP_EXPLOSION_Y, WHITE);
     }
 }
 

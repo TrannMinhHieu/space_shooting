@@ -15,10 +15,8 @@
 
 #include "sst_game_screen.h"
 
-#define SIZE_BITMAP_EXPLOSION_1_X     (15)
-#define SIZE_BITMAP_EXPLOSION_1_Y     (15)
-#define SIZE_BITMAP_EXPLOSION_2_X     (10)
-#define SIZE_BITMAP_EXPLOSION_2_Y     (10)
+#define SIZE_BITMAP_EXPLOSION_X     (15)
+#define SIZE_BITMAP_EXPLOSION_Y     (15)
 
 typedef struct 
 {

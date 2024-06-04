@@ -1,5 +1,7 @@
 # “SPACE SHOOTING” GAME ON AK EMBEDDED BASE KIT
 
+---
+
 #### Table of Contents
 
 - [**Introduction**](#introduction)
@@ -18,6 +20,7 @@
 - [**Display in “Space Shooting” Game**](#display-in-space-shooting-game)
 - [**Reference**](#reference)
 
+---
 
 ### Introduction
 
@@ -27,7 +30,7 @@ AK Embedded Base Kit is an evaluation kit for advanced embedded software learner
 - The KIT integrates 1.3" Oled LCD, 3 push buttons, and 1 Buzzers that play music, to learn the event-driven system through hands-on game machine design.
 - The KIT also integrates RS485, NRF24L01+, and Flash up to 32MB, suitable for prototyping practical applications in embedded systems such as: wired communication, wireless wireless, data logger storage applications,...
 
-[<img src="hardware/images/ak-embedded-base-kit-stm32l151-lap-trinh-nhung-vi-dieu-khien.jpg" width="480"/>](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu)
+[<img src="hardware/images/ak-embedded-base-kit-stm32l151-lap-trinh-nhung-vi-dieu-khien.jpg" width="480"/>](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu)  
 *Figure 1: AK Embedded Base Kit*<br>  
 **“Space Shooting”** is an AK Embedded Base Kit using state machine and event-driven programming to operate. The report will document the game play, active objects, and how each active object function.
 
@@ -368,12 +371,12 @@ The game uses bitmaps—grid-based images defining each pixel's color and positi
 
 The bitmap of active objects is design in [pixilart](https://www.pixilart.com/) and convert to hex code [here](https://marlinfw.org/tools/u8glib/converter.html)  
 
-***Listing 4:***
+***Listing 4: Objects image***
 
-|lorem|Image|Name in source|
+|Object name|Image|Name in source|
 |-|:-:|-|
-|Asteroid|![]()|`sst_bitmap_asteroid_1`,<br>`sst_bitmap_asteroid_2`,<br>`sst_bitmap_asteroid_3`|
-|Explosion|![]()|`sst_bitmap_explosion_1`,<br>`sst_bitmap_explosion_2`,<br>`sst_bitmap_explosion_3`|
+|Asteroid|![](/img/active_obj_image/Asteroid-frame-0.png)<br>![](/img/active_obj_image/Asteroid-frame-1.png)<br>![](/img/active_obj_image/Asteroid-frame-2.png)|`sst_bitmap_asteroid_1`,<br>`sst_bitmap_asteroid_2`,<br>`sst_bitmap_asteroid_3`|
+|Explosion|![](/img/active_obj_image/Explosion-frame-0.png)<br>![](/img/active_obj_image/Explosion-frame-1.png)<br>![](/img/active_obj_image/Explosion-frame-2.png)|`sst_bitmap_explosion_1`,<br>`sst_bitmap_explosion_2`,<br>`sst_bitmap_explosion_3`|
 |Missile|![Player Missile](/img/active_obj_image/missile.png)<br>![Enemy Missile](/img/active_obj_image/missile-enemy.png)|`sst_bitmap_missile`,<br>`sst_bitmap_missile_enemy`|
 |Ship|![Ship](/img/active_obj_image/ship1-frame1.png)<br>![Ship](/img/active_obj_image/ship1-frame2.png)<br>![Ship](/img/active_obj_image/ship1-frame3.png)|`sst_bitmap_space_ship_1`,<br>`sst_bitmap_space_ship_2`,<br>`sst_bitmap_space_ship_3`|
 
