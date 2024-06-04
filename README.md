@@ -117,6 +117,7 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
     4.	##### Player ship and enemy ship
     ![](/img/Player_state_machine.png)  
     *Figure 3.1	Player State Machine*  
+    <br>
     ![](/img/Enemy_state_machine.png)  
     *Figure 3.2	Enemy State Machine*  
 
