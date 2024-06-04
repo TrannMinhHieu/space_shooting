@@ -121,13 +121,13 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
     ![](/img/Enemy_state_machine.png)  
     *Figure 3.2	Enemy State Machine*  
 
-    While the player and enemy state machines in the game share similarities, they have distinct characteristics. The player state machine typically remains in the `FLIGHT` state, processing player inputs to perform various actions. If the player is hit by an enemy missile, an asteroid, or crashes into terrain, the state machine transitions to the `EXPLODE` state and then to the end state, resetting all other active objects.  
+    While the player and enemy state machines in the game share similarities, they have distinct characteristics. The player state machine typically remains in the `FLIGHT` state, processing player inputs to perform various actions. If the player is hit by an enemy missile, an asteroid, or crashes into terrain, the state machine transitions to the `EXPLODE` state and then to the end state, resetting all other active objects.<br>  
     In contrast, the enemy state machine only becomes active when the game reaches the `ENEMY` stage. Like the player, the enemy spends most of its time in the `FLIGHT` state, performing actions automatically. When hit by a player's missile, it transitions to the `EXPLODE` state and then to the `HEALTH CONTROL` state. If the enemy's health is greater than 0, it returns to the `FLIGHT` state; otherwise, it resets the enemy active object and ends.
 
     5.	##### Player missile and enemy missile
     Given the high similarity between the player missile and enemy missile state machines, detailing both would be redundant. The player missile state machine sufficiently illustrates the core functionality and behavior that apply to both entities. By focusing on one, the report remains concise and clear, while still effectively conveying the essential mechanics that govern missile behavior in the game.  
-
-    Figure 4	Missile State Machine  
+    ![](/img/Missile_state_machine.png)  
+    *Figure 4	Missile State Machine*  
 
     >:memo: **Note:** The Missile state machine does not have and end state due to the dependence nature of it in player ship object.  
     
