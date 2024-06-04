@@ -31,7 +31,7 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
 
 ---
 
-# “SPACE SHOOTING” GAME ON AK EMBEDDED BASE KIT REPORT
+# “SPACE SHOOTING” GAME ON AK EMBEDDED BASE KIT
 
 <style>
     body {
@@ -50,6 +50,7 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
 3.	##### How “Space Shooting” is played
     The player objective is to navigate a spaceship through an endless void space with asteroids, enemy space ship and occasionally the player have to avoid terrain as their space ship is fly near a planet. The basic input for the space ship is ***Up*** and ***Down*** button to control the ***Up*** and ***Down*** flight path of the ship. The Mode button is to fire a missile from the ship. The score is calculated for the number of asteroids destroyed, enemy ships destroyed and the terrain avoided.<br>
     The “Space Shooting” start with 3 options: **“START”**, **“HIGH SCORE”**, and **“EXIT”**. **“START”** option is to start the main game sequence. **“HIGH SCORE”** is to view top 3 highest score achieved, but the score is automatically erased when the game is reset. **“EXIT”** option is to exit the game, display a screen saver. The screen saver is also display after a period of time when there are no inputs.<br>
+    
     1.  **Game active objects**
 
     | Active Object |	Name | Description |
@@ -61,11 +62,11 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
     |Explosion      |`myExplosion`|	Animation when a missile collided with an active object
     |Missiles       |`myMissile`<br>`myEnemyMissile`|Player missile fly with a fixed speed<br>Enemy missile depends on player ship fly speed
 
-    2.	**Inputs**
+    2.	**Inputs**  
     Player ship can be control with **“UP”** button to move up. **“DOWN”** button to move down, and **“MODE”** button to fire a missile. There can be only one player missile in flight at a time, therefore, pressing **“MODE”** button when a missile is already in flight has no effect.<br>
     In the terrain stage, player ship is automated descend with 1 pixel per tick, stop at the bottom of the screen.
 
-    3.	**Points calculation**
+    3.	**Points calculation**  
     Each time an asteroid is destroyed, it will send 10 points via a message to player’s ship. Destroy an enemy ship will gain 100 points. Each node of the terrain the player ship passed through gain 5 points.<br>
     Every time player gained 200 points, player’s ship will increase it fly speed by one, making the game harder, and the fly speed maxed out at 8.<br>
     The game is over when player’s ship is collided with an asteroid, enemy’s missile, or a terrain node. All active objects will be reset and points accumulated will be store in high-score board.
