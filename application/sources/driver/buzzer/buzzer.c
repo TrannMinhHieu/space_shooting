@@ -131,7 +131,7 @@ void BUZZER_Disable(void) {
 //   tones - pointer to tones array
 void BUZZER_PlayTones(const Tone_TypeDef * tones)
 {
-	if (0)	{
+	if (1)	{
 		_tones = tones;
 		_tones_playing = true;
 		BUZZER_Enable(_tones->frequency, _tones->duration);

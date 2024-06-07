@@ -38,6 +38,7 @@ void sst_explosion_explode()
     // If the action image reaches 4, reset it and make the explosion invisible
     if (myExplosion.action_image == 4)
     {
+        BUZZER_PlayTones(explosion_sound);
         myExplosion.action_image = 1;
         myExplosion.visible = BLACK;
     }

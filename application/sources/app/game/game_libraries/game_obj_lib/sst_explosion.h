@@ -13,6 +13,8 @@
 #include "task_list.h"
 #include "task_display.h"
 
+#include "buzzer.h"
+
 #include "sst_game_screen.h"
 
 #define SIZE_BITMAP_EXPLOSION_X     (15)

@@ -39,6 +39,21 @@ static const Tone_TypeDef tones_3beep[] = {
 	{   0, 0}
 };
 
+static const Tone_TypeDef explosion_sound[] = {
+	{3000,3},
+	{4500,6},
+	{   0,0}
+};
+
+static const Tone_TypeDef end_game_sound[] = {
+	{4000, 3},
+	{   0,10},
+	{1000, 6},
+	{   0,10},
+	{4000, 3},
+	{   0, 0}
+};
+
 // "Super Mario bros." =)
 static const Tone_TypeDef tones_SMB[] = {
 	{2637,18}, // E7 x2

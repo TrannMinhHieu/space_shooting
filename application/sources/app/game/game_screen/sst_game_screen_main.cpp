@@ -166,6 +166,7 @@ void sst_game_play_handler(ak_msg_t *msg)
         task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_RESET_SIG);
 
         timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_GAME_HIGHSCORE, GAMEPLAY_TIME_EXIT_INTERVAL, TIMER_ONE_SHOT);
+        BUZZER_PlayTones(end_game_sound);
         sst_game_state = GAME_OVER;
         break;
 
