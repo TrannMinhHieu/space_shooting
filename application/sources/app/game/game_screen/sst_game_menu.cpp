@@ -118,6 +118,7 @@ void sst_game_menu_handler(ak_msg_t* msg)
         view_render.initialize();
         view_render_display_on();
         sst_menu_cursor();
+        BUZZER_PlayTones(tokyo_drift);
         timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE, AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
     }
     break;

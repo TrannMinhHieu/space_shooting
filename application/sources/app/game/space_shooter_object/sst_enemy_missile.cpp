@@ -63,9 +63,6 @@ void sst_enemy_missile_hit()
                 // Set the visibility of the enemy missile and the player's missile to black
                 v_myEnemyMissiles[i].visible = BLACK;
                 v_myPlayerMissiles.erase(v_myPlayerMissiles.begin() + j);
-
-                // Reset the position of the player's missile and update the enemy missile's position to the enemy ship's position
-                v_myEnemyMissiles[i].x = myEnemyShip.ship.x;
             }
         }
 

@@ -38,7 +38,7 @@ void sst_space_shooting_gameplay_render()
 
 #define TEXT_SCORE_X (97)
 #define TEXT_SCORE_Y (TEXT_TITLE_Y_2)
-    static uint8_t x_missile_display = 2;
+    static uint8_t x_missile_display = 7;
     if (sst_game_state == GAME_PLAY)
     {
         sst_asteroid_draw();

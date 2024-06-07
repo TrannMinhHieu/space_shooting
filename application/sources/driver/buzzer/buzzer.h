@@ -9,6 +9,8 @@ extern "C"
 #include <stdint.h>
 #include "io_cfg.h"
 
+#include "pitches.h"
+
 // Single tone definition
 typedef struct {
 	uint16_t frequency;
@@ -169,6 +171,88 @@ static const Tone_TypeDef tones_merryChrismast[] = {
 	{3136, 9}, // G7
 	{   0, 0}  // <-- tones end
 };
+// Star War theme
+static const Tone_TypeDef star_war[] = {
+    {NOTE_AS4, 8}, {NOTE_AS4, 8}, {NOTE_AS4, 8},
+    {NOTE_F5, 2}, {NOTE_C6, 2},
+    {NOTE_AS5, 8}, {NOTE_A5, 8}, {NOTE_G5, 8}, {NOTE_F6, 2}, {NOTE_C6, 4},
+    {NOTE_AS5, 8}, {NOTE_A5, 8}, {NOTE_G5, 8}, {NOTE_F6, 2}, {NOTE_C6, 4},
+    {NOTE_AS5, 8}, {NOTE_A5, 8}, {NOTE_AS5, 8}, {NOTE_G5, 2}, {NOTE_C5, 8}, {NOTE_C5, 8}, {NOTE_C5, 8},
+    {NOTE_F5, 2}, {NOTE_C6, 2},
+    {NOTE_AS5, 8}, {NOTE_A5, 8}, {NOTE_G5, 8}, {NOTE_F6, 2}, {NOTE_C6, 4},
+
+    {NOTE_AS5, 8}, {NOTE_A5, 8}, {NOTE_G5, 8}, {NOTE_F6, 2}, {NOTE_C6, 4},
+    {NOTE_AS5, 8}, {NOTE_A5, 8}, {NOTE_AS5, 8}, {NOTE_G5, 2}, {NOTE_C5, 8}, {NOTE_C5, 16},
+    {NOTE_D5, 4}, {NOTE_D5, 8}, {NOTE_AS5, 8}, {NOTE_A5, 8}, {NOTE_G5, 8}, {NOTE_F5, 8},
+    {NOTE_F5, 8}, {NOTE_G5, 8}, {NOTE_A5, 8}, {NOTE_G5, 4}, {NOTE_D5, 8}, {NOTE_E5, 4}, {NOTE_C5, 8}, {NOTE_C5, 16},
+    {NOTE_D5, 4}, {NOTE_D5, 8}, {NOTE_AS5, 8}, {NOTE_A5, 8}, {NOTE_G5, 8}, {NOTE_F5, 8},
+    
+    {NOTE_C6, 8}, {NOTE_G5, 16}, {NOTE_G5, 2}, {REST, 8}, {NOTE_C5, 8},
+    {NOTE_D5, 4}, {NOTE_D5, 8}, {NOTE_AS5, 8}, {NOTE_A5, 8}, {NOTE_G5, 8}, {NOTE_F5, 8},
+    {NOTE_F5, 8}, {NOTE_G5, 8}, {NOTE_A5, 8}, {NOTE_G5, 4}, {NOTE_D5, 8}, {NOTE_E5, 4}, {NOTE_C6, 8}, {NOTE_C6, 16},
+    {NOTE_F6, 4}, {NOTE_DS6, 8}, {NOTE_CS6, 4}, {NOTE_C6, 8}, {NOTE_AS5, 4}, {NOTE_GS5, 8}, {NOTE_G5, 4}, {NOTE_F5, 8},
+    {NOTE_C6, 1}
+};
+// Harry Potter theme
+static const Tone_TypeDef harry_potter[] = {
+    {REST, 2}, {NOTE_D4, 4},
+    {NOTE_G4, 4}, {NOTE_AS4, 8}, {NOTE_A4, 4},
+    {NOTE_G4, 2}, {NOTE_D5, 4},
+    {NOTE_C5, 2},
+    {NOTE_A4, 2},
+    {NOTE_G4, 4}, {NOTE_AS4, 8}, {NOTE_A4, 4},
+    {NOTE_F4, 2}, {NOTE_GS4, 4},
+    {NOTE_D4, 1},
+    {NOTE_D4, 4},
+    
+    {NOTE_G4, 4}, {NOTE_AS4, 8}, {NOTE_A4, 4},
+    {NOTE_G4, 2}, {NOTE_D5, 4},
+    {NOTE_F5, 2}, {NOTE_E5, 4},
+    {NOTE_DS5, 2}, {NOTE_B4, 4},
+    {NOTE_DS5, 4}, {NOTE_D5, 8}, {NOTE_CS5, 4},
+    {NOTE_CS4, 2}, {NOTE_B4, 4},
+    {NOTE_G4, 1},
+    {NOTE_AS4, 4},
+     
+    {NOTE_D5, 2}, {NOTE_AS4, 4},
+    {NOTE_D5, 2}, {NOTE_AS4, 4},
+    {NOTE_DS5, 2}, {NOTE_D5, 4},
+    {NOTE_CS5, 2}, {NOTE_A4, 4},
+    {NOTE_AS4, 4}, {NOTE_D5, 8}, {NOTE_CS5, 4},
+    {NOTE_CS4, 2}, {NOTE_D4, 4},
+    {NOTE_D5, 1},
+    {REST, 4}, {NOTE_AS4, 4},
+  
+    {NOTE_D5, 2}, {NOTE_AS4, 4},
+    {NOTE_D5, 2}, {NOTE_AS4, 4},
+    {NOTE_F5, 2}, {NOTE_E5, 4},
+    {NOTE_DS5, 2}, {NOTE_B4, 4},
+    {NOTE_DS5, 4}, {NOTE_D5, 8}, {NOTE_CS5, 4},
+    {NOTE_CS4, 2}, {NOTE_AS4, 4},
+    {NOTE_G4, 1}
+};
+// Tokyo Drift theme
+static const Tone_TypeDef tokyo_drift[] = {
+	{NOTE_AS4, 4}, {REST, 4}, {NOTE_AS4, 4}, {REST, 4}, {NOTE_AS4, 4}, {REST, 4}, {NOTE_AS4, 4}, {REST, 4},
+    {NOTE_AS4, 3}, {NOTE_B4, 3}, {NOTE_DS5, 4},
+    {NOTE_AS4, 4}, {REST, 4}, {NOTE_AS4, 4}, {REST, 4},
+    {NOTE_AS4, 3}, {NOTE_B4, 3}, {NOTE_DS5, 4},
+    {NOTE_AS4, 4}, {REST, 4}, {NOTE_AS4, 4}, {REST, 4},
+    {NOTE_AS4, 3}, {NOTE_B4, 3}, {NOTE_DS5, 4},
+    {NOTE_AS4, 4}, {REST, 4}, {NOTE_AS4, 4}, {REST, 4},
+    {NOTE_AS4, 3}, {NOTE_B4, 3}, {NOTE_DS5, 4},
+    {NOTE_F5, 4}, {REST, 4}, {NOTE_F5, 4}, {REST, 4},
+    {NOTE_GS5, 3}, {NOTE_FS5, 3}, {NOTE_F5, 4},
+    {NOTE_AS4, 4}, {REST, 4}, {NOTE_AS4, 4}, {REST, 4},
+    {NOTE_GS5, 3}, {NOTE_FS5, 3}, {NOTE_F5, 4},
+    {NOTE_AS4, 4}, {REST, 4}, {NOTE_AS4, 4}, {REST, 4},
+    {NOTE_AS4, 3}, {NOTE_B4, 3}, {NOTE_DS5, 4},
+    {NOTE_AS4, 4}, {REST, 4}, {NOTE_AS4, 4}, {REST, 4},
+    {NOTE_AS4, 3}, {NOTE_B4, 3}, {NOTE_DS5, 4},
+    {NOTE_AS4, 4}, {REST, 4}, {NOTE_AS4, 4}, {REST, 4},
+    {REST, 1}
+};
+
 
 // Function prototypes
 void BUZZER_Init(void);

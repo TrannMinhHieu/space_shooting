@@ -15,6 +15,8 @@
 #include "task_display.h"
 #include "view_render.h"
 
+#include "buzzer.h"
+
 #include "eeprom.h"
 #include "app_eeprom.h"
 

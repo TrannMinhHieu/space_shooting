@@ -211,7 +211,7 @@ uint8_t sst_better_strategy_based_enemy_control()
 
     if (actions_performed_counter == 0)
     {
-        decision_interval = 100;
+        decision_interval = 100 - myShip.fly_speed * 5;
         actions_performed_counter = 12;
         return DO_NOTHING;
     }
@@ -263,7 +263,7 @@ void sst_attack_pattern_3()
 void sst_enemy_ship_positioning()
 {
     // Define the y-coordinates the ship will move through
-    uint8_t y_positions[] = {0, 10, 20, 30, 40, 50};
+    uint8_t y_positions[] = {0, 10, 20, 30, 40};
     uint8_t num_positions = sizeof(y_positions) / sizeof(y_positions[0]);
     uint8_t pos = rand() % num_positions;
 
