@@ -124,7 +124,7 @@ The task level enables prioritizing the processing of task messages in the syste
 ![](/img/Asteroid_state_machine.png)  
 *Figure 4: Asteroid state machine*  
 
-Upon enter the initialization state, the Asteroid state machine transit to `FLIGHT` state. Its transit to itself with each `TIME_TICK`. The Asteroid transit to `HIT HANDLER` state when a hit occurred. If it is a ship hit, transit to `EXPLODE` and then to end state, else the state machine repositions an asteroid and transit back to `FLIGHT` state. If the Asteroid count traverse a threshold, it transits to `FIELD CONTROL` and reset the asteroid object.<br>  
+Upon enter the initialization state, the Asteroid state machine transit to `FLIGHT` state. Its transit to itself and update the position of it with each `TIME_TICK`. The Asteroid transit to `HIT HANDLER` state when a hit occurred. If it is a ship hit, transit to `EXPLODE` and then to end state, else the state machine repositions an asteroid and transit back to `FLIGHT` state. If the Asteroid count traverse a threshold, it transits to `FIELD CONTROL` and reset the asteroid object.<br>  
 **Asteroid task handler** to handle all event sent to asteroid active object. 
 
 ```
@@ -169,7 +169,7 @@ typedef struct
 ![](/img/Terrain_state_machine.png)  
 *Figure 5: Terrain state machine*  
 
-Similar to asteroid, after the initialization state, the Terrain state machine remain in `TERRAIN UPDATE` state. The *Terrain generate* signal transit the state machine to `TERRAIN GENERATE` state. When the terrain crosses a terrain max length, it transits in to terrain end state and then to end state.<br>  
+Similar to asteroid, after the initialization state, the Terrain state machine remain in `TERRAIN UPDATE` state. With every *time tick*, the terrain moves from right to left in pace with the player's flight speed. The *Terrain generate* signal transit the state machine to `TERRAIN GENERATE` state. When the terrain crosses a terrain max length, it transits in to terrain end state and then to end state.<br>  
 **Terrain task handler** to handle all event sent to terrain active object.
 
 ```
@@ -207,7 +207,7 @@ public:
 };
 ```
 
-Define **"Terrain"** active object
+Define **Terrain** active object
 
 ```
 extern std::vector<TerrainCoordinates> v_terrain;
@@ -219,7 +219,7 @@ extern std::vector<TerrainCoordinates> v_terrain;
 <br>
 ![](/img/Enemy_state_machine.png)  
 *Figure 6.2: Enemy State Machine*  
-While the player and enemy state machines in the game share similarities, they have distinct characteristics. The player state machine typically remains in the `FLIGHT` state, processing player inputs to perform various actions. If the player is hit by an enemy missile, an asteroid, or crashes into terrain, the state machine transitions to the `EXPLODE` state and then to the end state, resetting all other active objects.<br>  
+While the player and enemy state machines in the game share similarities, they have distinct characteristics. The player state machine typically remains in the `FLIGHT` state, processing player inputs to perform various actions: move up, move down, and fire a missile. If the player is hit by an enemy missile, an asteroid, or crashes into terrain, the state machine transitions to the `EXPLODE` state and then to the end state, resetting all other active objects.<br>  
 Define base **ship** type
 
 ```
@@ -332,8 +332,11 @@ Given the high similarity between the player missile and enemy missile state mac
 ![](/img/Missile_state_machine.png)  
 *Figure 7: Missile State Machine*  
 
+After the initialization state, the missile active object enters an **ARMED** state. Without any further signal, the state machine will remain in this stage indefinitely or until the end of the game. With the *missile fire* signal, the missile object transits itself into **FLIGHT** stage. In **FLIGHT** stage, the missile updates the position of itself with every *time tick*. If the missile travers to it max range, an *out range* signal is sent, the missile state become **ARMED**. Else, if the missile hit an active object, it transits in to **EXPLODE** state and then back to **ARMED** state.
+
 >:memo: **Note:** The Missile state machine does not have and end state due to the dependence nature of it in player ship object.  
-    
+
+
 **Player missile task handler**
 
 ```
@@ -484,7 +487,7 @@ The other infomation such as missile reload time, missile shootable, and enemy h
 
 **Asteroid effect**
 
-Scoring effec
+Scoring effect
  : `+10` when an Asteroid is destroyed
 ```
 if (myExplosion.visible == WHITE)
