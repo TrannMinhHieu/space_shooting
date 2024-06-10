@@ -520,7 +520,7 @@ if(v_myPlayerMissiles.size() < 3)
 Display **Enemy info** 
 
 Health bar
- : Sreduce when hit
+ : Reduce when hit
 ```
 view_render.drawRoundRect(10, 55, 110, 5, 2, WHITE);
 view_render.fillRoundRect(10, 55, myEnemyShip.health * (110 / total_health), 5, 2, WHITE);
