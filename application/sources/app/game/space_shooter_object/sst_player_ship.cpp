@@ -46,6 +46,7 @@ void sst_player_ship_flight()
         scoreCounter = 0;
         prevScore = myShip.score;
         myShip.fly_speed++;
+        BUZZER_PlayTones(tones_3beep);
         APP_DBG_SIG("Ship fly speed %d\n", myShip.fly_speed);
     }
     else

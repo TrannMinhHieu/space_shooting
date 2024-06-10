@@ -7,6 +7,8 @@
 #include "app_dbg.h"
 #include "app_if.h"
 
+#include "buzzer.h"
+
 #include "task_list.h"
 #include "task_list_if.h"
 
@@ -27,6 +29,7 @@ void btn_mode_callback(void* b) {
 	case BUTTON_SW_STATE_LONG_PRESSED: {
 		APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
 		task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_MODE_LONG_PRESSED);
+		BUZZER_PlayTones(tones_1beep);
 	}
 		break;
 
@@ -36,6 +39,7 @@ void btn_mode_callback(void* b) {
 			task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_FIRE_SIG);
 		} else {
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_MODE_RELEASED);
+			BUZZER_PlayTones(tones_1beep);
 		}
 	}
 		break;
@@ -56,6 +60,7 @@ void btn_up_callback(void* b) {
 	case BUTTON_SW_STATE_LONG_PRESSED: {
 		APP_DBG("[btn_up_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
 		task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_UP_LONG_PRESSED);
+		BUZZER_PlayTones(tones_1beep);
 	}
 		break;
 
@@ -65,6 +70,7 @@ void btn_up_callback(void* b) {
 			task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_MOVE_UP_SIG);
 		} else {
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_UP_RELEASED);
+			BUZZER_PlayTones(tones_1beep);
 		}
 	}
 		break;
@@ -93,6 +99,7 @@ void btn_down_callback(void* b) {
 			task_post_pure_msg(SST_PLAYER_SHIP_TASK_ID, SST_SHIP_MOVE_DOWN_SIG);
 		} else {
 			task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_DOWN_RELEASED);
+			BUZZER_PlayTones(tones_1beep);
 		}
 	}
 		break;

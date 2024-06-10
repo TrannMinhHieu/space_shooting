@@ -45,13 +45,9 @@ static const Tone_TypeDef explosion_sound[] = {
 	{   0,0}
 };
 
-static const Tone_TypeDef end_game_sound[] = {
+static const Tone_TypeDef tones_1beep[] = {
 	{4000, 3},
 	{   0,10},
-	{1000, 6},
-	{   0,10},
-	{4000, 3},
-	{   0, 0}
 };
 
 // "Super Mario bros." =)

@@ -8,6 +8,8 @@
 #include "message.h"
 #include "timer.h"
 
+#include "buzzer.h"
+
 #include "app.h"
 #include "app_dbg.h"
 #include "task_list.h"
