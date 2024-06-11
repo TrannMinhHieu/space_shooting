@@ -119,6 +119,8 @@ void sst_player_missile_reset()
     myMissile.visible = BLACK;
     myMissile.x = 0;
     myMissile.y = 0;
+
+    v_myPlayerMissiles.clear();
 }
 
 /**

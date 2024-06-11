@@ -105,10 +105,9 @@ void sst_asteroid_flight()
  * @param None
  * @return None
  */
+static uint8_t asteroid_count = 0;
 void sst_asteroid_hit_handler()
 {
-    static uint8_t asteroid_count = 0;
-
     // Iterate through each asteroid in the myAsteroid array
     for (uint8_t i = 0; i < NUM_ASTEROIDS; i++)
     {
@@ -184,6 +183,7 @@ void sst_asteroid_reset()
         // Assign a new random action image to the asteroid.
         myAsteroid[i].action_image = rand() % 3 + 1;
     }
+    asteroid_count = 0;
 }
 
 /**
@@ -321,8 +321,6 @@ void sst_asteroid_field_control(uint8_t *asteroid_count)
         // Set the game stage to "SHIP_FIGHT"
         sst_game_stage = GAME_STAGE_SHIP_FIGHT;
 
-        // Re-arm the enemy ship
-        task_post_pure_msg(SST_ENEMY_MISSILE_TASK_ID, SST_ENEMY_MISSILE_INIT_SIG);
         // Trigger the enemy ship to take off
         task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_TAKEOFF_SIG);
 

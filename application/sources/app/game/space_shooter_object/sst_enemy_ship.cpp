@@ -20,9 +20,7 @@ void sst_enemy_ship_init()
     myEnemyShip.ship.y = SHIP_Y_COORDINATE;
     myEnemyShip.ship.action_image = rand() % 3 + 1;
     myEnemyShip.health = SHIP_LIFE;
-    myEnemyShip.num_missiles = BASE_NUM_OF_ENEMY_MISSILE;
     APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
-    APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 }
 
 /**
@@ -40,9 +38,7 @@ void sst_enemy_ship_takeoff()
     // Set enemy ship health and number of missiles
     myEnemyShip.health = SHIP_LIFE + myShip.fly_speed;
     total_health = myEnemyShip.health;
-    myEnemyShip.num_missiles = BASE_NUM_OF_ENEMY_MISSILE;
     APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
-    APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 
     // Set enemy ship position
     myEnemyShip.ship.x = 150;
@@ -50,7 +46,6 @@ void sst_enemy_ship_takeoff()
 
     // Set enemy ship visibility and action image
     myEnemyShip.ship.visible = WHITE;
-    myEnemyShip.ship.action_image = 1;
 }
 
 /**
@@ -204,9 +199,7 @@ void sst_enemy_ship_reset()
     myEnemyShip.ship.y = 0;
     myEnemyShip.ship.action_image = rand() % 3 + 1;
     myEnemyShip.health = SHIP_LIFE;
-    myEnemyShip.num_missiles = BASE_NUM_OF_ENEMY_MISSILE;
     APP_DBG_SIG("Enemy ship health %d\n", myEnemyShip.health);
-    APP_DBG_SIG("Enemy max missile %d\n", myEnemyShip.num_missiles);
 }
 
 void sst_enemy_ship_handler(ak_msg_t *msg)

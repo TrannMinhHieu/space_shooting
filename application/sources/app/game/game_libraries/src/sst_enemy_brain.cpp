@@ -237,13 +237,9 @@ uint8_t sst_better_strategy_based_enemy_control()
 void sst_attack_pattern_1()
 {
     sst_enemy_ship_positioning();
-    if (uint8_t missile_count = 0; missile_count < 1)
-    {
-        // Bug: missile y position is not updated correctly
-        task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
-        sst_ship_action = FIRE;
-        missile_count++;
-    }
+    // Bug: missile y position is not updated correctly
+    task_post_pure_msg(SST_ENEMY_SHIP_TASK_ID, SST_ENEMY_SHIP_FIRE_SIG);
+    sst_ship_action = FIRE;
 }
 void sst_attack_pattern_2()
 {

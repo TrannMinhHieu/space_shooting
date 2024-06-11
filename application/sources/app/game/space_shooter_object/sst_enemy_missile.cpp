@@ -18,18 +18,11 @@ bool is_enemy_missile_player_ship_collided(uint8_t enemy_missile_index);
  */
 void sst_enemy_missile_inint()
 {
-    // For each element of the v_myEnemyMissiles vector
-    for (uint8_t i = 0; i < myEnemyShip.num_missiles; i++)
-    {
-        // Set the properties of the current element
-        myEnemyMissile.visible = BLACK;
-        myEnemyMissile.x = 0;
-        myEnemyMissile.y = 0;
-        myEnemyMissile.action_image = 1;
-
-        // Add the current element to the v_myEnemyMissiles vector
-        v_myEnemyMissiles.push_back(myEnemyMissile);
-    }
+    APP_DBG_SIG("Enemy missile init\n");
+    myEnemyMissile.x = 0;
+    myEnemyMissile.y = 0;
+    myEnemyMissile.visible = BLACK;
+    myEnemyMissile.action_image = 1;
 }
 
 /**
@@ -45,6 +38,16 @@ void sst_enemy_missile_inint()
  */
 void sst_enemy_missile_hit()
 {
+    if(v_myEnemyMissiles.size() == 0)
+    {
+        return;
+    }
+
+    if (v_myPlayerMissiles.size() == 0)
+    {
+        return;
+    }
+    
     // Iterate over each element of the v_myEnemyMissiles vector
     for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
     {
@@ -61,7 +64,7 @@ void sst_enemy_missile_hit()
                 myExplosion.y = v_myEnemyMissiles[i].y;
 
                 // Set the visibility of the enemy missile and the player's missile to black
-                v_myEnemyMissiles[i].visible = BLACK;
+                v_myEnemyMissiles.erase(v_myEnemyMissiles.begin() + i);
                 v_myPlayerMissiles.erase(v_myPlayerMissiles.begin() + j);
             }
         }
@@ -99,24 +102,13 @@ void sst_enemy_missile_hit()
  */
 void sst_enemy_missile_fired()
 {
-    // Iterate over each element of the v_myEnemyMissiles vector
-    for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
-    {
-        // Check if the current enemy missile is not visible (color is black)
-        if (v_myEnemyMissiles[i].visible == BLACK)
-        {
-            // Set the properties of the missile to make it visible and positioned at the enemy ship's location
-            v_myEnemyMissiles[i].x = myEnemyShip.ship.x;
-            v_myEnemyMissiles[i].y = myEnemyShip.ship.y + SHIP_Y_OFFSET_FOR_MISSILES;
-            v_myEnemyMissiles[i].visible = WHITE;
+    APP_DBG_SIG("Enemy missile fired\n");
+    // Set the y-coordinate of the enemy missile
+    myEnemyMissile.y = myEnemyShip.ship.y + SHIP_Y_OFFSET_FOR_MISSILES;
+    myEnemyMissile.x = myEnemyShip.ship.x;
+    myEnemyMissile.visible = WHITE;
 
-            // Print debug message
-            APP_DBG_SIG("Enemy missile[%d] fired at (%d, %d)\n", i, v_myEnemyMissiles[i].x, v_myEnemyMissiles[i].y);
-
-            // Exit the loop
-            break;
-        }
-    }
+    v_myEnemyMissiles.push_back(myEnemyMissile);
 }
 
 /**
@@ -128,7 +120,7 @@ void sst_enemy_missile_fired()
 void sst_enemy_missile_flight()
 {
     // Iterate over each enemy missile
-    for (uint8_t i = 0; i < v_myEnemyMissiles.size(); i++)
+    for (int i = v_myEnemyMissiles.size() - 1; i >= 0; --i)
     {
         // Check if the current enemy missile is visible
         if (v_myEnemyMissiles[i].visible == WHITE)
@@ -142,6 +134,7 @@ void sst_enemy_missile_flight()
                 APP_DBG_SIG("Enemy missile[%d] out of screen\n", i);
                 // Reset the enemy missile's visibility
                 v_myEnemyMissiles[i].visible = BLACK;
+                v_myEnemyMissiles.erase(v_myEnemyMissiles.begin() + i);
             }
         }
     }
@@ -157,6 +150,11 @@ void sst_enemy_missile_flight()
  */
 void sst_enemy_missile_reset()
 {
+    APP_DBG_SIG("Enemy missile reset\n");
+    myEnemyMissile.visible = BLACK;
+    myEnemyMissile.x = 0;
+    myEnemyMissile.y = 0;
+
     // Clear the v_myEnemyMissiles vector
     v_myEnemyMissiles.clear();
 }

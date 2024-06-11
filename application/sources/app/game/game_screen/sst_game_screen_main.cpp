@@ -325,7 +325,7 @@ void sst_enemy_missile_draw()
     {
         if (v_myEnemyMissiles[i].visible != WHITE)
         {
-            continue;
+            return;
         }
         view_render.drawBitmap(v_myEnemyMissiles[i].x,
                                v_myEnemyMissiles[i].y,

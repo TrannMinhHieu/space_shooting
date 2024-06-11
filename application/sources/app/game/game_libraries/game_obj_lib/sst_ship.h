@@ -25,7 +25,6 @@
 #define SHIP_Y_COORDINATE       (20)
 
 #define SHIP_LIFE               (3)
-#define BASE_NUM_OF_ENEMY_MISSILE       (12)
 
 typedef struct 
 {
@@ -45,7 +44,6 @@ typedef struct
 {
     sst_Ship_t ship;
     uint8_t health;
-    uint8_t num_missiles;
     const uint8_t enemy_ship_score = 100;
 } sst_EnemyShip_t;
 
