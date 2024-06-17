@@ -191,6 +191,7 @@ bool is_player_missile_enemy_ship_collided(uint8_t player_missile_index)
         return false;
     }
 
+    // Check if the x-coordinate of the missile is greater than the x-coordinate of the enemy ship plus the size of the enemy ship bitmap.
     if (v_myPlayerMissiles[player_missile_index].x > myEnemyShip.ship.x + SIZE_BITMAP_SHIP_X)
     {
         return false;

@@ -254,7 +254,7 @@ void sst_attack_pattern_3()
     // TODO: Implement attack pattern 3
     // @brief enemy slam into player
 
-    uint32_t player_prev_position = myShip.ship.y;
+    //uint32_t player_prev_position = myShip.ship.y;
 }
 void sst_enemy_ship_positioning()
 {

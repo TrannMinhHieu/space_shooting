@@ -38,12 +38,8 @@ void sst_enemy_missile_inint()
  */
 void sst_enemy_missile_hit()
 {
+    // Immediately return if v_myEnemyMissiles size is empty
     if(v_myEnemyMissiles.size() == 0)
-    {
-        return;
-    }
-
-    if (v_myPlayerMissiles.size() == 0)
     {
         return;
     }
@@ -63,7 +59,7 @@ void sst_enemy_missile_hit()
                 myExplosion.x = v_myEnemyMissiles[i].x;
                 myExplosion.y = v_myEnemyMissiles[i].y;
 
-                // Set the visibility of the enemy missile and the player's missile to black
+                // Remove the enemy missile and the player's missile from the respective vectors
                 v_myEnemyMissiles.erase(v_myEnemyMissiles.begin() + i);
                 v_myPlayerMissiles.erase(v_myPlayerMissiles.begin() + j);
             }
@@ -80,8 +76,9 @@ void sst_enemy_missile_hit()
             myExplosion.x = myShip.ship.x;
             myExplosion.y = myShip.ship.y;
 
-            // Set the visibility of the enemy missile and the player's ship to black
-            v_myEnemyMissiles[i].visible = BLACK;
+            // Set the visibility player's ship to black
+            // Delete the enemy missile from the vector
+            v_myEnemyMissiles.erase(v_myEnemyMissiles.begin() + i);
             myShip.ship.visible = BLACK;
 
             // Send a message to the gameplay task to exit the game
@@ -132,8 +129,7 @@ void sst_enemy_missile_flight()
             if (is_enemy_missile_out_of_screen(i))
             {
                 APP_DBG_SIG("Enemy missile[%d] out of screen\n", i);
-                // Reset the enemy missile's visibility
-                v_myEnemyMissiles[i].visible = BLACK;
+                // Delete the enemy missile from the vector
                 v_myEnemyMissiles.erase(v_myEnemyMissiles.begin() + i);
             }
         }
